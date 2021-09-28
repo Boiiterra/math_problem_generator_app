@@ -8,6 +8,8 @@ from threading import Thread
 from requests import get
 
 __version__ = '0.1'
+__author__ = "TerraBoii"
+__credits__ = ['TerraBoii']
 _AppName_ = 'Math problems app launcher'
 
 # url for installer
