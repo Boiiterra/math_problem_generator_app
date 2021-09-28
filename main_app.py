@@ -18,16 +18,16 @@ num_fg = parser.get("colors", "num_btn_fore")
 num_active_fg = parser.get("colors", "num_btn_active_fore")
 
 
-def change_lang(lng: str):
+def change_lang(language: str):
     global parser, current_language, lng_state
 
-    if lng == "rus":
+    if language == "rus":
         parser.read('data.txt')
         parser.set('language', "language", 'rus')
         parser.set("language", 'state', 'keep')
         current_language = parser.get('language', 'language')
         lng_state = parser.get('language', 'state')
-    elif lng == "eng":
+    elif language == "eng":
         parser.read('data.txt')
         parser.set('language', "language", 'eng')
         parser.set("language", 'state', 'keep')
@@ -133,6 +133,7 @@ class MainAppBody(Tk):
         self.title("math_problem generator")
         self.iconbitmap("images//main_icon.ico")
         self.minsize(width=800, height=600)
+        self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
 
         container = Frame(self, bg="black")
         container.pack(side="top", fill="both", expand=True)
@@ -159,11 +160,15 @@ class MainAppBody(Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+    def get_page(self, page_class):
+        return self.frames[page_class]
+
 
 class StartPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
 
         question = Label(self, text="\nChoose language:", bg=bg, fg=fg, font=("Arial", 40))
         question.pack(side="top")
@@ -197,6 +202,7 @@ class StartPage(Frame):
 
         def new_lang(_, lang: str):
             change_lang(lang)
+            controller.show_frame(MainPage)
 
         russian.bind("<Enter>", lambda _: entered(_, btn=russian))
         russian.bind("<Leave>", lambda _: left(_, btn=russian))
@@ -210,12 +216,33 @@ class MainPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self.start_button = Button(self, text="Start", bg=num_bg, fg=fg, font=("Arial", 45),
+                                   activeforeground=active_fg, activebackground=num_bg, bd=0,
+                                   disabledforeground=num_bg, command=lambda: controller.show_frame(TopicsPage))
+        self.start_button.pack(fill='both', pady=2, expand=True)
+
+        self.settings_button = Button(self, text="Settings", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
+                                      activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
+                                      disabledforeground=num_bg, command=lambda: controller.show_frame(SettingsPage))
+        self.settings_button.pack(fill='both', side='bottom', expand=True)
+
+    
 
 
 class TopicsPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+
+class SettingsPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
 
 
 if __name__ == "__main__":
