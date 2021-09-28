@@ -201,6 +201,31 @@ class StartPage(Frame):
         self.english.bind("<Leave>", lambda _: left(_, btn=self.english))
         self.english.bind("<Button-1>", lambda _: self.new_lang(_, lang="eng"))
 
+        def font_resize_startpage(e):
+            if e.height <= 620:
+                question.config(font=('Arial', 40))
+                bottom_.config(font=("Arial", 30))
+                self.russian.config(font=('Arial, 30'))
+                self.english.config(font=('Arial, 30'))
+            elif 620 < e.height <= 700:
+                question.config(font=('Arial', 45))
+                bottom_.config(font=("Arial", 35))
+                self.russian.config(font=('Arial', 35))
+                self.english.config(font=('Arial', 35))
+            elif 700 < e.height <= 800:
+                question.config(font=('Arial', 50))
+                bottom_.config(font=("Arial", 40))
+                self.russian.config(font=('Arial', 40))
+                self.english.config(font=('Arial', 40))
+            elif e.height > 800:
+                question.config(font=('Arial', 55))
+                bottom_.config(font=("Arial", 45))
+                self.russian.config(font=('Arial', 45))
+                self.english.config(font=('Arial', 45))
+
+
+        self.bind("<Configure>", font_resize_startpage)
+
     def new_lang(self, _, lang: str):
         change_language(lang)
         page = self.controller.get_page(MainPage)
@@ -329,18 +354,21 @@ class SettingsPage(Frame):
 
         def font_resize_settings(e):
             """Resizes font based on window height and width"""
-            # Change font for big buttons
-            if e.width <= 912:
+            # Change font for page components
+            if e.width <= 959:
+                self.theme_info.config(font=('Arial', 42))
                 self.home_button.config(font=('Arial', 45))
                 self.neon_green_theme_btn.config(font=('Times New Roman', 42))
                 self.dark_theme_btn.config(font=('Times New Roman', 42))
                 self.light_theme_btn.config(font=('Times New Roman', 42))
-            elif 912 < e.width <= 1160:
+            elif 959 < e.width <= 1160:
+                self.theme_info.config(font=('Arial', 50))
                 self.home_button.config(font=('Arial', 55))
                 self.neon_green_theme_btn.config(font=('Times New Roman', 50))
                 self.dark_theme_btn.config(font=('Times New Roman', 50))
                 self.light_theme_btn.config(font=('Times New Roman', 50))
             elif e.width > 1160:
+                self.theme_info.config(font=('Arial', 55))
                 self.home_button.config(font=('Arial', 55))
                 self.neon_green_theme_btn.config(font=('Times New Roman', 55))
                 self.dark_theme_btn.config(font=('Times New Roman', 55))
