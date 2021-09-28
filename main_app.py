@@ -6,16 +6,19 @@ parser = ConfigParser()
 parser.read("data.txt")
 current_language = parser.get("language", "language")
 lng_state = parser.get("language", 'state')
-current_theme = parser.get('theme', "current_theme")
-bg = parser.get("colors", "background")
-fg = parser.get("colors", "foreground")
-active_fg = parser.get("colors", "active_foreground")
-home_btn_fg = parser.get("colors", "home_btn_fore")
-home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-main_btn_bg = parser.get("colors", "main_btn_back")
-num_bg = parser.get("colors", "num_btn_back")
-num_fg = parser.get("colors", "num_btn_fore")
-num_active_fg = parser.get("colors", "num_btn_active_fore")
+def set_theme():
+    global current_theme, bg, fg, active_fg, home_btn_active_fg, home_btn_fg, main_btn_bg, num_bg, num_fg, num_active_fg
+    current_theme = parser.get('theme', "current_theme")
+    bg = parser.get("colors", "background")
+    fg = parser.get("colors", "foreground")
+    active_fg = parser.get("colors", "active_foreground")
+    home_btn_fg = parser.get("colors", "home_btn_fore")
+    home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
+    main_btn_bg = parser.get("colors", "main_btn_back")
+    num_bg = parser.get("colors", "num_btn_back")
+    num_fg = parser.get("colors", "num_btn_fore")
+    num_active_fg = parser.get("colors", "num_btn_active_fore")
+set_theme()
 
 
 def change_language(language: str):
@@ -57,17 +60,7 @@ def neon_green_theme():
         parser.write(configfile)
     # Set colors
     parser.read("data.txt")
-    global bg, fg, active_fg, home_btn_fg, home_btn_active_fg, main_btn_bg, num_bg, num_fg, num_active_fg, current_theme
-    current_theme = parser.get('theme', "current_theme")
-    bg = parser.get("colors", "background")
-    fg = parser.get("colors", "foreground")
-    active_fg = parser.get("colors", "active_foreground")
-    home_btn_fg = parser.get("colors", "home_btn_fore")
-    home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-    main_btn_bg = parser.get("colors", "main_btn_back")
-    num_bg = parser.get("colors", "num_btn_back")
-    num_fg = parser.get("colors", "num_btn_fore")
-    num_active_fg = parser.get("colors", "num_btn_active_fore")
+    set_theme()
 
 
 def dark_theme():
@@ -87,17 +80,7 @@ def dark_theme():
         parser.write(configfile)
     # Set colors
     parser.read("data.txt")
-    global bg, fg, active_fg, home_btn_fg, home_btn_active_fg, main_btn_bg, num_bg, num_fg, num_active_fg, current_theme
-    current_theme = parser.get('theme', "current_theme")
-    bg = parser.get("colors", "background")
-    fg = parser.get("colors", "foreground")
-    active_fg = parser.get("colors", "active_foreground")
-    home_btn_fg = parser.get("colors", "home_btn_fore")
-    home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-    main_btn_bg = parser.get("colors", "main_btn_back")
-    num_bg = parser.get("colors", "num_btn_back")
-    num_fg = parser.get("colors", "num_btn_fore")
-    num_active_fg = parser.get("colors", "num_btn_active_fore")
+    set_theme()
 
 
 def light_theme():
@@ -117,17 +100,7 @@ def light_theme():
         parser.write(configfile)
     # Set colors
     parser.read("data.txt")
-    global bg, fg, active_fg, home_btn_fg, home_btn_active_fg, main_btn_bg, num_bg, num_fg, num_active_fg, current_theme
-    current_theme = parser.get('theme', "current_theme")
-    bg = parser.get("colors", "background")
-    fg = parser.get("colors", "foreground")
-    active_fg = parser.get("colors", "active_foreground")
-    home_btn_fg = parser.get("colors", "home_btn_fore")
-    home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-    main_btn_bg = parser.get("colors", "main_btn_back")
-    num_bg = parser.get("colors", "num_btn_back")
-    num_fg = parser.get("colors", "num_btn_fore")
-    num_active_fg = parser.get("colors", "num_btn_active_fore")
+    set_theme()
 
 
 class MainAppBody(Tk):
@@ -175,10 +148,14 @@ class StartPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        question = Label(self, text="\nChoose language:", bg=bg, fg=fg, font=("Arial", 40))
+        question_text = "\nChoose language:"
+
+        question = Label(self, text=question_text, bg=bg, fg=fg, font=("Arial", 40))
         question.pack(side="top")
 
-        bottom_ = Label(self, bg=bg, text="Note: you can always change\nlanguage in settings menu",
+        hint_text = "Note: you can always change\nlanguage in settings menu"
+
+        bottom_ = Label(self, bg=bg, text=hint_text,
                         font=("Arial", 30), fg=active_fg)
         bottom_.pack(side="bottom")
 
@@ -189,32 +166,41 @@ class StartPage(Frame):
         lang_btn_container.rowconfigure(1, weight=1)
         lang_btn_container.columnconfigure(0, weight=1)
 
-        russian = Button(lang_btn_container, text="Русский", bg=bg, fg=fg,
+        self.russian = Button(lang_btn_container, text="Русский", bg=bg, fg=fg,
                          activeforeground=active_fg,
                          font=("Arial", 30), bd=0)
-        russian.grid(row=0, column=0, sticky="nsew")
+        self.russian.grid(row=0, column=0, sticky="nsew")
 
-        english = Button(lang_btn_container, text="English", bg=bg, fg=fg,
+        self.english = Button(lang_btn_container, text="English", bg=bg, fg=fg,
                          activeforeground=active_fg,
                          font=("Arial", 30), bd=0)
-        english.grid(row=1, column=0, sticky="nsew")
+        self.english.grid(row=1, column=0, sticky="nsew")
 
-        def entered(_, btn):
+        def entered(_, btn, lang: str):
             btn.config(bg=active_fg, activebackground=fg)
+            global question_text, hint_text
+            if lang == "eng":
+                question_text = "\nChoose language:"
+                hint_text = "Note: you can always change\nlanguage in settings menu"
+            elif lang == "rus":
+                question_text = "\n Выберите язык: "
+                hint_text = " Заметка: вы всегда можете\nизменить язык в настройках"
+            question.config(text=question_text)
+            bottom_.config(text=hint_text)
 
-        def left(_, btn):
+        def left(_, btn, lang: str):
             btn.config(bg=bg)
 
         def new_lang(_, lang: str):
             change_language(lang)
             controller.show_frame(MainPage)
 
-        russian.bind("<Enter>", lambda _: entered(_, btn=russian))
-        russian.bind("<Leave>", lambda _: left(_, btn=russian))
-        russian.bind("<Button-1>", lambda _: new_lang(_, lang="rus"))
-        english.bind("<Enter>", lambda _: entered(_, btn=english))
-        english.bind("<Leave>", lambda _: left(_, btn=english))
-        english.bind("<Button-1>", lambda _: new_lang(_, lang="eng"))
+        self.russian.bind("<Enter>", lambda _: entered(_, btn=self.russian, lang='rus'))
+        self.russian.bind("<Leave>", lambda _: left(_, btn=self.russian, lang='eng'))
+        self.russian.bind("<Button-1>", lambda _: new_lang(_, lang="rus"))
+        self.english.bind("<Enter>", lambda _: entered(_, btn=self.english, lang='eng'))
+        self.english.bind("<Leave>", lambda _: left(_, btn=self.english, lang='eng'))
+        self.english.bind("<Button-1>", lambda _: new_lang(_, lang="eng"))
 
 
 class MainPage(Frame):
