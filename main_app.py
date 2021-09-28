@@ -18,7 +18,7 @@ num_fg = parser.get("colors", "num_btn_fore")
 num_active_fg = parser.get("colors", "num_btn_active_fore")
 
 
-def change_lang(language: str):
+def change_language(language: str):
     global parser, current_language, lng_state
 
     if language == "rus":
@@ -35,7 +35,7 @@ def change_lang(language: str):
         lng_state = parser.get('language', 'state')
 
 
-def neon_green_data():
+def neon_green_theme():
     global parser
     parser.read("data.txt")
     parser.set('theme', "current_theme", "neon_green")
@@ -65,7 +65,7 @@ def neon_green_data():
     num_active_fg = parser.get("colors", "num_btn_active_fore")
 
 
-def dark_data():
+def dark_theme():
     global parser
     parser.read("data.txt")
     parser.set("theme", "current_theme", "dark")
@@ -95,7 +95,7 @@ def dark_data():
     num_active_fg = parser.get("colors", "num_btn_active_fore")
 
 
-def light_data():
+def light_theme():
     global parser
     parser.read("data.txt")
     parser.set('theme', "current_theme", "light")
@@ -201,7 +201,7 @@ class StartPage(Frame):
             btn.config(bg=bg)
 
         def new_lang(_, lang: str):
-            change_lang(lang)
+            change_language(lang)
             controller.show_frame(MainPage)
 
         russian.bind("<Enter>", lambda _: entered(_, btn=russian))
@@ -217,6 +217,11 @@ class MainPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
+
+        text = "Text here"
+
+        self.text_label = Label(self, text=text, font=("Verdana", 45), bg=bg, fg=fg))
+        self.welcome_text.pack(fill='both', expand=True)
 
         self.start_button = Button(self, text="Start", bg=num_bg, fg=fg, font=("Arial", 45),
                                    activeforeground=active_fg, activebackground=num_bg, bd=0,
