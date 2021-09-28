@@ -18,16 +18,16 @@ num_fg = parser.get("colors", "num_btn_fore")
 num_active_fg = parser.get("colors", "num_btn_active_fore")
 
 
-def new_lang(_, lang: str):
+def change_lang(lng: str):
     global parser, current_language, lng_state
 
-    if lang == "rus":
+    if lng == "rus":
         parser.read('data.txt')
         parser.set('language', "language", 'rus')
         parser.set("language", 'state', 'keep')
         current_language = parser.get('language', 'language')
         lng_state = parser.get('language', 'state')
-    elif lang == "eng":
+    elif lng == "eng":
         parser.read('data.txt')
         parser.set('language', "language", 'eng')
         parser.set("language", 'state', 'keep')
@@ -161,7 +161,6 @@ class MainAppBody(Tk):
 
 
 class StartPage(Frame):
-    global parser
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
@@ -195,6 +194,9 @@ class StartPage(Frame):
 
         def left(_, btn):
             btn.config(bg=bg)
+
+        def new_lang(_, lang: str):
+            change_lang(lang)
 
         russian.bind("<Enter>", lambda _: entered(_, btn=russian))
         russian.bind("<Leave>", lambda _: left(_, btn=russian))
