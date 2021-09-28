@@ -25,12 +25,17 @@ def change_language(language: str):
         parser.read('data.txt')
         parser.set('language', "language", 'rus')
         parser.set("language", 'state', 'keep')
+        with open("data.txt", "w") as configfile:
+            parser.write(configfile)
+        parser.read("data.txt")
         current_language = parser.get('language', 'language')
         lng_state = parser.get('language', 'state')
     elif language == "eng":
         parser.read('data.txt')
         parser.set('language', "language", 'eng')
         parser.set("language", 'state', 'keep')
+        with open("data.txt", "w") as configfile:
+            parser.write(configfile)
         current_language = parser.get('language', 'language')
         lng_state = parser.get('language', 'state')
 
@@ -143,7 +148,7 @@ class MainAppBody(Tk):
 
         self.frames = {}
 
-        frame_collection = (StartPage, TopicsPage, MainPage)
+        frame_collection = (StartPage, TopicsPage, MainPage, SettingsPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -220,8 +225,8 @@ class MainPage(Frame):
 
         text = "Text here"
 
-        self.text_label = Label(self, text=text, font=("Verdana", 45), bg=bg, fg=fg))
-        self.welcome_text.pack(fill='both', expand=True)
+        self.text_label = Label(self, text=text, font=("Verdana", 45), bg=bg, fg=fg)
+        self.text_label.pack(fill='both', expand=True)
 
         self.start_button = Button(self, text="Start", bg=num_bg, fg=fg, font=("Arial", 45),
                                    activeforeground=active_fg, activebackground=num_bg, bd=0,
