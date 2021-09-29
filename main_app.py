@@ -132,7 +132,7 @@ class MainAppBody(Tk):
             self.frames[frame] = current_frame
 
             current_frame.grid(row=0, column=0, sticky="nsew")
-        if lng_state == "ask":
+        if lng_state == "ask" or current_language == "unknown":
             self.show_frame(StartPage)
         elif lng_state == "keep":
             self.show_frame(MainPage)
@@ -187,7 +187,7 @@ class StartPage(Frame):
                 hint_text = "Note: you can always change\nlanguage in settings menu"
             elif lang == "rus":
                 question_text = "\n Выберите язык: "
-                hint_text = " Заметка: вы всегда можете\nизменить язык в настройках"
+                hint_text = " Подсказка: всегда можно\nизменить язык в настройках"
             question.config(text=question_text)
             bottom_.config(text=hint_text)
 
@@ -223,7 +223,6 @@ class StartPage(Frame):
                 self.russian.config(font=('Arial', 45))
                 self.english.config(font=('Arial', 45))
 
-
         self.bind("<Configure>", font_resize_startpage)
 
     def new_lang(self, _, lang: str):
@@ -252,24 +251,28 @@ class MainPage(Frame):
                                       disabledforeground=num_bg, command=lambda: controller.show_frame(SettingsPage))
         self.settings_button.pack(fill='both', side='bottom', expand=True)
 
+        def font_resize_mainpage(_):
+            pass
+
+        self.bind("<Configure>", font_resize_mainpage)
+
         self.set_lang_mainpage()
 
     def set_lang_mainpage(self):
         if current_language == "eng":
-            self.text_label.config(text='Text here')
+            self.text_label.config(text='Math problem generator.')
             self.start_button.config(text="Start")
             self.settings_button.config(text="Settings")
         elif current_language == 'rus':
-            self.text_label.config(text='Пример текста')
+            self.text_label.config(text='Генератор задач по математике.')
             self.start_button.config(text="Старт")
             self.settings_button.config(text="Настройки")
-        elif current_language == "unknown":
-            self.text_label.config(text='Text here')
-            self.start_button.config(text="Start")
-            self.settings_button.config(text="Settings")
 
     def main_page_theme_update(self):
         self.config(bg=bg)
+        self.text_label.config(bg=bg)
+        self.start_button.config(bg=num_bg, fg=fg, activeforeground=num_active_fg, activebackground=num_bg)
+        self.settings_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg)
 
 
 class TopicsPage(Frame):
@@ -303,8 +306,33 @@ class SettingsPage(Frame):
         self.created_by.bind("<Enter>", enter)
         self.created_by.bind("<Leave>", leave)
 
+        Label(self, bg=bg, font=('Arial', 25)).pack()  # Separator or placeholder
+
+        self.language_changers_container = Label(self, bg=bg)
+        self.language_changers_container.pack(anchor='n')
+
+        Grid.rowconfigure(self.language_changers_container, 0, weight=1)
+        Grid.columnconfigure(self.language_changers_container, 0, weight=1)
+        Grid.columnconfigure(self.language_changers_container, 1, weight=1)
+        Grid.columnconfigure(self.language_changers_container, 2, weight=1)
+
+        self.language_info = Label(self.language_changers_container, bg=bg, fg=fg, font=("Arial", 35), text="Language:")
+        self.language_info.grid(row=0, column=0, sticky="nsew")
+
+        self.english_lang_btn = Button(self.language_changers_container, text="English", bg=num_bg, fg=num_fg,
+                                       font=("Times New Roman", 50),
+                                       activeforeground=num_active_fg, activebackground=num_bg, bd=0 )
+        self.english_lang_btn.grid(row=0, column=1)
+
+        self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
+                                       font=("Times New Roman", 50),
+                                       activeforeground=active_fg, activebackground=bg, bd=0 )
+        self.russian_lang_btn.grid(row=0, column=2)
+
+        Label(self, bg=bg, font=('Arial', 30)).pack()  # Separator or placeholder
+
         self.themes_changers_container = Label(self, bg=bg)
-        self.themes_changers_container.pack(side='top', anchor='n')
+        self.themes_changers_container.pack(anchor='n')
 
         Grid.rowconfigure(self.themes_changers_container, 0, weight=1)
         Grid.columnconfigure(self.themes_changers_container, 0, weight=1)
@@ -316,10 +344,10 @@ class SettingsPage(Frame):
         self.theme_info.grid(row=0, column=0, sticky="nsew")
 
         self.neon_green_theme_btn = Button(self.themes_changers_container, text="Neon green", bg=num_bg, fg=num_fg,
-                                     font=("Times New Roman", 55),
-                                     activeforeground=num_active_fg, activebackground=num_bg, bd=0,
-                                     disabledforeground=num_bg,
-                                     command=self.change_theme_to_neon)
+                                           font=("Times New Roman", 55),
+                                           activeforeground=num_active_fg, activebackground=num_bg, bd=0,
+                                           disabledforeground=num_bg,
+                                           command=self.change_theme_to_neon)
         self.neon_green_theme_btn.grid(row=0, column=2, sticky='nsew')
 
         self.dark_theme_btn = Button(self.themes_changers_container, text="Dark", bg=bg, fg=fg,
@@ -333,6 +361,8 @@ class SettingsPage(Frame):
                                       activeforeground=active_fg, activebackground=bg, bd=0, disabledforeground=bg,
                                       command=self.change_theme_to_light)
         self.light_theme_btn.grid(row=0, column=3, sticky='nsew')
+
+        Label(self, bg=bg, font=('Arial', 20)).pack()  # Separator or placeholder
 
         self.home_button = Button(self, text="Home", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
                                   activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
