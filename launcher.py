@@ -9,7 +9,9 @@ from requests import get
 
 __version__ = '0.1'
 __author__ = "TerraBoii"
-__credits__ = ['TerraBoii']
+# Victor Santiago is an original creator, I just modified entire file because I didn't like the design
+# Link to original project: https://github.com/vsantiago113/Tkinter-MyTestApp
+__credits__ = ["Victor Santiago", 'TerraBoii']
 _AppName_ = 'Math problems app launcher'
 
 # url for installer
