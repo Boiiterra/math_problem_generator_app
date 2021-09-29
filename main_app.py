@@ -9,6 +9,18 @@ parser = ConfigParser()
 parser.read("data.txt")
 current_language = parser.get("language", "language")
 lng_state = parser.get("language", 'state')
+current_theme = parser.get('theme', "current_theme")
+bg = parser.get("colors", "background")
+fg = parser.get("colors", "foreground")
+active_fg = parser.get("colors", "active_foreground")
+home_btn_fg = parser.get("colors", "home_btn_fore")
+home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
+main_btn_bg = parser.get("colors", "main_btn_back")
+num_bg = parser.get("colors", "num_btn_back")
+num_fg = parser.get("colors", "num_btn_fore")
+num_active_fg = parser.get("colors", "num_btn_active_fore")
+
+
 def set_theme():
     global current_theme, bg, fg, active_fg, home_btn_active_fg, home_btn_fg, main_btn_bg, num_bg, num_fg, num_active_fg
     current_theme = parser.get('theme', "current_theme")
@@ -21,7 +33,6 @@ def set_theme():
     num_bg = parser.get("colors", "num_btn_back")
     num_fg = parser.get("colors", "num_btn_fore")
     num_active_fg = parser.get("colors", "num_btn_active_fore")
-set_theme()
 
 
 def change_language(language: str):
@@ -320,13 +331,13 @@ class SettingsPage(Frame):
         self.language_info.grid(row=0, column=0, sticky="nsew")
 
         self.english_lang_btn = Button(self.language_changers_container, text="English", bg=num_bg, fg=num_fg,
-                                       font=("Times New Roman", 50),
-                                       activeforeground=num_active_fg, activebackground=num_bg, bd=0 )
+                                       font=("Times New Roman", 50), disabledforeground=num_bg,
+                                       activeforeground=num_active_fg, activebackground=num_bg, bd=0)
         self.english_lang_btn.grid(row=0, column=1)
 
         self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
-                                       font=("Times New Roman", 50),
-                                       activeforeground=active_fg, activebackground=bg, bd=0 )
+                                       font=("Times New Roman", 50), disabledforeground=bg,
+                                       activeforeground=active_fg, activebackground=bg, bd=0)
         self.russian_lang_btn.grid(row=0, column=2)
 
         Label(self, bg=bg, font=('Arial', 30)).pack()  # Separator or placeholder
@@ -369,7 +380,7 @@ class SettingsPage(Frame):
                                   disabledforeground=num_bg, command=lambda: controller.show_frame(MainPage))
         self.home_button.pack(fill='both', side='bottom', expand=True)
 
-        if current_theme == "neon":
+        if current_theme == "neon_green":
             self.dark_theme_btn.config(state='normal')
             self.neon_green_theme_btn.config(state='disabled')
             self.light_theme_btn.config(state='normal')
