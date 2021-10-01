@@ -90,8 +90,8 @@ try:
     data = response.text
 
     if float(data) > float(__version__):
-        get_update = askyesno('Software update!',
-                              f'Update Available!\n{_AppName_} {__version__} needs to update to version {data}')
+        get_update = askyesno('Software update available!\n',
+                              f'{_AppName_} {__version__} needs to update to version {data}')
         if get_update is True:
             UpdateManager(tmp)
         elif get_update is False:
