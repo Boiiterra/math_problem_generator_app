@@ -502,11 +502,12 @@ class SettingsPage(Frame):
             self.neon_green_theme_btn.config(state='normal')
             self.light_theme_btn.config(state='disabled')
 
-        self.bind("<Configure>", lambda _: self.font_changer(_.width, _))
+        self.bind("<Configure>", lambda params: self.font_changer(params.width))
 
         self.set_lang_settingspage()
 
-    def font_changer(self, width, _=None):
+    def font_changer(self, width):
+        """Changing font size based on window width"""
         # This changes font sizes, the same as above but after language switching
         if width <= 959 and current_language == 'eng':
             self.theme_info.config(font=('Arial', 42))
@@ -533,11 +534,11 @@ class SettingsPage(Frame):
             self.dark_theme_btn.config(font=('Times New Roman', 33))
             self.light_theme_btn.config(font=('Times New Roman', 33))
         elif 959 < width <= 1160 and current_language == 'rus':
-            self.theme_info.config(font=('Arial', 45))
+            self.theme_info.config(font=('Arial', 44))
             self.home_button.config(font=('Arial', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 41))
-            self.dark_theme_btn.config(font=('Times New Roman', 41))
-            self.light_theme_btn.config(font=('Times New Roman', 41))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 39))
+            self.dark_theme_btn.config(font=('Times New Roman', 39))
+            self.light_theme_btn.config(font=('Times New Roman', 39))
         elif width > 1160 and current_language == 'rus':
             self.theme_info.config(font=('Arial', 50))
             self.home_button.config(font=('Arial', 55))
@@ -547,9 +548,10 @@ class SettingsPage(Frame):
 
 
     def language_changer(self, _lang_: str):
-        _page = self.controller.get_page(FLaunchPage)
+        '''Changes language from setting page and fixes its font'''
+        _page = self.controller.get_page(FLaunchPage)  # Getting access to FLaunchPage in oreder to use new_lang method
         _page.new_lang('', lang=_lang_, _from='')
-        self.font_changer(self.winfo_width())
+        self.font_changer(self.winfo_width())  # Changing font size so everything will fit in the window
 
 
     def set_lang_settingspage(self):
@@ -607,23 +609,23 @@ class SettingsPage(Frame):
 
 
     def change_theme_to_dark(self):
-        self.dark_theme_btn.config(state='disabled')
         self.neon_green_theme_btn.config(state='normal')
+        self.dark_theme_btn.config(state='disabled')
         self.light_theme_btn.config(state='normal')
         dark_theme()
         self.pages_update()
 
     def change_theme_to_neon(self):
-        self.dark_theme_btn.config(state='normal')
         self.neon_green_theme_btn.config(state='disabled')
         self.light_theme_btn.config(state='normal')
+        self.dark_theme_btn.config(state='normal')
         neon_green_theme()
         self.pages_update()
 
     def change_theme_to_light(self):
-        self.dark_theme_btn.config(state='normal')
         self.neon_green_theme_btn.config(state='normal')
         self.light_theme_btn.config(state='disabled')
+        self.dark_theme_btn.config(state='normal')
         light_theme()
         self.pages_update()
 
