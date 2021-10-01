@@ -571,6 +571,7 @@ class SettingsPage(Frame):
             self.english_lang_btn.config(state='normal')
             self.russian_lang_btn.config(state='disabled')
             self.neon_green_theme_btn.config(text='Тёмно-зелёная')
+        self.font_changer(self.winfo_width())
 
 
     def settings_page_theme_update(self):
