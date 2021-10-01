@@ -20,7 +20,7 @@ num_bg = parser.get("colors", "num_btn_back")
 num_fg = parser.get("colors", "num_btn_fore")
 num_active_fg = parser.get("colors", "num_btn_active_fore")
 
-
+# This function updates colors after theme changed
 def set_theme():
     global current_theme, bg, fg, active_fg, home_btn_active_fg, home_btn_fg, main_btn_bg, num_bg, num_fg, num_active_fg
     current_theme = parser.get('theme', "current_theme")
@@ -34,7 +34,7 @@ def set_theme():
     num_fg = parser.get("colors", "num_btn_fore")
     num_active_fg = parser.get("colors", "num_btn_active_fore")
 
-
+# This function changes language for whole application
 def change_language(language: str):
     global parser, current_language, lng_state
 
@@ -56,7 +56,7 @@ def change_language(language: str):
         current_language = parser.get('language', 'language')
         lng_state = parser.get('language', 'state')
 
-
+# This function changes colors and theme to neon green and saves changes to file
 def neon_green_theme():
     global parser
     parser.read("data.txt")
@@ -76,7 +76,7 @@ def neon_green_theme():
     parser.read("data.txt")
     set_theme()
 
-
+# This function changes colors and theme to dark and saves changes to file
 def dark_theme():
     global parser
     parser.read("data.txt")
@@ -96,7 +96,7 @@ def dark_theme():
     parser.read("data.txt")
     set_theme()
 
-
+# This function changes colors and theme to light and saves changes to file
 def light_theme():
     global parser
     parser.read("data.txt")
@@ -117,7 +117,7 @@ def light_theme():
     set_theme()
 
 
-class MainAppBody(Tk):
+class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -156,7 +156,7 @@ class MainAppBody(Tk):
         return self.frames[page_class]
 
 
-class FLaunchPage(Frame):  # First page launched
+class FLaunchPage(Frame):  # This page launches when you need to choose language
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg="black")
@@ -181,13 +181,11 @@ class FLaunchPage(Frame):  # First page launched
         lang_btn_container.columnconfigure(0, weight=1)
 
         self.russian = Button(lang_btn_container, text="Русский", bg="black", fg="#00ff00",
-                         activeforeground="#008000",
-                         font=("Arial", 30), bd=0)
+                         activeforeground="#008000", font=("Arial", 30), bd=0)
         self.russian.grid(row=0, column=0, sticky="nsew")
 
         self.english = Button(lang_btn_container, text="English", bg="black", fg="#00ff00",
-                         activeforeground="#008000",
-                         font=("Arial", 30), bd=0)
+                         activeforeground="#008000", font=("Arial", 30), bd=0)
         self.english.grid(row=1, column=0, sticky="nsew")
 
         def entered(_, btn, lang: str):
@@ -238,18 +236,18 @@ class FLaunchPage(Frame):  # First page launched
 
     def new_lang(self, _, lang: str, _from = None):
         change_language(lang)
-        page = self.controller.get_page(MainPage)
-        page.set_lang_mainpage()
-        page = self.controller.get_page(TopicsPage)
-        page.set_lang_topicspage()
-        page = self.controller.get_page(SquaresPage)
-        page.set_lang_squarespage()
         page = self.controller.get_page(PerimetersPage)
         page.set_lang_perimeterspage()
         page = self.controller.get_page(SettingsPage)
         page.set_lang_settingspage()
+        page = self.controller.get_page(SquaresPage)
+        page.set_lang_squarespage()
+        page = self.controller.get_page(TopicsPage)
+        page.set_lang_topicspage()
+        page = self.controller.get_page(MainPage)
+        page.set_lang_mainpage()
 
-        if _from is None:
+        if _from is None:  # We don't need to go to main page after switching language in settings
             self.controller.show_frame(MainPage)
 
 
@@ -349,9 +347,9 @@ class TopicsPage(Frame):
         self.placeholder.config(bg=bg)
         self.topics_container.config(bg=bg)
         self.figure_square.config(disabledforeground=bg, bg=bg)
-        self.figure_squares.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
         self.figure_perimeter.config(disabledforeground=bg, bg=bg)
         self.figure_perimeters.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
+        self.figure_squares.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
         self.home_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
 
@@ -361,18 +359,18 @@ class SquaresPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self._home_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self._home_btn.pack(side='bottom', fill='x', ipady=5)
+        self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
         self.set_lang_squarespage()
 
     def set_lang_squarespage(self):
         if current_language == "eng":
-            self._home_btn.config(text='Home')
+            self.back_btn.config(text='Back')
 
         elif current_language == 'rus':
-            self._home_btn.config(text='Назад')
+            self.back_btn.config(text='Назад')
 
 
 class PerimetersPage(Frame):
@@ -381,18 +379,18 @@ class PerimetersPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.home_btn_ = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
+        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.home_btn_.pack(side='bottom', fill='x', ipady=5)
+        self.return_btn.pack(side='bottom', fill='x', ipady=5)
 
         self.set_lang_perimeterspage()
 
     def set_lang_perimeterspage(self):
         if current_language == "eng":
-            self.home_btn_.config(text='Home')
+            self.return_btn.config(text='Return')
 
         elif current_language == 'rus':
-            self.home_btn_.config(text='Назад')
+            self.return_btn.config(text='Назад')
 
 
 class SettingsPage(Frame):
@@ -412,9 +410,9 @@ class SettingsPage(Frame):
         self.created_by= Label(self, bg=bg, fg="#213c91", text="Created by: TerraBoii", 
                                font=("Tahoma", 15), cursor='hand2')
         self.created_by.pack(side='top')
-        self.created_by.bind("<Button-1>", call_link)
         self.created_by.bind("<Enter>", enter)
         self.created_by.bind("<Leave>", leave)
+        self.created_by.bind("<Button-1>", call_link)
 
         # Separator or placeholder
         self.place_h0 = Label(self, bg=bg, font=('Arial', 25))
@@ -491,16 +489,16 @@ class SettingsPage(Frame):
         # Checking for current theme
         if current_theme == "neon_green":
             self.dark_theme_btn.config(state='normal')
-            self.neon_green_theme_btn.config(state='disabled')
             self.light_theme_btn.config(state='normal')
+            self.neon_green_theme_btn.config(state='disabled')
         elif current_theme == 'dark':
-            self.dark_theme_btn.config(state='disabled')
             self.neon_green_theme_btn.config(state='normal')
+            self.dark_theme_btn.config(state='disabled')
             self.light_theme_btn.config(state='normal')
         elif current_theme == 'light':
             self.dark_theme_btn.config(state='normal')
-            self.neon_green_theme_btn.config(state='normal')
             self.light_theme_btn.config(state='disabled')
+            self.neon_green_theme_btn.config(state='normal')
 
         self.bind("<Configure>", lambda params: self.font_changer(params.width))
 
@@ -512,39 +510,39 @@ class SettingsPage(Frame):
         if width <= 959 and current_language == 'eng':
             self.theme_info.config(font=('Arial', 42))
             self.home_button.config(font=('Arial', 45))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 42))
             self.dark_theme_btn.config(font=('Times New Roman', 42))
             self.light_theme_btn.config(font=('Times New Roman', 42))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 42))
         elif 959 < width <= 1160 and current_language == 'eng':
             self.theme_info.config(font=('Arial', 50))
             self.home_button.config(font=('Arial', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 50))
             self.dark_theme_btn.config(font=('Times New Roman', 50))
             self.light_theme_btn.config(font=('Times New Roman', 50))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 50))
         elif width > 1160 and current_language == 'eng':
             self.theme_info.config(font=('Arial', 55))
             self.home_button.config(font=('Arial', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 55))
             self.dark_theme_btn.config(font=('Times New Roman', 55))
             self.light_theme_btn.config(font=('Times New Roman', 55))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 55))
         elif width <= 959 and current_language == 'rus':
             self.theme_info.config(font=('Arial', 35))
             self.home_button.config(font=('Arial', 45))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 33))
             self.dark_theme_btn.config(font=('Times New Roman', 33))
             self.light_theme_btn.config(font=('Times New Roman', 33))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 33))
         elif 959 < width <= 1160 and current_language == 'rus':
             self.theme_info.config(font=('Arial', 44))
             self.home_button.config(font=('Arial', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 39))
             self.dark_theme_btn.config(font=('Times New Roman', 39))
             self.light_theme_btn.config(font=('Times New Roman', 39))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 39))
         elif width > 1160 and current_language == 'rus':
             self.theme_info.config(font=('Arial', 50))
             self.home_button.config(font=('Arial', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 46))
             self.dark_theme_btn.config(font=('Times New Roman', 46))
             self.light_theme_btn.config(font=('Times New Roman', 46))
+            self.neon_green_theme_btn.config(font=('Times New Roman', 46))
 
 
     def language_changer(self, _lang_: str):
