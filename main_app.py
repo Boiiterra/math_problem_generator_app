@@ -240,6 +240,8 @@ class FLaunchPage(Frame):  # First page launched
         change_language(lang)
         page = self.controller.get_page(MainPage)
         page.set_lang_mainpage()
+        page = self.controller.get_page(TopicsPage)
+        page.set_lang_topicspage()
         if _from is None:
             self.controller.show_frame(MainPage)
 
@@ -297,11 +299,34 @@ class TopicsPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.home_btn.pack(side='bottom', fill='x', ipady=5)
 
+        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
+        self.placeholder.pack(side='bottom')
+
         self.topics_container = Label(self, bg=bg)
         self.topics_container.pack(side="left", expand=True, fill="both", padx=2)
 
+        Grid.rowconfigure(self.topics_container, 0, weight=1)
+        Grid.rowconfigure(self.topics_container, 1, weight=1)
+        Grid.columnconfigure(self.topics_container, 0, weight=1)
+
+        self.figure_squares = Button(self.topics_container, text='Figure squares')
+        self.figure_squares.grid(row=0, column=0, sticky='nsew')
+        
+        self.figure_perimeter = Button(self.topics_container, text='Figure perimeter')
+        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
+
         self._topics_container = Label(self, bg=bg)
         self._topics_container.pack(side='right', expand=True, fill="both", padx=2)
+        
+        self.figure_perimeters = Button(self._topics_container, text='Figure perimeters')
+        self.figure_perimeters.grid(row=0, column=0, sticky='nsew')
+        
+        self.figure_square = Button(self._topics_container, text='Figure square')
+        self.figure_square.grid(row=1, column=0, sticky='nsew')
+        
+        Grid.rowconfigure(self._topics_container, 0, weight=1)
+        Grid.rowconfigure(self._topics_container, 1, weight=1)
+        Grid.columnconfigure(self._topics_container, 0, weight=1)
 
         self.set_lang_topicspage()
 
@@ -314,6 +339,7 @@ class TopicsPage(Frame):
 
     def topics_page_theme_update(self):
         self.config(bg=bg)
+        self.placeholder.config(bg=bg)
         self.topics_container.config(bg=bg)
         self._topics_container.config(bg=bg)
         self.home_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
