@@ -135,7 +135,7 @@ class MainAppBody(Tk):
 
         self.frames = {}
 
-        frame_collection = (StartPage, TopicsPage, MainPage, SettingsPage)
+        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -144,7 +144,7 @@ class MainAppBody(Tk):
 
             current_frame.grid(row=0, column=0, sticky="nsew")
         if lng_state == "ask" or current_language == "unknown":
-            self.show_frame(StartPage)
+            self.show_frame(FLaunchPage)
         elif lng_state == "keep":
             self.show_frame(MainPage)
 
@@ -156,7 +156,7 @@ class MainAppBody(Tk):
         return self.frames[page_class]
 
 
-class StartPage(Frame):
+class FLaunchPage(Frame):  # First page launched
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg="black")
@@ -212,7 +212,7 @@ class StartPage(Frame):
         self.english.bind("<Leave>", lambda _: left(_, btn=self.english))
         self.english.bind("<Button-1>", lambda _: self.new_lang(_, lang="eng"))
 
-        def font_resize_startpage(e):
+        def font_resize_for_flaunchpage(e):
             if e.height <= 620:
                 question.config(font=('Arial', 40))
                 bottom_.config(font=("Arial", 30))
@@ -234,13 +234,14 @@ class StartPage(Frame):
                 self.russian.config(font=('Arial', 45))
                 self.english.config(font=('Arial', 45))
 
-        self.bind("<Configure>", font_resize_startpage)
+        self.bind("<Configure>", font_resize_for_flaunchpage)
 
-    def new_lang(self, _, lang: str):
+    def new_lang(self, _, lang: str, _from = None):
         change_language(lang)
         page = self.controller.get_page(MainPage)
         page.set_lang_mainpage()
-        self.controller.show_frame(MainPage)
+        if _from is None:
+            self.controller.show_frame(MainPage)
 
 
 class MainPage(Frame):
@@ -271,17 +272,17 @@ class MainPage(Frame):
 
     def set_lang_mainpage(self):
         if current_language == "eng":
-            self.text_label.config(text='Math problem generator.')
+            self.text_label.config(text='Math problem\ngenerator')
             self.start_button.config(text="Start")
             self.settings_button.config(text="Settings")
         elif current_language == 'rus':
-            self.text_label.config(text='Генератор задач по математике.')
+            self.text_label.config(text='Генератор задач по\nматематике')
             self.start_button.config(text="Старт")
             self.settings_button.config(text="Настройки")
 
     def main_page_theme_update(self):
         self.config(bg=bg)
-        self.text_label.config(bg=bg)
+        self.text_label.config(bg=bg, fg=fg)
         self.start_button.config(bg=num_bg, fg=fg, activeforeground=num_active_fg, activebackground=num_bg)
         self.settings_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg)
 
@@ -292,8 +293,30 @@ class TopicsPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
+        self.home_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.home_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.topics_container = Label(self, bg=bg)
+        self.topics_container.pack(side="left", expand=True, fill="both", padx=2)
+
+        self._topics_container = Label(self, bg=bg)
+        self._topics_container.pack(side='right', expand=True, fill="both", padx=2)
+
+        self.set_lang_topicspage()
+
+    def set_lang_topicspage(self):
+        if current_language == "eng":
+            self.home_btn.config(text='Home')
+
+        elif current_language == 'rus':
+            self.home_btn.config(text='Назад')
+
     def topics_page_theme_update(self):
         self.config(bg=bg)
+        self.topics_container.config(bg=bg)
+        self._topics_container.config(bg=bg)
+        self.home_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
 
 class SettingsPage(Frame):
@@ -317,7 +340,9 @@ class SettingsPage(Frame):
         self.created_by.bind("<Enter>", enter)
         self.created_by.bind("<Leave>", leave)
 
-        Label(self, bg=bg, font=('Arial', 25)).pack()  # Separator or placeholder
+        # Separator or placeholder
+        self.place_h0 = Label(self, bg=bg, font=('Arial', 25))
+        self.place_h0.pack()
 
         self.language_changers_container = Label(self, bg=bg)
         self.language_changers_container.pack(anchor='n')
@@ -334,13 +359,17 @@ class SettingsPage(Frame):
                                        font=("Times New Roman", 50), disabledforeground=num_bg,
                                        activeforeground=num_active_fg, activebackground=num_bg, bd=0)
         self.english_lang_btn.grid(row=0, column=1)
+        self.english_lang_btn.bind("<Button-1>", lambda _: self.language_changer(_, _lang_="eng"))
 
         self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
                                        font=("Times New Roman", 50), disabledforeground=bg,
                                        activeforeground=active_fg, activebackground=bg, bd=0)
         self.russian_lang_btn.grid(row=0, column=2)
+        self.russian_lang_btn.bind("<Button-1>", lambda _: self.language_changer(_, _lang_="rus"))
 
-        Label(self, bg=bg, font=('Arial', 30)).pack()  # Separator or placeholder
+        # Separator or placeholder
+        self.place_h1 = Label(self, bg=bg, font=('Arial', 30))
+        self.place_h1.pack()
 
         self.themes_changers_container = Label(self, bg=bg)
         self.themes_changers_container.pack(anchor='n')
@@ -373,13 +402,16 @@ class SettingsPage(Frame):
                                       command=self.change_theme_to_light)
         self.light_theme_btn.grid(row=0, column=3, sticky='nsew')
 
-        Label(self, bg=bg, font=('Arial', 20)).pack()  # Separator or placeholder
+        # Separator or placeholder
+        self.place_h2 = Label(self, bg=bg, font=('Arial', 20))
+        self.place_h2.pack()
 
         self.home_button = Button(self, text="Home", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
                                   activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
                                   disabledforeground=num_bg, command=lambda: controller.show_frame(MainPage))
         self.home_button.pack(fill='both', side='bottom', expand=True)
 
+        # Checking for current theme and language
         if current_theme == "neon_green":
             self.dark_theme_btn.config(state='normal')
             self.neon_green_theme_btn.config(state='disabled')
@@ -392,6 +424,12 @@ class SettingsPage(Frame):
             self.dark_theme_btn.config(state='normal')
             self.neon_green_theme_btn.config(state='normal')
             self.light_theme_btn.config(state='disabled')
+        if current_language == "eng":
+            self.english_lang_btn.config(state='disabled')
+            self.russian_lang_btn.config(state='normal')
+        elif current_language == 'rus':
+            self.english_lang_btn.config(state='normal')
+            self.russian_lang_btn.config(state='disabled')
 
         def font_resize_settings(e):
             """Resizes font based on window height and width"""
@@ -417,16 +455,36 @@ class SettingsPage(Frame):
 
         self.bind("<Configure>", font_resize_settings)
 
+    def language_changer(self, _, _lang_: str):
+        if _lang_ == "eng":
+            self.english_lang_btn.config(state='disabled')
+            self.russian_lang_btn.config(state='normal')
+        elif _lang_ == "rus":
+            self.english_lang_btn.config(state='normal')
+            self.russian_lang_btn.config(state='disabled')
+        _page = self.controller.get_page(FLaunchPage)
+        _page.new_lang(_, lang=_lang_, _from='')
+
     def settings_page_theme_update(self):
         self.config(bg=bg)
+        self.place_h0.config(bg=bg)
+        self.place_h1.config(bg=bg)
+        self.place_h2.config(bg=bg)
         self.created_by.config(bg=bg)
         self.theme_info.config(bg=bg, fg=fg)
+        self.language_info.config(bg=bg, fg=fg)
         self.themes_changers_container.config(bg=bg)
-        self.dark_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg, disabledforeground=bg)
+        self.language_changers_container.config(bg=bg)
+        self.dark_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
+                                   disabledforeground=bg)
         self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
                                     disabledforeground=bg)
+        self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg,
+                                     activebackground=bg)
         self.home_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
                                 disabledforeground=num_bg)
+        self.english_lang_btn.config(bg=num_bg, fg=num_fg, disabledforeground=num_bg, activeforeground=num_active_fg,
+                                     activebackground=num_bg)
         self.neon_green_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
                                          disabledforeground=num_bg)
 
