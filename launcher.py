@@ -9,10 +9,11 @@ from requests import get
 
 __version__ = '0.1'
 __author__ = "TerraBoii"
-# Victor Santiago is an original creator, I just modified entire file because I didn't like the design
+# Victor Santiago is an original creator of an application that checks for updates
+# I took its main functionality and modified appearance.
 # Link to original project: https://github.com/vsantiago113/Tkinter-MyTestApp
 __credits__ = ["Victor Santiago", 'TerraBoii']
-_AppName_ = 'Math problems app launcher'
+_AppName_ = 'Math problem generator app'
 
 # url for installer
 url = ""
@@ -47,7 +48,7 @@ class UpdateManager(Toplevel):
 
         def install_update():
             tmp.after(0, tmp.destroy)
-            # ShellExecute(0, 'open', "setup\\mathproblemsapp_setup.exe", None, None, 10)
+            ShellExecute(0, 'open', file_path, None, None, 10)
 
         def start_update_manager():
             destination_folder = "setup"
@@ -95,11 +96,11 @@ try:
             UpdateManager(tmp)
         elif get_update is False:
             tmp.after(0, tmp.destroy)
-            # ShellExecute(0, 'open', 'binaries\\.exe', None, None, 10)
+            ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
     else:
         tmp.after(0, tmp.destroy)
-        # ShellExecute(0, 'open', 'binaries\\.exe', None, None, 10)
+        ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
 except Exception:
     tmp.after(0, tmp.destroy)
-    # ShellExecute(0, 'open', 'binaries\\.exe', None, None, 10)
+    ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
 tmp.mainloop()
