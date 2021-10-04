@@ -122,7 +122,7 @@ class MainAppBody(Tk):  # Main application with page logic
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.geometry("800x600")
-        self.title("math_problem generator")
+        self.title("Math problem generator")
         self.iconbitmap("images//main_icon.ico")
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
@@ -135,7 +135,7 @@ class MainAppBody(Tk):  # Main application with page logic
 
         self.frames = {}
 
-        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, SquaresPage, PerimetersPage)
+        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, SquaresPage, PerimetersPage, SSquarePage, SRectanglePage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -214,8 +214,8 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
             if width.height <= 620:
                 question.config(font=('Arial', 40))
                 bottom_.config(font=("Arial", 30))
-                self.russian.config(font=('Arial, 30'))
-                self.english.config(font=('Arial, 30'))
+                self.russian.config(font=('Arial', 30))
+                self.english.config(font=('Arial', 30))
             elif 620 < width.height <= 700:
                 question.config(font=('Arial', 45))
                 bottom_.config(font=("Arial", 35))
@@ -280,11 +280,11 @@ class MainPage(Frame):
     def set_lang_mainpage(self):
         if current_language == "eng":
             self.text_label.config(text='Math problem\ngenerator')
-            self.start_button.config(text="Start")
+            self.start_button.config(text="Begin")
             self.settings_button.config(text="Settings")
         elif current_language == 'rus':
             self.text_label.config(text='Генератор задач по\nматематике')
-            self.start_button.config(text="Старт")
+            self.start_button.config(text="Начать")
             self.settings_button.config(text="Настройки")
 
     def main_page_theme_update(self):
@@ -304,6 +304,9 @@ class TopicsPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.home_btn.pack(side='bottom', fill='x', ipady=5)
 
+        self.topics_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
+        self.topics_info.pack()
+
         self.placeholder = Label(self, font=('Arial', 5), bg=bg)
         self.placeholder.pack(side='bottom')
 
@@ -315,12 +318,12 @@ class TopicsPage(Frame):
         Grid.columnconfigure(self.topics_container, 0, weight=1)
         Grid.columnconfigure(self.topics_container, 1, weight=1)
 
-        self.figure_squares = Button(self.topics_container, text='Figure squares', bd=0, font=('Arial', 25),
+        self.figure_squares = Button(self.topics_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
                                      command=lambda: controller.show_frame(SquaresPage))
         self.figure_squares.grid(row=0, column=0, sticky='nsew')
         
-        self.figure_perimeters = Button(self.topics_container, text='Figure perimeters', bd=0, font=('Arial', 25),
+        self.figure_perimeters = Button(self.topics_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
                                         command=lambda: controller.show_frame(PerimetersPage))
         self.figure_perimeters.grid(row=0, column=1, sticky='nsew')
@@ -338,14 +341,21 @@ class TopicsPage(Frame):
     def set_lang_topicspage(self):
         if current_language == "eng":
             self.home_btn.config(text='Home')
+            self.figure_squares.config(text='Figure\n squares ')
+            self.figure_perimeters.config(text='Figure\nperimeters')
+            self.topics_info.config(text='Choose topic:')
 
         elif current_language == 'rus':
             self.home_btn.config(text='Назад')
+            self.figure_squares.config(text='Площади \nфигур')
+            self.figure_perimeters.config(text='Периметр\nфигур')
+            self.topics_info.config(text='Выбери тему:')
 
     def topics_page_theme_update(self):
         self.config(bg=bg)
         self.placeholder.config(bg=bg)
         self.topics_container.config(bg=bg)
+        self.topics_info.config(bg=bg, fg=fg)
         self.figure_square.config(disabledforeground=bg, bg=bg)
         self.figure_perimeter.config(disabledforeground=bg, bg=bg)
         self.figure_perimeters.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
@@ -363,6 +373,35 @@ class SquaresPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
+        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
+        self.placeholder.pack(side='bottom')
+
+        self.sq_figures_container = Label(self, bg=bg)
+        self.sq_figures_container.pack(side="left", expand=True, fill="both", padx=2)
+
+        Grid.rowconfigure(self.sq_figures_container, 0, weight=1)
+        Grid.rowconfigure(self.sq_figures_container, 1, weight=1)
+        Grid.columnconfigure(self.sq_figures_container, 0, weight=1)
+        Grid.columnconfigure(self.sq_figures_container, 1, weight=1)
+        
+        self.rectangle = Button(self.sq_figures_container, text="Rectangele's square", bd=0, font=('Arial', 25),
+                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                        command=lambda: controller.show_frame(SRectanglePage))
+        self.rectangle.grid(row=0, column=0, sticky='nsew')
+
+        self.squares = Button(self.sq_figures_container, text="Square's square", bd=0, font=('Arial', 25),
+                                     bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                     command=lambda: controller.show_frame(SSquarePage))
+        self.squares.grid(row=0, column=1, sticky='nsew')
+        
+        self.figure_perimeter = Button(self.sq_figures_container, text='Figure perimeter', bd=0, state='disabled',
+                                       disabledforeground=bg, bg=bg)
+        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
+        
+        self.figure_square = Button(self.sq_figures_container, text='Figure square', bd=0, state='disabled',
+                                    disabledforeground=bg, bg=bg)
+        self.figure_square.grid(row=1, column=1, sticky='nsew')
+
         self.set_lang_squarespage()
 
     def set_lang_squarespage(self):
@@ -373,13 +412,13 @@ class SquaresPage(Frame):
             self.back_btn.config(text='Назад')
 
 
-class PerimetersPage(Frame):
+class SSquarePage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
+        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SquaresPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.pack(side='bottom', fill='x', ipady=5)
 
@@ -391,6 +430,46 @@ class PerimetersPage(Frame):
 
         elif current_language == 'rus':
             self.return_btn.config(text='Назад')
+
+
+class SRectanglePage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self.go_back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SquaresPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.go_back_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.set_lang_srectanglespage()
+
+    def set_lang_srectanglespage(self):
+        if current_language == "eng":
+            self.go_back_btn.config(text='Back')
+
+        elif current_language == 'rus':
+            self.go_back_btn.config(text='Назад')
+
+
+class PerimetersPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self._return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self._return_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.set_lang_perimeterspage()
+
+    def set_lang_perimeterspage(self):
+        if current_language == "eng":
+            self._return_btn.config(text='Return')
+
+        elif current_language == 'rus':
+            self._return_btn.config(text='Назад')
 
 
 class SettingsPage(Frame):
@@ -546,7 +625,7 @@ class SettingsPage(Frame):
 
 
     def language_changer(self, _lang_: str):
-        '''Changes language from setting page and fixes its font'''
+        """Changes language from setting page and fixes its font"""
         _page = self.controller.get_page(FLaunchPage)  # Getting access to FLaunchPage in oreder to use new_lang method
         _page.new_lang('', lang=_lang_, _from='')
         self.font_changer(self.winfo_width())  # Changing font size so everything will fit in the window
