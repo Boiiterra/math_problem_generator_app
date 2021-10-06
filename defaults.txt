@@ -1,0 +1,18 @@
+This is file that contains default settings for application
+[language]
+state = ask
+language = unknown
+
+[theme]
+current_theme = neon_green
+
+[colors]
+background = #000000
+foreground = #00ff00
+active_foreground = #008000
+home_btn_fore = #0000FF
+home_bts_active_fore = #00008B
+main_btn_back = #000000
+num_btn_back = #0a0a0a
+num_btn_fore = #00ff00
+num_btn_active_fore = #008000
