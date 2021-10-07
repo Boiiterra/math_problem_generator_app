@@ -1,6 +1,12 @@
 [language]
-state = ask
-language = unknown
+state = keep
+language = eng
+
+[parameters]
+width = 1268
+height = 627
+x = 0
+y = 0
 
 [theme]
 current_theme = neon_green
