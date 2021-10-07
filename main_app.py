@@ -8,25 +8,29 @@ author = "TerraBoii"
 # File reading section
 parser = ConfigParser()
 parser.read("data.txt")
+# Parameters:
 x_pos = parser.get('parameters', 'x')
 y_pos = parser.get('parameters', 'y')
-bg = parser.get("colors", "background")
-fg = parser.get("colors", "foreground")
 _width = parser.get('parameters', 'width')
-lng_state = parser.get("language", 'state')
+_state = parser.get('parameters', 'zoomed')
 _height = parser.get('parameters', 'height')
-num_fg = parser.get("colors", "num_btn_fore")
-num_bg = parser.get("colors", "num_btn_back")
+# Language
+lng_state = parser.get("language", 'state')
+current_language = parser.get("language", "language")
+# Colors and theme
+home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
+num_active_fg = parser.get("colors", "num_btn_active_fore")
+active_fg = parser.get("colors", "active_foreground")
+current_theme = parser.get('theme', "current_theme")
 home_btn_fg = parser.get("colors", "home_btn_fore")
 main_btn_bg = parser.get("colors", "main_btn_back")
-current_theme = parser.get('theme', "current_theme")
-active_fg = parser.get("colors", "active_foreground")
-current_language = parser.get("language", "language")
-num_active_fg = parser.get("colors", "num_btn_active_fore")
-home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
+num_bg = parser.get("colors", "num_btn_back")
+num_fg = parser.get("colors", "num_btn_fore")
+fg = parser.get("colors", "foreground")
+bg = parser.get("colors", "background")
 
-# This function updates colors after theme changed
-def set_theme():
+
+def set_theme():  # This function updates colors after theme changed
     global current_theme, bg, fg, active_fg, home_btn_active_fg, home_btn_fg, main_btn_bg, num_bg, num_fg, num_active_fg
     home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
     num_active_fg = parser.get("colors", "num_btn_active_fore")
@@ -39,8 +43,8 @@ def set_theme():
     fg = parser.get("colors", "foreground")
     bg = parser.get("colors", "background")
 
-# This function changes language for whole application
-def change_language(language: str):
+
+def change_language(language: str):  # This function changes language for whole application
     global parser, current_language, lng_state
 
     if language == "rus":
@@ -60,8 +64,8 @@ def change_language(language: str):
         lng_state = parser.get('language', 'state')
         current_language = parser.get('language', 'language')
 
-# This function changes colors and theme to neon green and saves changes to file
-def neon_green_theme():
+
+def neon_green_theme():  # This function changes colors and theme to neon green and saves changes to file
     global parser
     parser.read("data.txt")
     parser.set("colors", "background", "#000000")
@@ -80,8 +84,8 @@ def neon_green_theme():
     parser.read("data.txt")
     set_theme()
 
-# This function changes colors and theme to dark and saves changes to file
-def dark_theme():
+
+def dark_theme():  # This function changes colors and theme to dark and saves changes to file
     global parser
     parser.read("data.txt")
     parser.set("theme", "current_theme", "dark")
@@ -100,8 +104,8 @@ def dark_theme():
     parser.read("data.txt")
     set_theme()
 
-# This function changes colors and theme to light and saves changes to file
-def light_theme():
+
+def light_theme():  # This function changes colors and theme to light and saves changes to file
     global parser
     parser.read("data.txt")
     parser.set('theme', "current_theme", "light")
@@ -121,12 +125,13 @@ def light_theme():
     set_theme()
 
 
-def save_window_parameters(_width_, _height_, _x_, _y_):
+def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     # Saves given params to data.txt file
     global parser
     parser.read("data.txt")
-    parser.set('parameters', 'width', _width_)
     parser.set('parameters', 'height', _height_)
+    parser.set('parameters', 'zoomed', _state_)
+    parser.set('parameters', 'width', _width_)
     parser.set('parameters', 'x', _x_)
     parser.set('parameters', 'y', _y_)
     with open("data.txt", "w") as configfile:
@@ -139,15 +144,22 @@ class MainAppBody(Tk):  # Main application with page logic
         Tk.__init__(self, *args, **kwargs)
         self.title("Math problem generator")
         self.iconbitmap("images//main_icon.ico")
+        # Setting max and min sizes for the app
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
 
         def delete_window():
-            save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                   str(self.winfo_rootx()), str(self.winfo_rooty()))
+            if self.wm_state() == "zoomed":
+                save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
+                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'True')
+            else:
+                save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
+                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'False')
             self.destroy()
-        # - 8 and - 31 is important
-        self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")
+        # creating window:
+        self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
+        if bool(_state):
+            self.state('zoomed')
         # Rewriting default delete method in order to save window parameters
         self.protocol('WM_DELETE_WINDOW', delete_window)
 
@@ -462,7 +474,7 @@ class SSquarePage(Frame):
         self.controller = controller
 
         self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SquaresPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.pack(side='bottom', fill='x', ipady=5)
 
         self.set_lang_perimeterspage()
@@ -480,18 +492,18 @@ class SRectanglePage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.go_back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SquaresPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.go_back_btn.pack(side='bottom', fill='x', ipady=5)
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SquaresPage), bd=0,
+                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
         self.set_lang_srectanglespage()
 
     def set_lang_srectanglespage(self):
         if current_language == "eng":
-            self.go_back_btn.config(text='Back')
+            self.back_btn.config(text='Back')
 
         elif current_language == 'rus':
-            self.go_back_btn.config(text='Назад')
+            self.back_btn.config(text='Назад')
 
 
 class PerimetersPage(Frame):
@@ -588,18 +600,18 @@ class PRectanglePage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.go_back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.go_back_btn.pack(side='bottom', fill='x', ipady=5)
+        self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
         self.set_lang_srectanglespage()
 
     def set_lang_srectanglespage(self):
         if current_language == "eng":
-            self.go_back_btn.config(text='Back')
+            self.back_btn.config(text='Back')
 
         elif current_language == 'rus':
-            self.go_back_btn.config(text='Назад')
+            self.back_btn.config(text='Назад')
 
 
 class SettingsPage(Frame):
