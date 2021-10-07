@@ -151,14 +151,14 @@ class MainAppBody(Tk):  # Main application with page logic
         def delete_window():
             if self.wm_state() == "zoomed":
                 save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'True')
+                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'yes')
             else:
                 save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'False')
+                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'no')
             self.destroy()
         # creating window:
         self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
-        if bool(_state):
+        if _state == 'yes':
             self.state('zoomed')
         # Rewriting default delete method in order to save window parameters
         self.protocol('WM_DELETE_WINDOW', delete_window)
