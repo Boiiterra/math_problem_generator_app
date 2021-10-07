@@ -45,7 +45,7 @@ def __create_seed(app_version: str, app_width: int, app_height: int, screen_widt
 def perimeter_task(figure: str, app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
     new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
-    if figure == 'square_task':
+    if figure == 'square':
         return randint(2, 100)
     elif figure == 'rectangle':
         a = randint(10, 120)
@@ -56,7 +56,7 @@ def perimeter_task(figure: str, app_version: str, app_width: int, app_height: in
 def square_task(figure: str, app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
     new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
-    if figure == 'square_task':
+    if figure == 'square':
         return randint(2, 100)
     elif figure == 'rectangle':
         a = randint(10, 120)
