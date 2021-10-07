@@ -36,10 +36,10 @@ def create_seed(app_version: str, app_width: int, app_height: int, screen_width:
     rule_3 = int((''.join(app_version.split('.'))) + (''.join(data.split('.')))) * \
              int((''.join(app_version.split('.'))) + (''.join(data.split('.'))))
     # Rule 4: manipulating with screen size data and window size
-    dif_x = screen_width - app_width + 1
-    dif_y = screen_height - app_height + 1
-    rule_4 = (((((screen_width // dif_x) * app_width) + ((screen_height // dif_y) * app_height)) + \
-            (screen_width + screen_height + dif_x + dif_y + app_width + app_height)))
+    dif_x = screen_width - app_width + 1 # (+ 1) in case of getting 0
+    dif_y = screen_height - app_height + 1 # (+ 1) in case of getting 0
+    rule_4 = ((((screen_width // dif_x) * app_width) + ((screen_height // dif_y) * app_height)) +
+               (screen_width + screen_height + dif_x + dif_y + app_width + app_height))
     new_seed = ((rule_1 * rule_3) + rule_2) * rule_4
     return new_seed
 
@@ -64,8 +64,3 @@ def square_task(figure: str, app_version: str, app_width: int, app_height: int, 
         a = randint(10, 120)
         b = randint(5, 75) + (a//2) + 1
         return a, b
-
-print(create_seed("0.1", 800, 600, 1920, 1080))
-print(create_seed("0.1", 800, 600, 1920, 1080))
-print(create_seed("0.1", 800, 600, 1920, 1080))
-print('look at me')
