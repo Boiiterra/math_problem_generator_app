@@ -3,10 +3,11 @@ state = keep
 language = eng
 
 [parameters]
-width = 800
-height = 600
-x = 0
-y = 31
+zoomed = False
+width = 1536
+height = 841
+x = -76
+y = 70
 
 [theme]
 current_theme = neon_green
