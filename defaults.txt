@@ -3,6 +3,12 @@ This is file that contains default settings for application
 state = ask
 language = unknown
 
+[parameters]
+width = 800
+height = 600
+x = 0
+y = 31
+
 [theme]
 current_theme = neon_green
 
