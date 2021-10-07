@@ -16,7 +16,7 @@ def getCursorPosition():
     return { "x": pt.x, "y": pt.y}
 
 
-def create_seed(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int) -> float:
+def __create_seed(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int) -> float:
     # Getting application version from internet page, can be the same as installed one
     try:
         response = get( 'https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
@@ -43,7 +43,7 @@ def create_seed(app_version: str, app_width: int, app_height: int, screen_width:
 
 
 def perimeter_task(figure: str, app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
-    new_seed = create_seed(app_version, app_width, app_height, screen_width, screen_height)
+    new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
     if figure == 'square_task':
         return randint(2, 100)
@@ -54,7 +54,7 @@ def perimeter_task(figure: str, app_version: str, app_width: int, app_height: in
 
 
 def square_task(figure: str, app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
-    new_seed = create_seed(app_version, app_width, app_height, screen_width, screen_height)
+    new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
     if figure == 'square_task':
         return randint(2, 100)
