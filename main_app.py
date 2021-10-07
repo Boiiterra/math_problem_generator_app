@@ -2,14 +2,19 @@ from tkinter import *
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 
+__version__ = '0.1'
 author = "TerraBoii"
 
 # File reading section
 parser = ConfigParser()
 parser.read("data.txt")
+x_pos = parser.get('parameters', 'x')
+y_pos = parser.get('parameters', 'y')
 bg = parser.get("colors", "background")
 fg = parser.get("colors", "foreground")
+_width = parser.get('parameters', 'width')
 lng_state = parser.get("language", 'state')
+_height = parser.get('parameters', 'height')
 num_fg = parser.get("colors", "num_btn_fore")
 num_bg = parser.get("colors", "num_btn_back")
 home_btn_fg = parser.get("colors", "home_btn_fore")
@@ -116,15 +121,35 @@ def light_theme():
     set_theme()
 
 
+def save_window_parameters(_width_, _height_, _x_, _y_):
+    # Saves given params to data.txt file
+    global parser
+    parser.read("data.txt")
+    parser.set('parameters', 'width', _width_)
+    parser.set('parameters', 'height', _height_)
+    parser.set('parameters', 'x', _x_)
+    parser.set('parameters', 'y', _y_)
+    with open("data.txt", "w") as configfile:
+        parser.write(configfile)
+
+
 class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.geometry("800x600")
         self.title("Math problem generator")
         self.iconbitmap("images//main_icon.ico")
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
+
+        def delete_window():
+            save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
+                                   str(self.winfo_rootx()), str(self.winfo_rooty()))
+            self.destroy()
+        # - 8 and - 31 is important
+        self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")
+        # Rewriting default delete method in order to save window parameters
+        self.protocol('WM_DELETE_WINDOW', delete_window)
 
         container = Frame(self, bg="black")
         container.pack(side="top", fill="both", expand=True)
@@ -134,7 +159,8 @@ class MainAppBody(Tk):  # Main application with page logic
 
         self.frames = {}
 
-        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, SquaresPage, PerimetersPage, SSquarePage, SRectanglePage)
+        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, SquaresPage, PerimetersPage, SSquarePage, 
+                            SRectanglePage, PSquarePage, PRectanglePage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -367,9 +393,12 @@ class SquaresPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
+        self._back_btn_ = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
+        self._back_btn_.pack(side='bottom', fill='x', ipady=5)
+        
+        self.squares_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
+        self.squares_info.pack()
 
         self.placeholder = Label(self, font=('Arial', 5), bg=bg)
         self.placeholder.pack(side='bottom')
@@ -382,15 +411,15 @@ class SquaresPage(Frame):
         Grid.columnconfigure(self.sq_figures_container, 0, weight=1)
         Grid.columnconfigure(self.sq_figures_container, 1, weight=1)
         
-        self.rectangle = Button(self.sq_figures_container, text="Rectangele's\nsquare", bd=0, font=('Arial', 25),
+        self.rectangles_s = Button(self.sq_figures_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
                                         command=lambda: controller.show_frame(SRectanglePage))
-        self.rectangle.grid(row=0, column=0, sticky='nsew')
+        self.rectangles_s.grid(row=0, column=0, sticky='nsew')
 
-        self.squares = Button(self.sq_figures_container, text="Square's\nsquare", bd=0, font=('Arial', 25),
+        self.squares_s = Button(self.sq_figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
                                      command=lambda: controller.show_frame(SSquarePage))
-        self.squares.grid(row=0, column=1, sticky='nsew')
+        self.squares_s.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.sq_figures_container, text='Figure perimeter', bd=0, state='disabled',
                                        disabledforeground=bg, bg=bg)
@@ -404,10 +433,26 @@ class SquaresPage(Frame):
 
     def set_lang_squarespage(self):
         if current_language == "eng":
-            self.back_btn.config(text='Back')
-
+            self._back_btn_.config(text='Back')
+            self.squares_s.config(text="Square's\nsquare")
+            self.squares_info.config(text='Choose the figure:')
+            self.rectangles_s.config(text="Rectangele's\nsquare")
         elif current_language == 'rus':
-            self.back_btn.config(text='Назад')
+            self.rectangles_s.config(text='Площадь\nпрямоугольника')
+            self.squares_info.config(text='Выберите фигуру:')
+            self.squares_s.config(text='Площадь\nквадрата')
+            self._back_btn_.config(text='Назад')
+
+    def squares_page_theme_update(self):
+        self.config(bg=bg)
+        self.placeholder.config(bg=bg)
+        self.squares_info.config(bg=bg, fg=fg)
+        self.sq_figures_container.config(bg=bg)
+        self.figure_square.config(disabledforeground=bg, bg=bg)
+        self.figure_perimeter.config(disabledforeground=bg, bg=bg)
+        self.rectangles_s.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
+        self.squares_s.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
+        self._back_btn_.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
 
 class SSquarePage(Frame):
@@ -425,7 +470,6 @@ class SSquarePage(Frame):
     def set_lang_perimeterspage(self):
         if current_language == "eng":
             self.return_btn.config(text='Return')
-
         elif current_language == 'rus':
             self.return_btn.config(text='Назад')
 
@@ -459,33 +503,36 @@ class PerimetersPage(Frame):
         self._return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self._return_btn.pack(side='bottom', fill='x', ipady=5)
+        
+        self.perimeters_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
+        self.perimeters_info.pack()
 
         self.placeholder = Label(self, font=('Arial', 5), bg=bg)
         self.placeholder.pack(side='bottom')
 
-        self.sq_figures_container = Label(self, bg=bg)
-        self.sq_figures_container.pack(side="left", expand=True, fill="both", padx=2)
+        self.p_figures_container = Label(self, bg=bg)
+        self.p_figures_container.pack(side="left", expand=True, fill="both", padx=2)
 
-        Grid.rowconfigure(self.sq_figures_container, 0, weight=1)
-        Grid.rowconfigure(self.sq_figures_container, 1, weight=1)
-        Grid.columnconfigure(self.sq_figures_container, 0, weight=1)
-        Grid.columnconfigure(self.sq_figures_container, 1, weight=1)
-        
-        self.rectangle = Button(self.sq_figures_container, text="Rectangele's\nperimeter", bd=0, font=('Arial', 25),
-                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(SRectanglePage))
-        self.rectangle.grid(row=0, column=0, sticky='nsew')
+        Grid.rowconfigure(self.p_figures_container, 0, weight=1)
+        Grid.rowconfigure(self.p_figures_container, 1, weight=1)
+        Grid.columnconfigure(self.p_figures_container, 0, weight=1)
+        Grid.columnconfigure(self.p_figures_container, 1, weight=1)
 
-        self.squares = Button(self.sq_figures_container, text="Square's\nperimeter", bd=0, font=('Arial', 25),
+        self.squares_p = Button(self.p_figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SSquarePage))
-        self.squares.grid(row=0, column=1, sticky='nsew')
+                                     command=lambda: controller.show_frame(PSquarePage))
+        self.squares_p.grid(row=0, column=0, sticky='nsew')
         
-        self.figure_perimeter = Button(self.sq_figures_container, text='Figure perimeter', bd=0, state='disabled',
+        self.rectangles_p = Button(self.p_figures_container, bd=0, font=('Arial', 25),
+                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                        command=lambda: controller.show_frame(PRectanglePage))
+        self.rectangles_p.grid(row=0, column=1, sticky='nsew')
+        
+        self.figure_perimeter = Button(self.p_figures_container, text='Figure perimeter', bd=0, state='disabled',
                                        disabledforeground=bg, bg=bg)
         self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
         
-        self.figure_square = Button(self.sq_figures_container, text='Figure square', bd=0, state='disabled',
+        self.figure_square = Button(self.p_figures_container, text='Figure square', bd=0, state='disabled',
                                     disabledforeground=bg, bg=bg)
         self.figure_square.grid(row=1, column=1, sticky='nsew')
 
@@ -494,9 +541,65 @@ class PerimetersPage(Frame):
     def set_lang_perimeterspage(self):
         if current_language == "eng":
             self._return_btn.config(text='Return')
+            self.squares_p.config(text="Square's\nperimeter")
+            self.perimeters_info.config(text='Choose the figure:')
+            self.rectangles_p.config(text="Rectangele's\nperimeter")
+        elif current_language == 'rus':
+            self.rectangles_p.config(text="Периметр\nпрямоугольника")
+            self.perimeters_info.config(text='Выберите фигуру:')
+            self.squares_p.config(text="Периметр\nквадрата")
+            self._return_btn.config(text='Назад')
+
+    def perimeters_page_theme_update(self):
+        self.config(bg=bg)
+        self.placeholder.config(bg=bg)
+        self.p_figures_container.config(bg=bg)
+        self.perimeters_info.config(bg=bg, fg=fg)
+        self.figure_square.config(disabledforeground=bg, bg=bg)
+        self.figure_perimeter.config(disabledforeground=bg, bg=bg)
+        self.rectangles_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
+        self.squares_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
+        self._return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+
+
+class PSquarePage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.return_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.set_lang_perimeterspage()
+
+    def set_lang_perimeterspage(self):
+        if current_language == "eng":
+            self.return_btn.config(text='Return')
 
         elif current_language == 'rus':
-            self._return_btn.config(text='Назад')
+            self.return_btn.config(text='Назад')
+
+
+class PRectanglePage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self.go_back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.go_back_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.set_lang_srectanglespage()
+
+    def set_lang_srectanglespage(self):
+        if current_language == "eng":
+            self.go_back_btn.config(text='Back')
+
+        elif current_language == 'rus':
+            self.go_back_btn.config(text='Назад')
 
 
 class SettingsPage(Frame):
@@ -704,12 +807,16 @@ class SettingsPage(Frame):
                                          disabledforeground=num_bg)
 
     def pages_update(self):
-        page = self.controller.get_page(MainPage)
-        page.main_page_theme_update()
+        page = self.controller.get_page(PerimetersPage)
+        page.perimeters_page_theme_update()
         page = self.controller.get_page(SettingsPage)
         page.settings_page_theme_update()
+        page = self.controller.get_page(SquaresPage)
+        page.squares_page_theme_update()
         page = self.controller.get_page(TopicsPage)
         page.topics_page_theme_update()
+        page = self.controller.get_page(MainPage)
+        page.main_page_theme_update()
 
 
     def change_theme_to_dark(self):
@@ -735,4 +842,4 @@ class SettingsPage(Frame):
 
 
 if __name__ == "__main__":
-    MainAppBody().mainloop()
+    MainAppBody().mainloop()  # Launch application
