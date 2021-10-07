@@ -17,13 +17,11 @@ def getCursorPosition():
 
 
 def create_seed(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int) -> float:
-    data = None
     # Getting application version from internet page, can be the same as installed one
     try:
         response = get( 'https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
         data = response.text
-    except RequestException: ...  # Something bad happened
-    if data is None:
+    except RequestException: 
         data = app_version
     cursor_position = getCursorPosition()
     x, y = cursor_position['x'], cursor_position['y']
