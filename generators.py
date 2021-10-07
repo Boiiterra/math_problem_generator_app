@@ -1,5 +1,5 @@
 """This file contains all generators used in the application"""
-from time import time
+from time import time, sleep
 from random import seed, randint
 from ctypes import windll, Structure, c_long, byref
 
@@ -14,10 +14,11 @@ def getCursorPosition():
     return { "x": pt.x, "y": pt.y}
 
 
-def get_seed(_time: float) -> float:
+def get_seed() -> float:
     cursor_position = getCursorPosition()
     x, y = cursor_position['x'], cursor_position['y']
     rule_1 = ((((int(str(x + 1) + str(y + 1)) * 2) // ((x + 1 * y + 1) + 1)) * (x + 1 + y + 1)) - (x + y)) * (x + 1 + y + 1)
+    sleep(0.001) # stoping program for 1 millisecond to get different time number
     return rule_1 + time()
 
 
@@ -41,23 +42,3 @@ def square_task(figure: str):
         a = randint(10, 120)
         b = randint(5, 75) + (a//2) + 1
         return a, b
-
-print(get_seed(1))
-print(get_seed(1))
-print(get_seed(1))
-print(get_seed(1))
-print('---')
-print(get_seed(1))
-print(get_seed(1))
-print(get_seed(1))
-print(get_seed(1))
-
-# print(perimeter_task('square_task'))
-# print(perimeter_task('square_task'))
-# print(square_task('square_task'))
-# print(square_task('square_task'))
-# print('another')
-# print(perimeter_task('rectangle'))
-# print(perimeter_task('rectangle'))
-# print(square_task('rectangle'))
-# print(square_task('rectangle'))
