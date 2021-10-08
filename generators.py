@@ -29,7 +29,7 @@ def __create_seed(app_version: str, app_width: int, app_height: int, screen_widt
     rule_1 = ((((int(str(x + 1) + str(y + 1)) * 2) // ((x + 1 * y + 1) + 1)) * (x + 1 + y + 1)) - (x + y)) * (x + 1 + y + 1)
     sleep(0.001)  # stoping program for 1 millisecond to get different time number
     # Rule 2: getting and manipulating with time
-    rule_2 = int(''.join(str(time()).split('.')))
+    rule_2 = int(''.join(str(time()).split('.'))) * ((int(str(time()).split('.')[0])) // (int(str(time()).split('.')[1])))
     # Rule 3: manipulating with app versions
     rule_3 = int((''.join(app_version.split('.'))) + (''.join(data.split('.')))) * \
              int((''.join(app_version.split('.'))) + (''.join(data.split('.'))))
