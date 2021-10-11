@@ -1,11 +1,13 @@
+from requests.exceptions import RequestException
 from tkinter import Button, Tk, Toplevel, Label
 from tkinter.messagebox import askyesno
 from tkinter.ttk import Progressbar
 from win32api import ShellExecute
 from PIL import Image, ImageTk
-from os import path, makedirs
 from threading import Thread
 from requests import get
+from pathlib import Path
+from os import os_path
 
 __version__ = '0.1'
 __author__ = "TerraBoii"
@@ -18,7 +20,7 @@ _AppName_ = 'Math problem generator app'
 # url for installer
 url = ""
 file_name = url.split('/')[-1].replace(" ", "_")
-file_path = path.join("setup", file_name)
+file_path = os_path.join("setup", file_name)
 
 
 class UpdateManager(Toplevel):
@@ -31,11 +33,9 @@ class UpdateManager(Toplevel):
         self.grab_set()
         w = 350
         h = 200
-        sw = self.winfo_screenwidth()
-        sh = self.winfo_screenheight()
-        x = (sw - w) / 2
-        y = (sh - h) / 2
-        self.geometry('{0}x{1}+{2}+{3}'.format(w, h, int(x), int(y)))
+        m_x = int((self.winfo_screenwidth() - 350) / 2)
+        m_y = int((self.winfo_screenheight() - 200) / 2)
+        self.geometry(f'{350}x{200}+{int((self.winfo_screenwidth() - 350) / 2)}+{int((self.winfo_screenheight() - 200) / 2)}')
         self.resizable(width=False, height=False)
         self.title('Update Manager')
         self.wm_iconbitmap('images/update_icon.ico')
@@ -52,8 +52,8 @@ class UpdateManager(Toplevel):
 
         def start_update_manager():
             destination_folder = "setup"
-            if not path.exists(destination_folder):
-                makedirs(destination_folder)  # create folder if it does not exist
+            if not os_path.exists(destination_folder):
+                destination_folder = str(Path.home() / "Downloads")  # create folder if it does not exist
             with get(url=url, stream=True) as r:
                 self.progressbar['maximum'] = int(r.headers.get('Content-Length'))
                 r.raise_for_status()
@@ -79,14 +79,18 @@ class UpdateManager(Toplevel):
         self.start_manager.start()
 
 
-tmp = Tk()
+tmp = Tk()  # Tmp -> short for temporary
 tmp.iconbitmap("images/update_icon.ico")
+# positioning window in middle of the screen with width = 650 and height = 400
 tmp.geometry(f"{650}x{400}+{int((tmp.winfo_screenwidth() - 650) / 2)}+{int((tmp.winfo_screenheight() - 400) / 2)}")
-tmp.withdraw()
+tmp.withdraw()  # Making tmp window "invisible"
+
+def run(): # Execute main .exe and destroy tmp window
+    tmp.after(0, tmp.destroy)
+    ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
 
 try:
-    response = get(
-        'https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
+    response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
     data = response.text
 
     if float(data) > float(__version__):
@@ -95,12 +99,10 @@ try:
         if get_update is True:
             UpdateManager(tmp)
         elif get_update is False:
-            tmp.after(0, tmp.destroy)
-            ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
+            run()
     else:
-        tmp.after(0, tmp.destroy)
-        ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
-except Exception:
-    tmp.after(0, tmp.destroy)
-    ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
+        run()
+except RequestException:  # Something went wrong during requesting
+    run()
+
 tmp.mainloop()
