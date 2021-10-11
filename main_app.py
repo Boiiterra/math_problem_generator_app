@@ -151,9 +151,9 @@ class MainAppBody(Tk):  # Main application with page logic
 
         # creating window:
         if current_language == "unknown" or lng_state == "ask":
-            middle_x = (self.winfo_screenwidth() / 2) - (int(_width) / 2)
-            middle_y = (self.winfo_screenheight() / 2) - (int(_height) / 2)
-            self.geometry(f"{800}x{600}+{int(middle_x)}+{(int(middle_y))}")  # Middle pos on the screen
+            middle_x = int((self.winfo_screenwidth() - 800) / 2)
+            middle_y = int((self.winfo_screenheight() - 600) / 2)
+            self.geometry(f"{800}x{600}+{middle_x}+{middle_y}")  # Middle pos on the screen
         else:
             self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
 
