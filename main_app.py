@@ -732,17 +732,17 @@ class SettingsPage(Frame):
 
         # Checking for current theme
         if current_theme == "neon_green":
-            self.dark_theme_btn.config(state='normal')
-            self.light_theme_btn.config(state='normal')
-            self.neon_green_theme_btn.config(state='disabled')
+            self.dark_theme_btn.config(state='normal', cursor="hand2")
+            self.light_theme_btn.config(state='normal', cursor="hand2")
+            self.neon_green_theme_btn.config(state='disabled', cursor="arrow")
         elif current_theme == 'dark':
-            self.neon_green_theme_btn.config(state='normal')
-            self.dark_theme_btn.config(state='disabled')
-            self.light_theme_btn.config(state='normal')
+            self.neon_green_theme_btn.config(state='normal', cursor="hand2")
+            self.dark_theme_btn.config(state='disabled', cursor="arrow")
+            self.light_theme_btn.config(state='normal', cursor="hand2")
         elif current_theme == 'light':
-            self.dark_theme_btn.config(state='normal')
-            self.light_theme_btn.config(state='disabled')
-            self.neon_green_theme_btn.config(state='normal')
+            self.dark_theme_btn.config(state='normal', cursor="hand2")
+            self.light_theme_btn.config(state='disabled', cursor="arrow")
+            self.neon_green_theme_btn.config(state='normal', cursor="hand2")
 
         self.bind("<Configure>", lambda params: self.font_changer(params.width))
 
@@ -798,9 +798,9 @@ class SettingsPage(Frame):
 
     def set_lang_settingspage(self):
         if current_language == "eng":
+            self.english_lang_btn.config(state='disabled', cursor="arrow")
+            self.russian_lang_btn.config(state='normal', cursor="hand2")
             self.neon_green_theme_btn.config(text='Neon green')
-            self.english_lang_btn.config(state='disabled')
-            self.russian_lang_btn.config(state='normal')
             self.language_info.config(text='Language:')
             self.light_theme_btn.config(text='Light')
             self.dark_theme_btn.config(text='Dark')
@@ -812,9 +812,9 @@ class SettingsPage(Frame):
             self.language_info.config(text='Язык:')
             self.dark_theme_btn.config(text='Тёмная')
             self.light_theme_btn.config(text='Светлая')
-            self.english_lang_btn.config(state='normal')
-            self.russian_lang_btn.config(state='disabled')
             self.neon_green_theme_btn.config(text='Тёмно-зелёная')
+            self.english_lang_btn.config(state='normal', cursor="hand2")
+            self.russian_lang_btn.config(state='disabled', cursor="arrow")
         self.font_changer(self.winfo_width())
 
 
@@ -841,6 +841,7 @@ class SettingsPage(Frame):
         self.neon_green_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
                                          disabledforeground=num_bg)
 
+
     def pages_update(self):
         page = self.controller.get_page(PerimetersPage)
         page.perimeters_page_theme_update()
@@ -855,23 +856,25 @@ class SettingsPage(Frame):
 
 
     def change_theme_to_dark(self):
-        self.dark_theme_btn.config(state='disabled')
-        self.neon_green_theme_btn.config(state='normal')
-        self.light_theme_btn.config(state='normal')
+        self.dark_theme_btn.config(state='disabled', cursor="arrow")
+        self.neon_green_theme_btn.config(state='normal', cursor="hand2")
+        self.light_theme_btn.config(state='normal', cursor="hand2")
         dark_theme()
         self.pages_update()
 
+
     def change_theme_to_neon(self):
-        self.light_theme_btn.config(state='normal')
-        self.neon_green_theme_btn.config(state='disabled')
-        self.dark_theme_btn.config(state='normal')
+        self.light_theme_btn.config(state='normal', cursor="hand2")
+        self.neon_green_theme_btn.config(state='disabled', cursor="arrow")
+        self.dark_theme_btn.config(state='normal', cursor="hand2")
         neon_green_theme()
         self.pages_update()
 
+
     def change_theme_to_light(self):
-        self.light_theme_btn.config(state='disabled')
-        self.neon_green_theme_btn.config(state='normal')
-        self.dark_theme_btn.config(state='normal')
+        self.light_theme_btn.config(state='disabled', cursor="arrow")
+        self.neon_green_theme_btn.config(state='normal', cursor="hand2")
+        self.dark_theme_btn.config(state='normal', cursor="hand2")
         light_theme()
         self.pages_update()
 
