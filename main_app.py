@@ -1,4 +1,5 @@
 from tkinter import *
+from generators import perimeter_task, square_task
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 
@@ -148,20 +149,19 @@ class MainAppBody(Tk):  # Main application with page logic
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
 
-        def delete_window():
-            if self.wm_state() == "zoomed":
-                save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'yes')
-            else:
-                save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                       str(self.winfo_rootx()), str(self.winfo_rooty()), 'no')
-            self.destroy()
         # creating window:
-        self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
+        if current_language == "unknown" or lng_state == "ask":
+            middle_x = (self.winfo_screenwidth() / 2) - (int(_width) / 2)
+            middle_y = (self.winfo_screenheight() / 2) - (int(_height) / 2)
+            self.geometry(f"{800}x{600}+{int(middle_x)}+{(int(middle_y))}")  # Middle pos on the screen
+        else:
+            self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
+
+        # Rewriting default delete method in order to save window parameters
+        self.protocol('WM_DELETE_WINDOW', self.delete_window)
         if _state == 'yes':
             self.state('zoomed')
-        # Rewriting default delete method in order to save window parameters
-        self.protocol('WM_DELETE_WINDOW', delete_window)
+
 
         container = Frame(self, bg="black")
         container.pack(side="top", fill="both", expand=True)
@@ -184,6 +184,15 @@ class MainAppBody(Tk):  # Main application with page logic
             self.show_frame(FLaunchPage)
         elif lng_state == "keep":
             self.show_frame(MainPage)
+
+    def delete_window(self):  # saves parameters and then deletes window
+        if self.wm_state() == "zoomed" and lng_state != "ask" and current_language != "unknown":
+            save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
+                                   str(self.winfo_rootx()), str(self.winfo_rooty()), 'yes')
+        elif self.wm_state() != "zoomed" and lng_state != "ask" and current_language != "unknown":
+            save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
+                                   str(self.winfo_rootx()), str(self.winfo_rooty()), 'no')
+        self.destroy()
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -477,7 +486,14 @@ class SSquarePage(Frame):
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.pack(side='bottom', fill='x', ipady=5)
 
+        self.text = Label(self, bg=bg, fg=fg, )
+
         self.set_lang_perimeterspage()
+
+    def ssquare_page_theme_update(self):
+        self.config(bg=bg)
+        self.text.config(bg=bg, fg=fg)
+        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
     def set_lang_perimeterspage(self):
         if current_language == "eng":
@@ -496,7 +512,14 @@ class SRectanglePage(Frame):
                                   bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
+        self.text =Label(self, bg=bg, fg=fg)
+
         self.set_lang_srectanglespage()
+
+    def srectange_page_theme_upgrade(self):
+        self.config(bg=bg)
+        self.text.config(bg=bg, fg=fg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
     def set_lang_srectanglespage(self):
         if current_language == "eng":
