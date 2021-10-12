@@ -788,13 +788,11 @@ class SettingsPage(Frame):
             self.home_button.config(font=('Arial', 55))
             self.theme_info.config(font=('Arial', 50))
 
-
     def language_changer(self, _lang_: str):
         """Changes language from setting page and fixes its font"""
         _page = self.controller.get_page(FLaunchPage)  # Getting access to FLaunchPage in oreder to use new_lang method
         _page.new_lang('', lang=_lang_, _from='')
         self.font_changer(self.winfo_width())  # Changing font size so everything will fit in the window
-
 
     def set_lang_settingspage(self):
         if current_language == "eng":
@@ -816,7 +814,6 @@ class SettingsPage(Frame):
             self.english_lang_btn.config(state='normal', cursor="hand2")
             self.russian_lang_btn.config(state='disabled', cursor="arrow")
         self.font_changer(self.winfo_width())
-
 
     def settings_page_theme_update(self):
         self.config(bg=bg)
@@ -841,7 +838,6 @@ class SettingsPage(Frame):
         self.neon_green_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
                                          disabledforeground=num_bg)
 
-
     def pages_update(self):
         page = self.controller.get_page(PerimetersPage)
         page.perimeters_page_theme_update()
@@ -854,14 +850,12 @@ class SettingsPage(Frame):
         page = self.controller.get_page(MainPage)
         page.main_page_theme_update()
 
-
     def change_theme_to_dark(self):
         self.dark_theme_btn.config(state='disabled', cursor="arrow")
         self.neon_green_theme_btn.config(state='normal', cursor="hand2")
         self.light_theme_btn.config(state='normal', cursor="hand2")
         dark_theme()
         self.pages_update()
-
 
     def change_theme_to_neon(self):
         self.light_theme_btn.config(state='normal', cursor="hand2")
@@ -870,14 +864,12 @@ class SettingsPage(Frame):
         neon_green_theme()
         self.pages_update()
 
-
     def change_theme_to_light(self):
         self.light_theme_btn.config(state='disabled', cursor="arrow")
         self.neon_green_theme_btn.config(state='normal', cursor="hand2")
         self.dark_theme_btn.config(state='normal', cursor="hand2")
         light_theme()
         self.pages_update()
-
 
 if __name__ == "__main__":
     MainAppBody().mainloop()  # Launch application
