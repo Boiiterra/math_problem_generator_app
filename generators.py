@@ -1,4 +1,4 @@
-"""This file contains all generators used in the application"""
+"""This file contains all generators used in the MAIN application"""
 from ctypes import windll, Structure, c_long, byref
 from requests.exceptions import RequestException
 from random import seed, randint
@@ -46,19 +46,117 @@ def perimeter_task(figure: str, app_version: str, app_width: int, app_height: in
     new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
     if figure == 'square':
-        return randint(2, 100)
+        return randint(2, 100), new_seed
     elif figure == 'rectangle':
         a = randint(10, 120)
         b = randint(5, 75) + (a//2) + 1
-        return a, b
+        return a, b, new_seed
 
 
 def square_task(figure: str, app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
     new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
     seed(new_seed)
     if figure == 'square':
-        return randint(2, 100)
+        return randint(2, 100), new_seed
     elif figure == 'rectangle':
         a = randint(10, 120)
         b = randint(5, 75) + (a//2) + 1
-        return a, b
+        return a, b, new_seed
+
+
+def test_gen(_seed):
+    seed(_seed)
+    print(randint(1, 10000))
+    print(randint(1, 10000))
+    print(randint(1, 10000))
+    print(randint(1, 10000))
+    print(randint(1, 10000))
+    print(randint(1, 10000))
+
+
+def test_ex(_seed):
+    seed(_seed)
+    a = randint(10, 120)
+    b = randint(5, 75) + (a//2) + 1
+    return a, b, randint(2, 100), _seed
+
+
+def console_testing():
+    while True:
+        command = input('--> ')
+
+        if command == "exit":
+            print('process finished')
+            break
+        elif command == "run -D -SP":
+            print('generated data -> ', square_task('square', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', square_task('rectangle', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', perimeter_task('square', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', perimeter_task('rectangle', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', square_task('square', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', square_task('rectangle', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', perimeter_task('square', '0.1', 800, 600, 1920, 1080))
+            print('generated data -> ', perimeter_task('rectangle', '0.1', 800, 600, 1920, 1080))
+        elif command == "run -D -S":
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+            print('generated seed -> ', __create_seed('0.1', 800, 600, 1920, 1080))
+        elif command == "run -S":
+            print('enter parameters separated by comma --> app version, app width, app height, screen width, screen_height')
+            _input = input('parameters -> ')
+            _input = _input.split(',')
+            ver = _input[0]
+            _input.pop(0)
+            _input = map(int, _input)
+            print('generated seed -> ', __create_seed(ver, *_input))
+        elif command =="run -S -S":
+            print('enter parameters separated by comma --> app version, app width, app height, screen width, screen_height')
+            _input = input('parameters -> ')
+            _input = _input.split(',')
+            ver = _input[0]
+            _input.pop(0)
+            _input = map(int, _input)
+            print("generated data -> ", square_task('square', ver, *_input))
+        elif command =="run -R -S":
+            print('enter parameters separated by comma --> app version, app width, app height, screen width, screen_height')
+            _input = input('parameters -> ')
+            _input = _input.split(',')
+            ver = _input[0]
+            _input.pop(0)
+            _input = map(int, _input)
+            print("generated data -> ", square_task('rectangle', ver, *_input))
+        elif command =="run -S -P":
+            print('enter parameters separated by comma --> app version, app width, app height, screen width, screen_height')
+            _input = input('parameters -> ')
+            _input = _input.split(',')
+            ver = _input[0]
+            _input.pop(0)
+            _input = map(int, _input)
+            print("generated data -> ", perimeter_task('square', ver, *_input))
+        elif command =="run -R -P":
+            print('enter parameters separated by comma --> app version, app width, app height, screen width, screen_height')
+            _input = input('parameters -> ')
+            _input = _input.split(',')
+            ver = _input[0]
+            _input.pop(0)
+            _input = map(int, _input)
+            print("generated data -> ", perimeter_task('rectangle', ver, *_input))
+        elif command == "test -G":
+            _input = int(input("Enter generator's seed -> "))
+            test_gen(_input)
+        elif command == "test -E":
+            _input = int(input("Enter generator's seed -> "))
+            print(test_ex(_input))
+        elif command == "help":
+            print("list of available commands: run -R -P, run -S -P, run -S -S, run -R -S, run -D -SP, run -D -S, run -S, test -G, test -E, help")
+        else: 
+            print("Unknown command.")
+
+
+if __name__ == "__main__":
+    console_testing()
