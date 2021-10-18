@@ -457,7 +457,7 @@ class AreasPage(Frame):
             self.back_btn.config(text='Back')
             self.squares_a.config(text="Square's\narea")
             self.areas_info.config(text='Choose the figure:')
-            self.rectangles_a.config(text="Rectangele's\area")
+            self.rectangles_a.config(text="Rectangele's\narea")
         elif current_language == 'rus':
             self.rectangles_a.config(text='Площадь\nпрямоугольника')
             self.areas_info.config(text='Выберите фигуру:')
@@ -482,28 +482,91 @@ class SquaresAPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(AreasPage), bd=0,
-                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.return_btn.pack(side='bottom', fill='x', ipady=5)
+        # Variables:
+        self.exercise_no = ...
+        self.param = ...
+
+        self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 25), anchor='w')
+        self.exercise.pack(fill="x", pady=8)
 
         self.text = Label(self, bg=bg, fg=fg, )
+        self.text.pack(pady=4)
+
+        # Containers:
+        self.btn_container = Label(self, bg=bg)
+        self.btn_container.pack(side="bottom", fill="x")
+
+        self.btn_container.rowconfigure(0, weight=1)
+        self.btn_container.columnconfigure(0, weight=1)
+        self.btn_container.columnconfigure(1, weight=1)
+
+        self.container = Label(self, bg=bg)
+        self.container.pack(pady=4)
+
+        self.container.rowconfigure(0, weight=1)
+        self.container.columnconfigure(0, weight=1)
+        self.container.columnconfigure(1, weight=1)
+        self.container.columnconfigure(2, weight=1)
+
+        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 35))
+        self.answer.grid(row=0, column=0)
+
+        is_valid = (parent.register(self.validate),
+                '%i', '%P')
+                # index, value_if_allowed
+
+        self.answer_field = Entry(self.container, font=("Arial", 35), validatecommand=is_valid, validate="key", width=6,
+                                  bg=bg, fg=fg, insertbackground=fg)
+        self.answer_field.grid(row=0, column=1)
+
+        self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back, bd=0,
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
+
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(AreasPage), bd=0,
+                                 bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_squaresapage()
+
+    def return_back(self):
+        self.controller.show_frame(AreasPage)
+        self.answer_field.delete(0, "end")
+
+    def validate(self, index, value_if_allowed):
+        """Enter only integer values"""
+        if " " in value_if_allowed:
+            return False
+        elif len(self.answer_field.get()) >= 6 and index != "5":
+            return False
+        try:
+            int(value_if_allowed)
+            return True
+        except ValueError:
+            if value_if_allowed == "":
+                return True
+            else:
+                return False
 
     def squares_a_page_theme_update(self):
         self.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.answer.config(bg=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
     def set_lang_squaresapage(self):
         if current_language == "eng":
+            self.answer.config(text='Answer: ')
             self.return_btn.config(text='Return')
             self.next_btn.config(text="New task")
-            self.text.config(text="Find square of the square")
+            self.text.config(text="Find square's area")
+            self.exercise.config(text=f"    Exercise: {_height}")
         elif current_language == 'rus':
-            self.return_btn.config(text='Назад')
+            self.exercise.config(text=f"    Номер: {_height}")
             self.next_btn.config(text="Новое задание")
-            self.text.config(text="")
+            self.text.config(text="Найдите что-то")
+            self.return_btn.config(text='Назад')
+            self.answer.config(text='Ответ: ')
 
 
 class RectanglesAPage(Frame):
@@ -518,7 +581,7 @@ class RectanglesAPage(Frame):
 
         self.text =Label(self, bg=bg, fg=fg)
 
-        self.set_lang_rectanglesapage()
+        self.set_lang_rectanglesaspage()
 
     def rectanglesa_page_theme_upgrade(self):
         self.config(bg=bg)
@@ -847,10 +910,10 @@ class SettingsPage(Frame):
         page.perimeters_page_theme_update()
         page = self.controller.get_page(SettingsPage)
         page.settings_page_theme_update()
-        page = self.controller.get_page(AreasPage)
-        page.squares_page_theme_update()
         page = self.controller.get_page(TopicsPage)
         page.topics_page_theme_update()
+        page = self.controller.get_page(AreasPage)
+        page.areas_page_theme_update()
         page = self.controller.get_page(MainPage)
         page.main_page_theme_update()
 
@@ -874,6 +937,7 @@ class SettingsPage(Frame):
         self.dark_theme_btn.config(state='normal', cursor="hand2")
         light_theme()
         self.pages_update()
+
 
 if __name__ == "__main__":
     MainAppBody().mainloop()  # Launch application
