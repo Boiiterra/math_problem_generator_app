@@ -489,7 +489,7 @@ class SquaresAPage(Frame):
         self.exercise_no = task_data[-1]
         self.param = task_data[0]
 
-        self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 25), anchor='w')
+        self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 27), anchor='w')
         self.exercise.pack(fill="x", pady=8, side='top')
 
         self.text = Label(self, bg=bg, fg=fg, font=('Arial', 10))
@@ -503,15 +503,15 @@ class SquaresAPage(Frame):
         self.btn_container.columnconfigure(0, weight=1)
         self.btn_container.columnconfigure(1, weight=1)
 
-        self.container = Label(self, bg=bg)
-        self.container.pack(pady=4)
+        self.container = Label(self, bg=bg, anchor='w')
+        self.container.pack(pady=6, side='bottom')
 
         self.container.rowconfigure(0, weight=1)
         self.container.columnconfigure(0, weight=1)
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 30))
+        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
         self.answer.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%i', '%P') # index, value
@@ -520,9 +520,12 @@ class SquaresAPage(Frame):
             self.answer_field.config(state='normal')
             self.answer_field.unbind('<Button-1>', self.clicked)
 
-        self.answer_field = Entry(self.container, font=("Arial", 30), validatecommand=is_valid, validate="key", width=6,
+        self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.answer_field.grid(row=0, column=1)
+
+        self.placeholder = Label(self.container, font=('Arial', 32), bg=bg, fg=bg)
+        self.placeholder.grid(row=0, column=2)
         
         self.clicked = self.answer_field.bind('<Button-1>', click)
 
@@ -554,6 +557,7 @@ class SquaresAPage(Frame):
     def squares_a_page_theme_update(self):
         self.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
@@ -563,11 +567,13 @@ class SquaresAPage(Frame):
             self.answer.config(text='Answer: ')
             self.return_btn.config(text='Return')
             self.next_btn.config(text="New task")
+            self.placeholder.config(text="oooo")
             self.text.config(text="Find square's area")
             self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
             self.exercise.config(text=f"  Номер: {self.exercise_no}")
             self.next_btn.config(text="Новое задание")
+            self.placeholder.config(text="ooooooooo")
             self.text.config(text="Найдите что-то")
             self.return_btn.config(text='Назад')
             self.answer.config(text='Ответ: ')
