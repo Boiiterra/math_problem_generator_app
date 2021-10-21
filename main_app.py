@@ -1,5 +1,5 @@
 from tkinter import *
-from generators import perimeter_task, square_task
+from generators import perimeter_task, area_task
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 
@@ -482,14 +482,17 @@ class SquaresAPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
+        task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
+                                self.winfo_screenwidth(), self.winfo_screenheight())
+
         # Variables:
-        self.exercise_no = ...
-        self.param = ...
+        self.exercise_no = task_data[-1]
+        self.param = task_data[0]
 
         self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 25), anchor='w')
-        self.exercise.pack(fill="x", pady=8)
+        self.exercise.pack(fill="x", pady=8, side='top')
 
-        self.text = Label(self, bg=bg, fg=fg, )
+        self.text = Label(self, bg=bg, fg=fg, font=('Arial', 10))
         self.text.pack(pady=4)
 
         # Containers:
@@ -508,18 +511,22 @@ class SquaresAPage(Frame):
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 35))
+        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 30))
         self.answer.grid(row=0, column=0)
 
-        is_valid = (parent.register(self.validate),
-                '%i', '%P')
-                # index, value_if_allowed
+        is_valid = (parent.register(self.validate), '%i', '%P') # index, value
 
-        self.answer_field = Entry(self.container, font=("Arial", 35), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg)
+        def click(_):
+            self.answer_field.config(state='normal')
+            self.answer_field.unbind('<Button-1>', self.clicked)
+
+        self.answer_field = Entry(self.container, font=("Arial", 30), validatecommand=is_valid, validate="key", width=6,
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.answer_field.grid(row=0, column=1)
+        
+        self.clicked = self.answer_field.bind('<Button-1>', click)
 
-        self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back, bd=0,
+        self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
@@ -530,28 +537,25 @@ class SquaresAPage(Frame):
         self.set_lang_squaresapage()
 
     def return_back(self):
-        self.controller.show_frame(AreasPage)
+        self.clicked
         self.answer_field.delete(0, "end")
+        self.answer_field.config(state='disabled')
+        self.controller.show_frame(AreasPage)
 
-    def validate(self, index, value_if_allowed):
+    def validate(self, index, value):
         """Enter only integer values"""
-        if " " in value_if_allowed:
+        if len(self.answer_field.get()) >= 6 and index != "5":  # Limiting input length
             return False
-        elif len(self.answer_field.get()) >= 6 and index != "5":
-            return False
-        try:
-            int(value_if_allowed)
+        elif all(_ in "0123456789" for _ in value):  # Allowed values
             return True
-        except ValueError:
-            if value_if_allowed == "":
-                return True
-            else:
-                return False
+        else:
+            return False
 
     def squares_a_page_theme_update(self):
         self.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
         self.answer.config(bg=bg, disabledforeground=fg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
     def set_lang_squaresapage(self):
@@ -560,9 +564,9 @@ class SquaresAPage(Frame):
             self.return_btn.config(text='Return')
             self.next_btn.config(text="New task")
             self.text.config(text="Find square's area")
-            self.exercise.config(text=f"    Exercise: {_height}")
+            self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
-            self.exercise.config(text=f"    Номер: {_height}")
+            self.exercise.config(text=f"  Номер: {self.exercise_no}")
             self.next_btn.config(text="Новое задание")
             self.text.config(text="Найдите что-то")
             self.return_btn.config(text='Назад')
