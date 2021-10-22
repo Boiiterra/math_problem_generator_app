@@ -526,7 +526,7 @@ class SquaresAPage(Frame):
 
         def click(_):
             self.answer_field.config(state='normal')
-            self.answer_field.unbind('<Button-1>', self.clicked)
+            self.answer_field.unbind_all('<Button-1>')
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -541,7 +541,7 @@ class SquaresAPage(Frame):
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(AreasPage), bd=0,
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
@@ -564,7 +564,9 @@ class SquaresAPage(Frame):
 
     def squares_a_page_theme_update(self):
         self.config(bg=bg)
+        self.container.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.btn_container.config(bg=bg)
         self.exercise.config(bg=bg, fg=fg)
         self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
@@ -631,7 +633,7 @@ class RectanglesAPage(Frame):
 
         def click(_):
             self.answer_field.config(state='normal')
-            self.answer_field.unbind('<Button-1>', self.clicked)
+            self.answer_field.unbind_all('<Button-1>')
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -646,7 +648,7 @@ class RectanglesAPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(AreasPage), bd=0,
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
@@ -669,7 +671,9 @@ class RectanglesAPage(Frame):
 
     def rectangles_a_page_theme_upgrade(self):
         self.config(bg=bg)
+        self.container.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.btn_container.config(bg=bg)
         self.exercise.config(bg=bg, fg=fg)
         self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
@@ -804,7 +808,7 @@ class SquaresPPage(Frame):
 
         def click(_):
             self.answer_field.config(state='normal')
-            self.answer_field.unbind('<Button-1>', self.clicked)
+            self.answer_field.unbind_all('<Button-1>')
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -819,7 +823,7 @@ class SquaresPPage(Frame):
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
@@ -829,7 +833,7 @@ class SquaresPPage(Frame):
         self.clicked
         self.answer_field.delete(0, "end")
         self.answer_field.config(state='disabled')
-        self.controller.show_frame(AreasPage)
+        self.controller.show_frame(PerimetersPage)
 
     def validate(self, index, value):
         """Enter only integer values"""
@@ -842,7 +846,9 @@ class SquaresPPage(Frame):
 
     def squares_p_page_theme_update(self):
         self.config(bg=bg)
+        self.container.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.btn_container.config(bg=bg)
         self.exercise.config(bg=bg, fg=fg)
         self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
@@ -850,14 +856,13 @@ class SquaresPPage(Frame):
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
-
     def set_lang_squaresppage(self):
         if current_language == "eng":
             self.answer.config(text='Answer: ')
             self.return_btn.config(text='Return')
             self.next_btn.config(text="New task")
             self.placeholder.config(text="oooo")
-            self.text.config(text="Find square's area")
+            self.text.config(text="Find square's perimeter")
             self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
             self.exercise.config(text=f"  Номер: {self.exercise_no}")
@@ -910,7 +915,7 @@ class RectanglesPPage(Frame):
 
         def click(_):
             self.answer_field.config(state='normal')
-            self.answer_field.unbind('<Button-1>', self.clicked)
+            self.answer_field.unbind_all('<Button-1>')
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -925,7 +930,7 @@ class RectanglesPPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
@@ -948,7 +953,9 @@ class RectanglesPPage(Frame):
 
     def rectangles_p_page_theme_upgrade(self):
         self.config(bg=bg)
+        self.container.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
+        self.btn_container.config(bg=bg)
         self.exercise.config(bg=bg, fg=fg)
         self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
@@ -962,7 +969,7 @@ class RectanglesPPage(Frame):
             self.back_btn.config(text='Back')
             self.next_btn.config(text="New task")
             self.placeholder.config(text="ooooo.")
-            self.text.config(text="Find rectangle's area")
+            self.text.config(text="Find rectangle's perimeter")
             self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
             self.exercise.config(text=f"  Номер: {self.exercise_no}")
