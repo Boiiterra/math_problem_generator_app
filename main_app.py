@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, Frame, Label, Button, Entry
 from generators import perimeter_task, area_task
 from configparser import ConfigParser
 from webbrowser import open_new_tab
@@ -772,7 +772,7 @@ class SquaresPPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
+        task_data = perimeter_task('square', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
 
         # Variables:
@@ -879,7 +879,7 @@ class RectanglesPPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
+        task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
 
         # Variables:
