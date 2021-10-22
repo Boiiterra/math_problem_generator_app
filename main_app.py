@@ -362,10 +362,10 @@ class TopicsPage(Frame):
         self.topics_container = Label(self, bg=bg)
         self.topics_container.pack(side="left", expand=True, fill="both", padx=2)
 
-        Grid.rowconfigure(self.topics_container, 0, weight=1)
-        Grid.rowconfigure(self.topics_container, 1, weight=1)
-        Grid.columnconfigure(self.topics_container, 0, weight=1)
-        Grid.columnconfigure(self.topics_container, 1, weight=1)
+        self.topics_container.rowconfigure(0, weight=1)
+        self.topics_container.rowconfigure(1, weight=1)
+        self.topics_container.columnconfigure(0, weight=1)
+        self.topics_container.columnconfigure(1, weight=1)
 
         self.figure_squares = Button(self.topics_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
@@ -431,10 +431,10 @@ class AreasPage(Frame):
         self.figures_container = Label(self, bg=bg)
         self.figures_container.pack(side="left", expand=True, fill="both", padx=2)
 
-        Grid.rowconfigure(self.figures_container, 0, weight=1)
-        Grid.rowconfigure(self.figures_container, 1, weight=1)
-        Grid.columnconfigure(self.figures_container, 0, weight=1)
-        Grid.columnconfigure(self.figures_container, 1, weight=1)
+        self.figures_container.rowconfigure(0, weight=1)
+        self.figures_container.rowconfigure(1, weight=1)
+        self.figures_container.columnconfigure(0, weight=1)
+        self.figures_container.columnconfigure(1, weight=1)
         
         self.rectangles_a = Button(self.figures_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
@@ -709,10 +709,10 @@ class PerimetersPage(Frame):
         self.figures_container = Label(self, bg=bg)
         self.figures_container.pack(side="left", expand=True, fill="both", padx=2)
 
-        Grid.rowconfigure(self.figures_container, 0, weight=1)
-        Grid.rowconfigure(self.figures_container, 1, weight=1)
-        Grid.columnconfigure(self.figures_container, 0, weight=1)
-        Grid.columnconfigure(self.figures_container, 1, weight=1)
+        self.figures_container.rowconfigure(0, weight=1)
+        self.figures_container.rowconfigure(1, weight=1)
+        self.figures_container.columnconfigure(0, weight=1)
+        self.figures_container.columnconfigure(1, weight=1)
 
         self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
@@ -826,10 +826,10 @@ class SettingsPage(Frame):
         self.language_changers_container = Label(self, bg=num_bg)
         self.language_changers_container.pack(anchor='n')
 
-        Grid.rowconfigure(self.language_changers_container, 0, weight=1)
-        Grid.columnconfigure(self.language_changers_container, 0, weight=1)
-        Grid.columnconfigure(self.language_changers_container, 1, weight=1)
-        Grid.columnconfigure(self.language_changers_container, 2, weight=1)
+        self.language_changers_container.rowconfigure(0, weight=1)
+        self.language_changers_container.columnconfigure(0, weight=1)
+        self.language_changers_container.columnconfigure(1, weight=1)
+        self.language_changers_container.columnconfigure(2, weight=1)
 
         self.language_info = Button(self.language_changers_container, bg=bg, disabledforeground=fg,
                                     font=("Arial", 35), state='disabled', bd=0)
@@ -854,11 +854,11 @@ class SettingsPage(Frame):
         self.themes_changers_container = Label(self, bg=bg)
         self.themes_changers_container.pack(anchor='n')
 
-        Grid.rowconfigure(self.themes_changers_container, 0, weight=1)
-        Grid.columnconfigure(self.themes_changers_container, 0, weight=1)
-        Grid.columnconfigure(self.themes_changers_container, 1, weight=1)
-        Grid.columnconfigure(self.themes_changers_container, 2, weight=1)
-        Grid.columnconfigure(self.themes_changers_container, 3, weight=1)
+        self.themes_changers_container.rowconfigure(0, weight=1)
+        self.themes_changers_container.columnconfigure(0, weight=1)
+        self.themes_changers_container.columnconfigure(1, weight=1)
+        self.themes_changers_container.columnconfigure(2, weight=1)
+        self.themes_changers_container.columnconfigure(3, weight=1)
         
         self.theme_info = Label(self.themes_changers_container, bg=bg, fg=fg, font=("Arial", 35))
         self.theme_info.grid(row=0, column=0, sticky="nsew")
