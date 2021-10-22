@@ -172,7 +172,7 @@ class MainAppBody(Tk):  # Main application with page logic
         self.frames = {}
 
         frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, AreasPage, PerimetersPage, SquaresAPage, 
-                            RectanglesAPage, PSquarePage, PRectanglePage)
+                            RectanglesAPage, SquaresPPage, RectanglesPPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -283,12 +283,16 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         change_language(lang)
         page = self.controller.get_page(RectanglesAPage)
         page.set_lang_rectanglesaspage()
+        page = self.controller.get_page(RectanglesPPage)
+        page.set_lang_rectanglesppage()
         page = self.controller.get_page(PerimetersPage)
         page.set_lang_perimeterspage()
         page = self.controller.get_page(SettingsPage)
         page.set_lang_settingspage()
         page = self.controller.get_page(SquaresAPage)
         page.set_lang_squaresapage()
+        page = self.controller.get_page(SquaresPPage)
+        page.set_lang_squaresppage()
         page = self.controller.get_page(AreasPage)
         page.set_lang_squarespage()
         page = self.controller.get_page(TopicsPage)
@@ -638,7 +642,7 @@ class RectanglesAPage(Frame):
         
         self.clicked = self.answer_field.bind('<Button-1>', click)
 
-        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(AreasPage), bd=0,
+        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
@@ -663,7 +667,7 @@ class RectanglesAPage(Frame):
         else:
             return False
 
-    def rectanglesa_page_theme_upgrade(self):
+    def rectangles_a_page_theme_upgrade(self):
         self.config(bg=bg)
         self.text.config(bg=bg, fg=fg)
         self.exercise.config(bg=bg, fg=fg)
@@ -716,12 +720,12 @@ class PerimetersPage(Frame):
 
         self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(PSquarePage))
+                                     command=lambda: controller.show_frame(SquaresPPage))
         self.squares_p.grid(row=0, column=0, sticky='nsew')
         
         self.rectangles_p = Button(self.figures_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(PRectanglePage))
+                                        command=lambda: controller.show_frame(RectanglesPPage))
         self.rectangles_p.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
@@ -758,44 +762,215 @@ class PerimetersPage(Frame):
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
 
-class PSquarePage(Frame):
+class SquaresPPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.return_btn.pack(side='bottom', fill='x', ipady=5)
+        task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
+                                self.winfo_screenwidth(), self.winfo_screenheight())
 
-        self.set_lang_perimeterspage()
+        # Variables:
+        self.exercise_no = task_data[-1]
+        self.param = task_data[0]
 
-    def set_lang_perimeterspage(self):
+        self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 27), anchor='w')
+        self.exercise.pack(fill="x", pady=8, side='top')
+
+        self.text = Label(self, bg=bg, fg=fg, font=('Arial', 20))
+        self.text.pack(pady=4)
+
+        # Containers:
+        self.btn_container = Label(self, bg=bg)
+        self.btn_container.pack(side="bottom", fill="x")
+
+        self.btn_container.rowconfigure(0, weight=1)
+        self.btn_container.columnconfigure(0, weight=1)
+        self.btn_container.columnconfigure(1, weight=1)
+
+        self.container = Label(self, bg=bg, anchor='w')
+        self.container.pack(pady=6, side='bottom')
+
+        self.container.rowconfigure(0, weight=1)
+        self.container.columnconfigure(0, weight=1)
+        self.container.columnconfigure(1, weight=1)
+        self.container.columnconfigure(2, weight=1)
+
+        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer.grid(row=0, column=0)
+
+        is_valid = (parent.register(self.validate), '%i', '%P') # index, value
+
+        def click(_):
+            self.answer_field.config(state='normal')
+            self.answer_field.unbind('<Button-1>', self.clicked)
+
+        self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+        self.answer_field.grid(row=0, column=1)
+
+        self.placeholder = Label(self.container, font=('Arial', 32), bg=bg, fg=bg)
+        self.placeholder.grid(row=0, column=2)
+        
+        self.clicked = self.answer_field.bind('<Button-1>', click)
+
+        self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
+
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
+
+        self.set_lang_squaresppage()
+
+    def return_back(self):
+        self.clicked
+        self.answer_field.delete(0, "end")
+        self.answer_field.config(state='disabled')
+        self.controller.show_frame(AreasPage)
+
+    def validate(self, index, value):
+        """Enter only integer values"""
+        if len(self.answer_field.get()) >= 6 and index != "5":  # Limiting input length
+            return False
+        elif all(_ in "0123456789" for _ in value):  # Allowed values
+            return True
+        else:
+            return False
+
+    def squares_p_page_theme_update(self):
+        self.config(bg=bg)
+        self.text.config(bg=bg, fg=fg)
+        self.exercise.config(bg=bg, fg=fg)
+        self.placeholder.config(bg=bg, fg=bg)
+        self.answer.config(bg=bg, disabledforeground=fg)
+        self.next_btn.config(bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+
+
+    def set_lang_squaresppage(self):
         if current_language == "eng":
+            self.answer.config(text='Answer: ')
             self.return_btn.config(text='Return')
-
+            self.next_btn.config(text="New task")
+            self.placeholder.config(text="oooo")
+            self.text.config(text="Find square's area")
+            self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
+            self.exercise.config(text=f"  Номер: {self.exercise_no}")
+            self.next_btn.config(text="Новое задание")
+            self.placeholder.config(text="ooooooooo")
+            self.text.config(text="Условие задачи")
             self.return_btn.config(text='Назад')
+            self.answer.config(text='Ответ: ')
 
 
-class PRectanglePage(Frame):
+class RectanglesPPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+        task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
+                                self.winfo_screenwidth(), self.winfo_screenheight())
+
+        # Variables:
+        self.exercise_no = task_data[-1]
+        self.param = (task_data[0], task_data[1])
+
+        self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 27), anchor='w')
+        self.exercise.pack(fill="x", pady=8, side='top')
+
+        self.text = Label(self, bg=bg, fg=fg, font=('Arial', 20))
+        self.text.pack(pady=4)
+
+        # Containers:
+        self.btn_container = Label(self, bg=bg)
+        self.btn_container.pack(side="bottom", fill="x")
+
+        self.btn_container.rowconfigure(0, weight=1)
+        self.btn_container.columnconfigure(0, weight=1)
+        self.btn_container.columnconfigure(1, weight=1)
+
+        self.container = Label(self, bg=bg, anchor='w')
+        self.container.pack(pady=6, side='bottom')
+
+        self.container.rowconfigure(0, weight=1)
+        self.container.columnconfigure(0, weight=1)
+        self.container.columnconfigure(1, weight=1)
+        self.container.columnconfigure(2, weight=1)
+
+        self.answer = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer.grid(row=0, column=0)
+
+        is_valid = (parent.register(self.validate), '%i', '%P') # index, value
+
+        def click(_):
+            self.answer_field.config(state='normal')
+            self.answer_field.unbind('<Button-1>', self.clicked)
+
+        self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+        self.answer_field.grid(row=0, column=1)
+
+        self.placeholder = Label(self.container, font=('Arial', 32), bg=bg, fg=bg)
+        self.placeholder.grid(row=0, column=2)
+        
+        self.clicked = self.answer_field.bind('<Button-1>', click)
+
+        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
+        self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.set_lang_srectanglespage()
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: controller.show_frame(PerimetersPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
-    def set_lang_srectanglespage(self):
+        self.set_lang_rectanglesppage()
+
+    def return_back(self):
+        self.clicked
+        self.answer_field.delete(0, "end")
+        self.answer_field.config(state='disabled')
+        self.controller.show_frame(PerimetersPage)
+
+    def validate(self, index, value):
+        """Enter only integer values"""
+        if len(self.answer_field.get()) >= 6 and index != "5":  # Limiting input length
+            return False
+        elif all(_ in "0123456789" for _ in value):  # Allowed values
+            return True
+        else:
+            return False
+
+    def rectangles_p_page_theme_upgrade(self):
+        self.config(bg=bg)
+        self.text.config(bg=bg, fg=fg)
+        self.exercise.config(bg=bg, fg=fg)
+        self.placeholder.config(bg=bg, fg=bg)
+        self.answer.config(bg=bg, disabledforeground=fg)
+        self.next_btn.config(bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+
+    def set_lang_rectanglesppage(self):
         if current_language == "eng":
+            self.answer.config(text='Answer: ')
             self.back_btn.config(text='Back')
-
+            self.next_btn.config(text="New task")
+            self.placeholder.config(text="ooooo.")
+            self.text.config(text="Find rectangle's area")
+            self.exercise.config(text=f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
+            self.exercise.config(text=f"  Номер: {self.exercise_no}")
+            self.next_btn.config(text="Новое задание")
+            self.placeholder.config(text="ooooooooo")
+            self.text.config(text="Условие задачи")
             self.back_btn.config(text='Назад')
+            self.answer.config(text='Ответ: ')
 
 
 class SettingsPage(Frame):
@@ -1001,9 +1176,13 @@ class SettingsPage(Frame):
 
     def pages_update(self):
         page = self.controller.get_page(RectanglesAPage)
-        page.rectanglesa_page_theme_upgrade()
+        page.rectangles_a_page_theme_upgrade()
+        page = self.controller.get_page(RectanglesPPage)
+        page.rectangles_p_page_theme_upgrade()
         page = self.controller.get_page(PerimetersPage)
         page.perimeters_page_theme_update()
+        page = self.controller.get_page(SquaresPPage)
+        page.squares_p_page_theme_update()
         page = self.controller.get_page(SquaresAPage)
         page.squares_a_page_theme_update()
         page = self.controller.get_page(SettingsPage)
