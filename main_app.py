@@ -66,26 +66,6 @@ def change_language(language: str):  # This function changes language for whole 
         current_language = parser.get('language', 'language')
 
 
-def neon_green_theme():  # This function changes colors and theme to neon green and saves changes to file
-    global parser
-    parser.read("data.txt")
-    parser.set("colors", "background", "#000000")
-    parser.set("colors", "num_btn_back", "#0a0a0a")
-    parser.set("colors", "home_btn_fore", "#52ff86")
-    parser.set('theme', "current_theme", "neon_green")
-    parser.set("colors", "num_btn_active_fore", "#008000")
-    parser.set("colors", "home_bts_active_fore", "#25703c")
-    parser.set("colors", "active_foreground", "#008000")
-    parser.set("colors", "main_btn_back", "#000000")
-    parser.set("colors", "num_btn_fore", "#00ff00")
-    parser.set("colors", "foreground", "#00ff00")
-    with open("data.txt", "w") as configfile:
-        parser.write(configfile)
-    # Set colors
-    parser.read("data.txt")
-    set_theme()
-
-
 def dark_theme():  # This function changes colors and theme to dark and saves changes to file
     global parser
     parser.read("data.txt")
@@ -889,8 +869,8 @@ class RectanglesPPage(Frame):
         self.exercise = Label(self, bg=bg, fg=fg, font=('Arial', 27), anchor='w')
         self.exercise.pack(fill="x", pady=8, side='top')
 
-        self.text = Label(self, bg=bg, fg=fg, font=('Arial', 20))
-        self.text.pack(pady=4)
+        self.text = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
+        self.text.pack(pady=4, expand=True)
 
         # Containers:
         self.btn_container = Label(self, bg=bg)
@@ -917,12 +897,16 @@ class RectanglesPPage(Frame):
             self.answer_field.config(state='normal')
             self.answer_field.unbind_all('<Button-1>')
 
+        def confirm():
+            print(self.answer_field.get())
+
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.answer_field.grid(row=0, column=1)
 
-        self.placeholder = Label(self.container, font=('Arial', 32), bg=bg, fg=bg)
-        self.placeholder.grid(row=0, column=2)
+        self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0,
+                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg)
+        self.confirm_btn.grid(row=0, column=2)
         
         self.clicked = self.answer_field.bind('<Button-1>', click)
 
@@ -931,7 +915,7 @@ class RectanglesPPage(Frame):
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
         self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_rectanglesppage()
@@ -957,9 +941,9 @@ class RectanglesPPage(Frame):
         self.text.config(bg=bg, fg=fg)
         self.btn_container.config(bg=bg)
         self.exercise.config(bg=bg, fg=fg)
-        self.placeholder.config(bg=bg, fg=bg)
         self.answer.config(bg=bg, disabledforeground=fg)
-        self.next_btn.config(bg=num_bg, activebackground=num_bg, fg=num_fg, activeforeground=num_active_fg)
+        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
 
@@ -968,14 +952,16 @@ class RectanglesPPage(Frame):
             self.answer.config(text='Answer: ')
             self.back_btn.config(text='Back')
             self.next_btn.config(text="New task")
-            self.placeholder.config(text="ooooo.")
-            self.text.config(text="Find rectangle's perimeter")
+            self.confirm_btn.config(text=" Confirm")
             self.exercise.config(text=f"  Exercise: {self.exercise_no}")
+            self.text.config(text="Your goal is to find rectangle's perimeter." \
+                                  f"\nIts height is {self.param[0]} and width - {self.param[1]}.")
         elif current_language == 'rus':
+            self.text.config(text="Чему равен периметр прямоугольника,\nесли его высота равна " \
+                                  f"{self.param[0]}, а ширина - {self.param[1]}.")
             self.exercise.config(text=f"  Номер: {self.exercise_no}")
             self.next_btn.config(text="Новое задание")
-            self.placeholder.config(text="ooooooooo")
-            self.text.config(text="Условие задачи")
+            self.confirm_btn.config(text="Подтвердить")
             self.back_btn.config(text='Назад')
             self.answer.config(text='Ответ: ')
 
@@ -1005,7 +991,7 @@ class SettingsPage(Frame):
         self.place_h0 = Label(self, bg=bg, font=('Arial', 25))
         self.place_h0.pack()
 
-        self.language_changers_container = Label(self, bg=num_bg)
+        self.language_changers_container = Label(self, bg=bg)
         self.language_changers_container.pack(anchor='n')
 
         self.language_changers_container.rowconfigure(0, weight=1)
@@ -1018,13 +1004,13 @@ class SettingsPage(Frame):
         self.language_info.grid(row=0, column=0, sticky="nsew")
 
         self.english_lang_btn = Button(self.language_changers_container, text="English", bg=num_bg, fg=num_fg,
-                                       font=("Times New Roman", 50), disabledforeground=num_bg,
+                                       font=("Arial", 35), disabledforeground=num_bg,
                                        activeforeground=num_active_fg, activebackground=num_bg, bd=0,
                                        command=lambda: self.language_changer(_lang_="eng"))
         self.english_lang_btn.grid(row=0, column=1)
 
         self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
-                                       font=("Times New Roman", 50), disabledforeground=bg,
+                                       font=("Arial", 35), disabledforeground=bg,
                                        activeforeground=active_fg, activebackground=bg, bd=0,
                                        command=lambda: self.language_changer(_lang_="rus"))
         self.russian_lang_btn.grid(row=0, column=2)
@@ -1045,21 +1031,13 @@ class SettingsPage(Frame):
         self.theme_info = Label(self.themes_changers_container, bg=bg, fg=fg, font=("Arial", 35))
         self.theme_info.grid(row=0, column=0, sticky="nsew")
 
-        self.neon_green_theme_btn = Button(self.themes_changers_container, text="Neon green", bg=num_bg, fg=num_fg,
-                                           font=("Times New Roman", 55),
-                                           activeforeground=num_active_fg, activebackground=num_bg, bd=0,
-                                           disabledforeground=num_bg,
-                                           command=self.change_theme_to_neon)
-        self.neon_green_theme_btn.grid(row=0, column=2, sticky='nsew')
-
-        self.dark_theme_btn = Button(self.themes_changers_container, text="Dark", bg=bg, fg=fg,
-                                     font=("Times New Roman", 55),
-                                     activeforeground=active_fg, activebackground=bg, bd=0, disabledforeground=bg,
-                                     command=self.change_theme_to_dark)
+        self.dark_theme_btn = Button(self.themes_changers_container, text="Dark", bg=num_bg, fg=num_fg,
+                                     font=("Arial", 40), command=self.change_theme_to_dark, bd=0,
+                                     activeforeground=num_active_fg, activebackground=num_bg, disabledforeground=num_bg)
         self.dark_theme_btn.grid(row=0, column=1, sticky='nsew')
 
         self.light_theme_btn = Button(self.themes_changers_container, text="Light", bg=bg, fg=fg,
-                                      font=("Times New Roman", 55),
+                                      font=("Arial", 40),
                                       activeforeground=active_fg, activebackground=bg, bd=0, disabledforeground=bg,
                                       command=self.change_theme_to_light)
         self.light_theme_btn.grid(row=0, column=3, sticky='nsew')
@@ -1074,18 +1052,12 @@ class SettingsPage(Frame):
         self.home_button.pack(fill='both', side='bottom', expand=True)
 
         # Checking for current theme
-        if current_theme == "neon_green":
-            self.dark_theme_btn.config(state='normal', cursor="hand2")
-            self.light_theme_btn.config(state='normal', cursor="hand2")
-            self.neon_green_theme_btn.config(state='disabled', cursor="arrow")
-        elif current_theme == 'dark':
-            self.neon_green_theme_btn.config(state='normal', cursor="hand2")
+        if current_theme == 'dark':
             self.dark_theme_btn.config(state='disabled', cursor="arrow")
             self.light_theme_btn.config(state='normal', cursor="hand2")
         elif current_theme == 'light':
             self.dark_theme_btn.config(state='normal', cursor="hand2")
             self.light_theme_btn.config(state='disabled', cursor="arrow")
-            self.neon_green_theme_btn.config(state='normal', cursor="hand2")
 
         self.bind("<Configure>", lambda params: self.font_changer(params.width))
 
@@ -1093,43 +1065,21 @@ class SettingsPage(Frame):
 
     def font_changer(self, width):
         """Changing font size based on window width"""
-        # This changes font sizes, the same as above but after language switching
-        if width <= 959 and current_language == 'eng':
+        if width <= 959:
             self.theme_info.config(font=('Arial', 42))
             self.home_button.config(font=('Arial', 45))
-            self.dark_theme_btn.config(font=('Times New Roman', 42))
-            self.light_theme_btn.config(font=('Times New Roman', 42))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 42))
-        elif 959 < width <= 1160 and current_language == 'eng':
-            self.neon_green_theme_btn.config(font=('Times New Roman', 50))
-            self.light_theme_btn.config(font=('Times New Roman', 50))
-            self.dark_theme_btn.config(font=('Times New Roman', 50))
+            self.dark_theme_btn.config(font=('Arial', 42))
+            self.light_theme_btn.config(font=('Arial', 42))
+        elif 959 < width <= 1160:
+            self.light_theme_btn.config(font=('Arial', 50))
+            self.dark_theme_btn.config(font=('Arial', 50))
             self.home_button.config(font=('Arial', 55))
             self.theme_info.config(font=('Arial', 50))
-        elif width > 1160 and current_language == 'eng':
+        elif width > 1160:
             self.theme_info.config(font=('Arial', 55))
             self.home_button.config(font=('Arial', 55))
-            self.dark_theme_btn.config(font=('Times New Roman', 55))
-            self.light_theme_btn.config(font=('Times New Roman', 55))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 55))
-        elif width <= 959 and current_language == 'rus':
-            self.neon_green_theme_btn.config(font=('Times New Roman', 33))
-            self.light_theme_btn.config(font=('Times New Roman', 33))
-            self.dark_theme_btn.config(font=('Times New Roman', 33))
-            self.home_button.config(font=('Arial', 45))
-            self.theme_info.config(font=('Arial', 35))
-        elif 959 < width <= 1160 and current_language == 'rus':
-            self.theme_info.config(font=('Arial', 44))
-            self.home_button.config(font=('Arial', 55))
-            self.dark_theme_btn.config(font=('Times New Roman', 39))
-            self.light_theme_btn.config(font=('Times New Roman', 39))
-            self.neon_green_theme_btn.config(font=('Times New Roman', 39))
-        elif width > 1160 and current_language == 'rus':
-            self.neon_green_theme_btn.config(font=('Times New Roman', 46))
-            self.light_theme_btn.config(font=('Times New Roman', 46))
-            self.dark_theme_btn.config(font=('Times New Roman', 46))
-            self.home_button.config(font=('Arial', 55))
-            self.theme_info.config(font=('Arial', 50))
+            self.dark_theme_btn.config(font=('Arial', 55))
+            self.light_theme_btn.config(font=('Arial', 55))
 
     def language_changer(self, _lang_: str):
         """Changes language from setting page and fixes its font"""
@@ -1141,7 +1091,6 @@ class SettingsPage(Frame):
         if current_language == "eng":
             self.english_lang_btn.config(state='disabled', cursor="arrow")
             self.russian_lang_btn.config(state='normal', cursor="hand2")
-            self.neon_green_theme_btn.config(text='Neon green')
             self.language_info.config(text='Language:')
             self.light_theme_btn.config(text='Light')
             self.dark_theme_btn.config(text='Dark')
@@ -1153,7 +1102,6 @@ class SettingsPage(Frame):
             self.language_info.config(text='Язык:')
             self.dark_theme_btn.config(text='Тёмная')
             self.light_theme_btn.config(text='Светлая')
-            self.neon_green_theme_btn.config(text='Тёмно-зелёная')
             self.english_lang_btn.config(state='normal', cursor="hand2")
             self.russian_lang_btn.config(state='disabled', cursor="arrow")
         self.font_changer(self.winfo_width())
@@ -1168,8 +1116,8 @@ class SettingsPage(Frame):
         self.themes_changers_container.config(bg=bg)
         self.language_changers_container.config(bg=bg)
         self.language_info.config(bg=bg, disabledforeground=fg)
-        self.dark_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
-                                   disabledforeground=bg)
+        self.dark_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
+                                   disabledforeground=num_bg)
         self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
                                     disabledforeground=bg)
         self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg,
@@ -1178,8 +1126,6 @@ class SettingsPage(Frame):
                                 disabledforeground=num_bg)
         self.english_lang_btn.config(bg=num_bg, fg=num_fg, disabledforeground=num_bg, activeforeground=num_active_fg,
                                      activebackground=num_bg)
-        self.neon_green_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
-                                         disabledforeground=num_bg)
 
     def pages_update(self):
         page = self.controller.get_page(RectanglesAPage)
@@ -1203,21 +1149,12 @@ class SettingsPage(Frame):
 
     def change_theme_to_dark(self):
         self.dark_theme_btn.config(state='disabled', cursor="arrow")
-        self.neon_green_theme_btn.config(state='normal', cursor="hand2")
         self.light_theme_btn.config(state='normal', cursor="hand2")
         dark_theme()
         self.pages_update()
 
-    def change_theme_to_neon(self):
-        self.light_theme_btn.config(state='normal', cursor="hand2")
-        self.neon_green_theme_btn.config(state='disabled', cursor="arrow")
-        self.dark_theme_btn.config(state='normal', cursor="hand2")
-        neon_green_theme()
-        self.pages_update()
-
     def change_theme_to_light(self):
         self.light_theme_btn.config(state='disabled', cursor="arrow")
-        self.neon_green_theme_btn.config(state='normal', cursor="hand2")
         self.dark_theme_btn.config(state='normal', cursor="hand2")
         light_theme()
         self.pages_update()
