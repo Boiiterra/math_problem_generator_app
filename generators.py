@@ -62,7 +62,7 @@ def area_task(figure: str, app_version: str, app_width: int, app_height: int, sc
     seed(new_seed)
     if figure == 'square':
         side = randint(2, 100)
-        answer = 4 * side
+        answer = side * side
         return side, answer, new_seed
     elif figure == 'rectangle':
         height = randint(10, 120)
