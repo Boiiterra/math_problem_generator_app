@@ -23,3 +23,7 @@ main_btn_back = #292929
 num_btn_back = #999999
 num_btn_fore = #4d4d4d
 num_btn_active_fore = #787878
+
+[info]
+first_launch = True
+
