@@ -11,15 +11,15 @@ x = 0
 y = 31
 
 [theme]
-current_theme = neon_green
+current_theme = light
 
 [colors]
-background = #000000
-foreground = #00ff00
-active_foreground = #008000
-home_btn_fore = #0000FF
-home_bts_active_fore = #00008B
-main_btn_back = #000000
-num_btn_back = #0a0a0a
-num_btn_fore = #00ff00
-num_btn_active_fore = #008000
+background = #bababa
+foreground = #000000
+active_foreground = #000000
+home_btn_fore = #404040
+home_bts_active_fore = #5e5e5e
+main_btn_back = #292929
+num_btn_back = #999999
+num_btn_fore = #4d4d4d
+num_btn_active_fore = #787878
