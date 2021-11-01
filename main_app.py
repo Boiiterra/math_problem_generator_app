@@ -542,9 +542,11 @@ class SquaresAPage(Frame):
             self.answer_field.config(state='normal')
 
         def confirm():
+            self.next_btn.config(state='disabled')
             _input = int(self.answer_field.get())
             self.answer_field.delete(0, "end")
             self.answer_field.config(state='disabled')
+            self.after(1000, self.next_btn.config(state='normal'))
             if _input == self.answer:
                 if current_language == "eng":
                     self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
@@ -558,6 +560,11 @@ class SquaresAPage(Frame):
                     self.confirm_btn.config(text=" Неправильно", state="disabled", disabledforeground=active_fg)
                 self.after(500, lambda: update_task(True))
             self.after(501, container_reset)
+
+        def new_task():
+            self.next_btn.config(state='disabled')
+            update_task()
+            self.after(1000, self.next_btn.config(state='normal'))
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -573,8 +580,8 @@ class SquaresAPage(Frame):
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_squaresapage()
@@ -619,10 +626,10 @@ class SquaresAPage(Frame):
         self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
 
     def set_lang_squaresapage(self):
         self.exercise.config(state='normal')
@@ -694,6 +701,12 @@ class RectanglesAPage(Frame):
                 elif current_language == "rus":
                     self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
 
+        def new_task():
+            self.next_btn.config(state='disabled')
+            update_task()
+            self.after(1000, self.next_btn.config(state='normal'))
+
+
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
@@ -726,9 +739,11 @@ class RectanglesAPage(Frame):
             self.answer_field.config(state='normal')
 
         def confirm():
+            self.next_btn.config(state='disabled')
             _input = int(self.answer_field.get())
             self.answer_field.delete(0, 'end')
             self.answer_field.config(state='disabled')
+            self.after(1000, self.next_btn.config(state='normal'))
             if _input == self.answer:
                 if current_language == "eng":
                     self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
@@ -757,8 +772,8 @@ class RectanglesAPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_rectanglesaspage()
@@ -803,10 +818,10 @@ class RectanglesAPage(Frame):
         self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
 
     def set_lang_rectanglesaspage(self):
         self.exercise.config(state='normal')
@@ -974,9 +989,11 @@ class SquaresPPage(Frame):
             self.answer_field.config(state='normal')
 
         def confirm():
+            self.next_btn.config(state='disabled')
             _input = int(self.answer_field.get())
             self.answer_field.delete(0, "end")
             self.answer_field.config(state='disabled')
+            self.after(1000, self.next_btn.config(state='normal'))
             if _input == self.answer:
                 if current_language == "eng":
                     self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
@@ -990,6 +1007,12 @@ class SquaresPPage(Frame):
                     self.confirm_btn.config(text=" Неправильно", state="disabled", disabledforeground=active_fg)
                 self.after(500, lambda: update_task(True))
             self.after(501, container_reset)
+
+        def new_task():
+            self.next_btn.config(state='disabled')
+            update_task()
+            self.after(1000, self.next_btn.config(state='normal'))
+
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
@@ -1005,8 +1028,8 @@ class SquaresPPage(Frame):
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_squaresppage()
@@ -1051,10 +1074,10 @@ class SquaresPPage(Frame):
         self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
 
     def set_lang_squaresppage(self):
         self.exercise.config(state='normal')
@@ -1158,9 +1181,11 @@ class RectanglesPPage(Frame):
             self.answer_field.config(state='normal')
 
         def confirm():
+            self.next_btn.config(state='disabled')
             _input = int(self.answer_field.get())
             self.answer_field.delete(0, "end")
             self.answer_field.config(state='disabled')
+            self.after(1000, self.next_btn.config(state='normal'))
             if _input == self.answer:
                 if current_language == "eng":
                     self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
@@ -1175,6 +1200,10 @@ class RectanglesPPage(Frame):
                 self.after(500, lambda: update_task(True))
             self.after(501, container_reset)
 
+        def new_task():
+            self.next_btn.config(state='disabled')
+            update_task()
+            self.after(1000, self.next_btn.config(state='normal'))
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=bg)
@@ -1190,8 +1219,8 @@ class RectanglesPPage(Frame):
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_rectanglesppage()
@@ -1236,10 +1265,10 @@ class RectanglesPPage(Frame):
         self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg)
         self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
 
     def set_lang_rectanglesppage(self):
         self.exercise.config(state='normal')
