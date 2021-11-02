@@ -1,13 +1,15 @@
 from requests.exceptions import RequestException
 from tkinter import Button, Tk, Toplevel, Label
 from tkinter.messagebox import askyesno
+from configparser import ConfigParser
 from tkinter.ttk import Progressbar
 from win32api import ShellExecute
 from PIL import Image, ImageTk
+from os import path as os_path
 from threading import Thread
 from requests import get
 from pathlib import Path
-from os import os_path
+from filecmp import cmp
 
 __version__ = '0.1'
 __author__ = "TerraBoii"
@@ -29,7 +31,6 @@ class UpdateManager(Toplevel):
 
         self.transient(parent)
         self.attributes("-disabled", True)
-        self.result = None
         self.grab_set()
         w = 350
         h = 200
@@ -79,30 +80,80 @@ class UpdateManager(Toplevel):
         self.start_manager.start()
 
 
-tmp = Tk()  # Tmp -> short for temporary
-tmp.iconbitmap("images/update_icon.ico")
-# positioning window in middle of the screen with width = 650 and height = 400
-tmp.geometry(f"{650}x{400}+{int((tmp.winfo_screenwidth() - 650) / 2)}+{int((tmp.winfo_screenheight() - 400) / 2)}")
-tmp.withdraw()  # Making tmp window "invisible"
+def backup_data():
+    with open("data.txt") as source_file:
+        with open("backup\\backup_data.txt", "w") as destination_file:
+            for line in source_file:
+                destination_file.write(line)
+            destination_file.close()
+        source_file.close()
+
+
+def check_for_backup():
+    try:
+        if not cmp("data.txt", "backup\\backup_data.txt"):
+            backup_data()
+    except FileNotFoundError:
+        open("backup\\backup_data.txt", "w").close()
+        backup_data()
+
+
+def check_and_restore():
+    parser = ConfigParser()
+    parser.read('backup\\backup_data.txt')
+    if parser.get("info", "updated") == "True":
+        cmp("backup\\backup_data.txt", "data.txt")
+
+
+def restore_and_backup():
+    parser = ConfigParser()
+    parser.read("data.txt")
+    if parser.get('info', "always_backup") == "False":
+        ask_for_backup = askyesno('Do you want to backup your data before update?')
+        if ask_for_backup is True:
+            parser.set("info", "updated", "True")
+            with open("data.txt", 'w') as configfile:
+                parser.write(configfile)
+            check_for_backup()
+    else:
+        parser.set("info", "updated", "True")
+        with open("data.txt", 'w') as configfile:
+            parser.write(configfile)
+        check_for_backup()
+    check_and_restore()
+
 
 def run(): # Execute main .exe and destroy tmp window
     tmp.after(0, tmp.destroy)
     ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
 
-try:
-    response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
-    data = response.text
 
-    if float(data) > float(__version__):
-        get_update = askyesno('Software update available!\n',
-                              f'{_AppName_} {__version__} needs to update to version {data}')
-        if get_update is True:
-            UpdateManager(tmp)
-        elif get_update is False:
+if __name__ == "__main__":
+
+    tmp = Tk()  # Tmp -> short for temporary
+    tmp.iconbitmap("images/update_icon.ico")
+    # positioning window in middle of the screen with width = 650 and height = 400
+    tmp.geometry(f"{650}x{400}+{int((tmp.winfo_screenwidth() - 650) / 2)}+{int((tmp.winfo_screenheight() - 400) / 2)}")
+    tmp.withdraw()  # Making tmp window "invisible"
+
+    try:
+
+        check_for_backup()
+
+        response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
+        data = response.text
+
+        if float(data) > float(__version__):
+            restore_and_backup()
+            get_update = askyesno('Software update available!\n',
+                                  f'{_AppName_} {__version__} needs to update to version {data}')
+            if get_update is True:
+                UpdateManager(tmp)
+            elif get_update is False:
+                run()
+        else:
             run()
-    else:
+    except RequestException:  # Something went wrong during requesting
         run()
-except RequestException:  # Something went wrong during requesting
-    run()
 
-tmp.mainloop()
+    tmp.mainloop()

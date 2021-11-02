@@ -1,5 +1,6 @@
-from tkinter import Tk, Frame, Label, Button, Entry, Text
+from tkinter import Tk, Frame, Label, Button, Entry, Text, Toplevel
 from generators import perimeter_task, area_task
+from launcher import check_for_backup
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 
@@ -29,6 +30,8 @@ num_bg = parser.get("colors", "num_btn_back")
 num_fg = parser.get("colors", "num_btn_fore")
 fg = parser.get("colors", "foreground")
 bg = parser.get("colors", "background")
+# Info
+first_launch = parser.get("info", "first_launch")
 
 
 def set_theme():  # This function updates colors after theme changed
@@ -115,8 +118,14 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     parser.set('parameters', 'width', _width_)
     parser.set('parameters', 'x', _x_)
     parser.set('parameters', 'y', _y_)
-    with open("data.txt", "w") as configfile:
-        parser.write(configfile)
+    if first_launch != "False":
+        parser.set('info', 'first_launch', 'False')
+        with open("data.txt", "w") as configfile:
+            parser.write(configfile)
+        check_for_backup()
+    else:
+        with open("data.txt", "w") as configfile:
+            parser.write(configfile)
 
 
 class MainAppBody(Tk):  # Main application with page logic
@@ -1482,6 +1491,12 @@ class SettingsPage(Frame):
         self.dark_theme_btn.config(state='normal', cursor="hand2")
         light_theme()
         self.pages_update()
+
+
+class ExtraSettings(Toplevel):
+    
+    def __init__(self, parent):
+        Toplevel.__init__(self, parent, bg=bg)
 
 
 if __name__ == "__main__":
