@@ -11,7 +11,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.4'
+__version__ = '0.5'
 __author__ = "TerraBoii"
 # Victor Santiago is an original creator of an application that checks for updates
 # I took its main functionality and modified appearance.
@@ -95,13 +95,17 @@ def check_for_backup():
 
 
 def check_and_restore():
-    parser = ConfigParser()
-    parser.read('backup\\backup_data.txt')
-    if parser.get("info", "updated") == "True":
-        parser.set("info", "updated", "False")
-        with open("backup\\backup_data.txt", 'w') as configfile:
-            parser.write(configfile)
-        cmp("backup\\backup_data.txt", "data.txt")
+    try:
+        open("backup\\backup_data.txt", "r").close()
+        parser = ConfigParser()
+        parser.read('backup\\backup_data.txt')
+        if parser.get("info", "updated") == "True":
+            parser.set("info", "updated", "False")
+            with open("backup\\backup_data.txt", 'w') as configfile:
+                parser.write(configfile)
+            cmp("backup\\backup_data.txt", "data.txt")
+    except FileNotFoundError:
+        pass
 
 
 def update_prepare():
