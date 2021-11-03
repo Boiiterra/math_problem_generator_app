@@ -1,7 +1,7 @@
+from configparser import ConfigParser, NoSectionError
 from requests.exceptions import RequestException
 from tkinter import Button, Tk, Toplevel, Label
 from tkinter.messagebox import askyesno
-from configparser import ConfigParser
 from tkinter.ttk import Progressbar
 from win32api import ShellExecute
 from PIL import Image, ImageTk
@@ -104,7 +104,7 @@ def check_and_restore():
             with open("backup\\backup_data.txt", 'w') as configfile:
                 parser.write(configfile)
             cmp("backup\\backup_data.txt", "data.txt")
-    except FileNotFoundError:
+    except FileNotFoundError and NoSectionError:
         pass
 
 
