@@ -11,7 +11,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.2'
+__version__ = '0.3'
 __author__ = "TerraBoii"
 # Victor Santiago is an original creator of an application that checks for updates
 # I took its main functionality and modified appearance.
@@ -20,7 +20,7 @@ __credits__ = ["Victor Santiago", 'TerraBoii']
 _AppName_ = 'Math problem generator app'
 
 # url for installer
-url = ""
+url = "https://github.com/TerraBoii/math_problem_generator_app/raw/main/app_installer/mathproblemgenerator_setup.exe"
 file_name = url.split('/')[-1].replace(" ", "_")
 file_path = os_path.join("setup", file_name)
 
@@ -109,7 +109,7 @@ def restore_and_backup():
     parser = ConfigParser()
     parser.read("data.txt")
     if parser.get('info', "always_backup") == "False":
-        ask_for_backup = askyesno('Do you want to backup your data before update?')
+        ask_for_backup = askyesno("Backup", 'Do you want to backup your data before update?')
         if ask_for_backup is True:
             parser.set("info", "updated", "True")
             with open("data.txt", 'w') as configfile:

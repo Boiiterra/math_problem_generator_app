@@ -4,7 +4,7 @@ from launcher import check_for_backup
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 
-__version__ = '0.2'
+__version__ = '0.3'
 author = "TerraBoii"
 
 # File reading section
