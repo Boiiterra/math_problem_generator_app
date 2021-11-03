@@ -11,7 +11,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.1'
+__version__ = '0.2'
 __author__ = "TerraBoii"
 # Victor Santiago is an original creator of an application that checks for updates
 # I took its main functionality and modified appearance.
@@ -32,10 +32,6 @@ class UpdateManager(Toplevel):
         self.transient(parent)
         self.attributes("-disabled", True)
         self.grab_set()
-        w = 350
-        h = 200
-        m_x = int((self.winfo_screenwidth() - 350) / 2)
-        m_y = int((self.winfo_screenheight() - 200) / 2)
         self.geometry(f'{350}x{200}+{int((self.winfo_screenwidth() - 350) / 2)}+{int((self.winfo_screenheight() - 200) / 2)}')
         self.resizable(width=False, height=False)
         self.title('Update Manager')
@@ -102,10 +98,14 @@ def check_and_restore():
     parser = ConfigParser()
     parser.read('backup\\backup_data.txt')
     if parser.get("info", "updated") == "True":
+        parser.set("info", "updated", "False")
+        with open("backup\\backup_data.txt", 'w') as configfile:
+            parser.write(configfile)
         cmp("backup\\backup_data.txt", "data.txt")
 
 
 def restore_and_backup():
+    check_and_restore()
     parser = ConfigParser()
     parser.read("data.txt")
     if parser.get('info', "always_backup") == "False":
@@ -120,12 +120,25 @@ def restore_and_backup():
         with open("data.txt", 'w') as configfile:
             parser.write(configfile)
         check_for_backup()
-    check_and_restore()
 
 
 def run(): # Execute main .exe and destroy tmp window
     tmp.after(0, tmp.destroy)
     ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
+
+
+def update(tmp, data):
+    parser = ConfigParser()
+    parser.read("data.txt")
+    if parser.get("info", "auto_update") == "False":
+        get_update = askyesno('Software update available!\n',
+                              f'{_AppName_} {__version__} needs to update to version {data}')
+        if get_update is True:
+            UpdateManager(tmp)
+        elif get_update is False:
+            run()
+    else:
+        UpdateManager(tmp)
 
 
 if __name__ == "__main__":
@@ -138,19 +151,12 @@ if __name__ == "__main__":
 
     try:
 
-        check_for_backup()
-
         response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
         data = response.text
 
         if float(data) > float(__version__):
             restore_and_backup()
-            get_update = askyesno('Software update available!\n',
-                                  f'{_AppName_} {__version__} needs to update to version {data}')
-            if get_update is True:
-                UpdateManager(tmp)
-            elif get_update is False:
-                run()
+            update(tmp, data)
         else:
             run()
     except RequestException:  # Something went wrong during requesting
