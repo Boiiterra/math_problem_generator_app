@@ -11,7 +11,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.3'
+__version__ = '0.4'
 __author__ = "TerraBoii"
 # Victor Santiago is an original creator of an application that checks for updates
 # I took its main functionality and modified appearance.
@@ -104,8 +104,7 @@ def check_and_restore():
         cmp("backup\\backup_data.txt", "data.txt")
 
 
-def restore_and_backup():
-    check_and_restore()
+def update_prepare():
     parser = ConfigParser()
     parser.read("data.txt")
     if parser.get('info', "always_backup") == "False":
@@ -151,11 +150,13 @@ if __name__ == "__main__":
 
     try:
 
+        check_and_restore()
+
         response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
         data = response.text
 
         if float(data) > float(__version__):
-            restore_and_backup()
+            update_prepare()
             update(tmp, data)
         else:
             run()
