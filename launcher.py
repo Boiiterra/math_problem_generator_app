@@ -11,7 +11,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.5'
+__version__ = '0.6'
 __author__ = "TerraBoii"
 # Victor Santiago is an original creator of an application that checks for updates
 # I took its main functionality and modified appearance.
@@ -86,6 +86,11 @@ def backup_data():
 
 
 def check_for_backup():
+    parser = ConfigParser()
+    parser.read("data.txt")
+    parser.set("info", "updated", "True")
+    with open("data.txt", 'w') as configfile:
+        parser.write(configfile)
     try:
         if not cmp("data.txt", "backup\\backup_data.txt"):
             backup_data()
@@ -103,7 +108,12 @@ def check_and_restore():
             parser.set("info", "updated", "False")
             with open("backup\\backup_data.txt", 'w') as configfile:
                 parser.write(configfile)
-            cmp("backup\\backup_data.txt", "data.txt")
+            with open("backup\\backup_data.txt") as source_file:
+                with open("data.txt", "w") as destination_file:
+                    for line in source_file:
+                        destination_file.write(line)
+                    destination_file.close()
+                source_file.close()
     except FileNotFoundError and NoSectionError:
         pass
 
@@ -114,14 +124,8 @@ def update_prepare():
     if parser.get('info', "always_backup") == "False":
         ask_for_backup = askyesno("Backup", 'Do you want to backup your data before update?')
         if ask_for_backup is True:
-            parser.set("info", "updated", "True")
-            with open("data.txt", 'w') as configfile:
-                parser.write(configfile)
             check_for_backup()
     else:
-        parser.set("info", "updated", "True")
-        with open("data.txt", 'w') as configfile:
-            parser.write(configfile)
         check_for_backup()
 
 
