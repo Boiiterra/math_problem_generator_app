@@ -25,7 +25,6 @@ num_btn_fore = #4d4d4d
 num_btn_active_fore = #787878
 
 [info]
-first_launch = True
 always_backup = False
 auto_update = False
 updated = False
