@@ -1,20 +1,10 @@
 """This file contains all generators used in the MAIN application"""
-from ctypes import windll, Structure, c_long, byref
 from requests.exceptions import RequestException
+from pyautogui import position as mouse_pos
 from random import seed, randint
 from time import time, sleep
 from requests import get
 # Created by TerraBoii
-
-
-class POINT(Structure):
-    _fields_ = [("x", c_long), ("y", c_long)]
-
-
-def getCursorPosition():
-    pt = POINT()
-    windll.user32.GetCursorPos(byref(pt))
-    return { "x": pt.x, "y": pt.y}
 
 
 def __create_seed(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int) -> float:
@@ -24,8 +14,7 @@ def __create_seed(app_version: str, app_width: int, app_height: int, screen_widt
         data = response.text
     except RequestException: 
         data = app_version
-    cursor_position = getCursorPosition()
-    x, y = cursor_position['x'], cursor_position['y']
+    x, y = mouse_pos()
     # Rule 1 for generating seed: getting cursor position and manipulating with x, y values
     rule_1 = ((((int(str(x + 1) + str(y + 1)) * 2) // ((x + 1 * y + 1) + 1)) * (x + 1 + y + 1)) - (x + y)) * (x + 1 + y + 1)
     sleep(0.001)  # stoping program for 1 millisecond to get different time number
