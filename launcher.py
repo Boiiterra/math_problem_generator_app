@@ -13,10 +13,8 @@ from filecmp import cmp
 
 __version__ = '0.6'
 __author__ = "TerraBoii"
-# Victor Santiago is an original creator of an application that checks for updates
-# I took its main functionality and modified appearance.
-# Link to original project: https://github.com/vsantiago113/Tkinter-MyTestApp
-__credits__ = ["Victor Santiago", 'TerraBoii']
+# If you want to get less automated version check this project: 
+# https://github.com/vsantiago113/Tkinter-MyTestApp
 _AppName_ = 'Math problem generator app'
 
 # url for installer
