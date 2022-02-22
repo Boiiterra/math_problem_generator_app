@@ -118,6 +118,53 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     parser.set('parameters', 'y', _y_)
 
 
+def copy_to_clipboard(parent, argument):
+    # parent.clipboard_clear()
+    parent.clipboard_append(argument)
+    parent.update() # now it stays on the clipboard after the window is closed
+
+
+class ToolTip(object):
+
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 57
+        y = y + cy + self.widget.winfo_rooty() +27
+        self.tipwindow = tw = Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = Label(tw, text=self.text, justify="left",
+                      background="#ffffe0", relief="solid", borderwidth=1,
+                      font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+
+
+def CreateToolTip(widget, text):
+    toolTip = ToolTip(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
+
+
 class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
@@ -554,6 +601,7 @@ class SquaresAPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
+        self.parent = parent
 
         task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
@@ -751,6 +799,7 @@ class RectanglesAPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
+        self.parent = parent
 
         task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
@@ -1024,6 +1073,7 @@ class SquaresPPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
+        self.parent = parent
 
         task_data = perimeter_task('square', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
@@ -1222,6 +1272,7 @@ class RectanglesPPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
+        self.parent = parent
 
         task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
@@ -1271,6 +1322,7 @@ class RectanglesPPage(Frame):
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
+        CreateToolTip(self.exercise, text="Click to copy exercise number")
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
         self.text_label.pack(pady=4, expand=True)
