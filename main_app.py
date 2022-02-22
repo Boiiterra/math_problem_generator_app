@@ -300,7 +300,7 @@ class MainPage(Frame):
 
         self.start_button = Button(self, bg=num_bg, fg=fg, font=("Arial", 45),
                                    activeforeground=active_fg, activebackground=num_bg, bd=0, highlightbackground=num_bg,
-                                   disabledforeground=num_bg, command=lambda: controller.show_frame(GeometryPage))
+                                   disabledforeground=num_bg, command=lambda: controller.show_frame(SubjectsPage))
         self.start_button.pack(fill='both', pady=2, expand=True)
 
         self.settings_button = Button(self, bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
@@ -355,20 +355,52 @@ class SubjectsPage(Frame):
         self.subjects_container = Label(self, bg=bg)
         self.subjects_container.pack(side="left", expand=True, fill="both", padx=2)
 
+        self.subjects_container.rowconfigure(0, weight=1)
+        self.subjects_container.rowconfigure(1, weight=1)
+        self.subjects_container.columnconfigure(0, weight=1)
+        self.subjects_container.columnconfigure(1, weight=1)
+
+        self.algebra = Button(self.subjects_container, text='Figure square', bd=0, state='disabled',
+                              disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.algebra.grid(row=0, column=0, sticky='nsew')
+        
+        self.geometry = Button(self.subjects_container, bd=0, font=('Arial', 25),
+                               bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                               command=lambda: controller.show_frame(GeometryPage), highlightbackground=num_bg)
+        self.geometry.grid(row=0, column=1, sticky='nsew')
+        
+        self.custom = Button(self.subjects_container, text='Figure perimeter', bd=0, state='disabled',
+                             disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.custom.grid(row=1, column=0, sticky='nsew')
+        
+        self.number = Button(self.subjects_container, text='Figure square', bd=0, state='disabled',
+                             disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.number.grid(row=1, column=1, sticky='nsew')
+
         self.set_lang_subjectspage()
 
     def set_lang_subjectspage(self):
         if current_language == "eng":
             self.back_btn.config(text='Back')
+            self.subjects_info.config(text="Choose subject:")
+            self.algebra.config(text="Algebra")
+            self.geometry.config(text="Geometry")
 
         elif current_language == "rus":
             self.back_btn.config(text='Назад')
+            self.subjects_info.config(text="Вибери предмет:")
+            self.algebra.config(text="Алгебра")
+            self.geometry.config(text="Геометрия")
 
     def subjects_page_theme_update(self):
         self.config(bg=bg)
         self.placeholder.config(bg=bg)
         self.subjects_container.config(bg=bg)
         self.subjects_info.config(bg=bg, fg=fg)
+        self.custom.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.number.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.algebra.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.geometry.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg, highlightbackground=num_bg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
 
 
@@ -942,13 +974,13 @@ class PerimetersPage(Frame):
         self.figures_container.columnconfigure(1, weight=1)
 
         self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                     bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SquaresPPage), highlightbackground=num_bg)
+                                     bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                     command=lambda: controller.show_frame(SquaresPPage), highlightbackground=bg)
         self.squares_p.grid(row=0, column=0, sticky='nsew')
         
         self.rectangles_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(RectanglesPPage), highlightbackground=bg)
+                                        bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                        command=lambda: controller.show_frame(RectanglesPPage), highlightbackground=num_bg)
         self.rectangles_p.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
@@ -980,9 +1012,9 @@ class PerimetersPage(Frame):
         self.perimeters_info.config(bg=bg, fg=fg)
         self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.rectangles_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg, highlightbackground=bg)
-        self.squares_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                              highlightbackground=num_bg)
+        self.squares_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg, highlightbackground=bg)
+        self.rectangles_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                 highlightbackground=num_bg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                                highlightbackground=num_bg)
 
