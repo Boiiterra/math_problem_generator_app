@@ -1,7 +1,8 @@
-from tkinter import Tk, Frame, Label, Button, Entry, Text, Toplevel
+from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
 from generators import perimeter_task, area_task
 from configparser import ConfigParser
 from webbrowser import open_new_tab
+from platform import system
 
 __version__ = '0.6'
 author = "TerraBoii"
@@ -122,13 +123,16 @@ class MainAppBody(Tk):  # Main application with page logic
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.title("Math problem generator")
-        self.iconbitmap("images//main_icon.ico")
+        try:
+            self.iconbitmap("images//main_icon.ico")
+        except TclError:
+            print("Unable to find icon file")
         # Setting max and min sizes for the app
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
 
         # creating window:
-        if current_language == "unknown" or lng_state == "ask":
+        if current_language == "unknown" or lng_state == "ask" or system() == "Linux":
             middle_x = int((self.winfo_screenwidth() - 800) / 2)
             middle_y = int((self.winfo_screenheight() - 600) / 2)
             self.geometry(f"{800}x{600}+{middle_x}+{middle_y}")  # Middle pos on the screen
@@ -136,9 +140,10 @@ class MainAppBody(Tk):  # Main application with page logic
             self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
 
         # Rewriting default delete method in order to save window parameters
-        self.protocol('WM_DELETE_WINDOW', self.delete_window)
-        if _state == 'yes':
-            self.state('zoomed')
+        if system() == "Windows":
+            self.protocol('WM_DELETE_WINDOW', self.delete_window)
+            if _state == 'yes':
+                self.state('zoomed')
 
 
         container = Frame(self, bg="black")
@@ -149,8 +154,8 @@ class MainAppBody(Tk):  # Main application with page logic
 
         self.frames = {}
 
-        frame_collection = (FLaunchPage, TopicsPage, MainPage, SettingsPage, AreasPage, PerimetersPage, SquaresAPage, 
-                            RectanglesAPage, SquaresPPage, RectanglesPPage)
+        frame_collection = (FLaunchPage, GeometryPage, MainPage, SettingsPage, AreasPage, PerimetersPage, SquaresAPage, 
+                            RectanglesAPage, SquaresPPage, RectanglesPPage, SubjectsPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -204,11 +209,11 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         lang_btn_container.columnconfigure(0, weight=1)
 
         self.russian = Button(lang_btn_container, text="Русский", bg="black", fg="#00ff00",
-                         activeforeground="#008000", font=("Arial", 30), bd=0)
+                         activeforeground="#008000", font=("Arial", 30), bd=0, highlightbackground="black")
         self.russian.grid(row=0, column=0, sticky="nsew")
 
         self.english = Button(lang_btn_container, text="English", bg="black", fg="#00ff00",
-                         activeforeground="#008000", font=("Arial", 30), bd=0)
+                         activeforeground="#008000", font=("Arial", 30), bd=0, highlightbackground="black")
         self.english.grid(row=1, column=0, sticky="nsew")
 
         def entered(_, btn, lang: str):
@@ -271,10 +276,12 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         page.set_lang_squaresapage()
         page = self.controller.get_page(SquaresPPage)
         page.set_lang_squaresppage()
+        page = self.controller.get_page(GeometryPage)
+        page.set_lang_geometrypage()
+        page = self.controller.get_page(SubjectsPage)
+        page.set_lang_subjectspage()
         page = self.controller.get_page(AreasPage)
         page.set_lang_squarespage()
-        page = self.controller.get_page(TopicsPage)
-        page.set_lang_topicspage()
         page = self.controller.get_page(MainPage)
         page.set_lang_mainpage()
 
@@ -292,13 +299,14 @@ class MainPage(Frame):
         self.text_label.pack(fill='both', expand=True)
 
         self.start_button = Button(self, bg=num_bg, fg=fg, font=("Arial", 45),
-                                   activeforeground=active_fg, activebackground=num_bg, bd=0,
-                                   disabledforeground=num_bg, command=lambda: controller.show_frame(TopicsPage))
+                                   activeforeground=active_fg, activebackground=num_bg, bd=0, highlightbackground=num_bg,
+                                   disabledforeground=num_bg, command=lambda: controller.show_frame(GeometryPage))
         self.start_button.pack(fill='both', pady=2, expand=True)
 
         self.settings_button = Button(self, bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
                                       activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
-                                      disabledforeground=num_bg, command=lambda: controller.show_frame(SettingsPage))
+                                      disabledforeground=num_bg, command=lambda: controller.show_frame(SettingsPage),
+                                      highlightbackground=num_bg)
         self.settings_button.pack(fill='both', side='bottom', expand=True)
 
         def font_resize_mainpage(_):
@@ -321,77 +329,120 @@ class MainPage(Frame):
     def main_page_theme_update(self):
         self.config(bg=bg)
         self.text_label.config(bg=bg, fg=fg)
-        self.start_button.config(bg=num_bg, fg=fg, activeforeground=num_active_fg, activebackground=num_bg)
-        self.settings_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg)
+        self.start_button.config(bg=num_bg, fg=fg, activeforeground=num_active_fg, activebackground=num_bg,
+                                 highlightbackground=num_bg)
+        self.settings_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
+                                    highlightbackground=num_bg)
 
 
-class TopicsPage(Frame):
+class SubjectsPage(Frame):
 
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.home_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.home_btn.pack(side='bottom', fill='x', ipady=5)
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
+        self.back_btn.pack(side='bottom', fill='x', ipady=5)
 
-        self.topics_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.topics_info.pack()
+        self.subjects_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
+        self.subjects_info.pack()
 
         self.placeholder = Label(self, font=('Arial', 5), bg=bg)
         self.placeholder.pack(side='bottom')
 
-        self.topics_container = Label(self, bg=bg)
-        self.topics_container.pack(side="left", expand=True, fill="both", padx=2)
+        self.subjects_container = Label(self, bg=bg)
+        self.subjects_container.pack(side="left", expand=True, fill="both", padx=2)
 
-        self.topics_container.rowconfigure(0, weight=1)
-        self.topics_container.rowconfigure(1, weight=1)
-        self.topics_container.columnconfigure(0, weight=1)
-        self.topics_container.columnconfigure(1, weight=1)
+        self.set_lang_subjectspage()
 
-        self.figure_squares = Button(self.topics_container, bd=0, font=('Arial', 25),
+    def set_lang_subjectspage(self):
+        if current_language == "eng":
+            self.back_btn.config(text='Back')
+
+        elif current_language == "rus":
+            self.back_btn.config(text='Назад')
+
+    def subjects_page_theme_update(self):
+        self.config(bg=bg)
+        self.placeholder.config(bg=bg)
+        self.subjects_container.config(bg=bg)
+        self.subjects_info.config(bg=bg, fg=fg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
+
+
+class GeometryPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent, bg=bg)
+        self.controller = controller
+
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(SubjectsPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
+        self.back_btn.pack(side='bottom', fill='x', ipady=5)
+
+        self.geometry_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
+        self.geometry_info.pack()
+
+        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
+        self.placeholder.pack(side='bottom')
+
+        self.geometry_container = Label(self, bg=bg)
+        self.geometry_container.pack(side="left", expand=True, fill="both", padx=2)
+
+        self.geometry_container.rowconfigure(0, weight=1)
+        self.geometry_container.rowconfigure(1, weight=1)
+        self.geometry_container.columnconfigure(0, weight=1)
+        self.geometry_container.columnconfigure(1, weight=1)
+
+        self.figure_squares = Button(self.geometry_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(AreasPage))
+                                     command=lambda: controller.show_frame(AreasPage), highlightbackground=num_bg)
         self.figure_squares.grid(row=0, column=0, sticky='nsew')
         
-        self.figure_perimeters = Button(self.topics_container, bd=0, font=('Arial', 25),
+        self.figure_perimeters = Button(self.geometry_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(PerimetersPage))
+                                        command=lambda: controller.show_frame(PerimetersPage), highlightbackground=bg)
         self.figure_perimeters.grid(row=0, column=1, sticky='nsew')
         
-        self.figure_perimeter = Button(self.topics_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg)
+        self.figure_perimeter = Button(self.geometry_container, text='Figure perimeter', bd=0, state='disabled',
+                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
         
-        self.figure_square = Button(self.topics_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg)
+        self.figure_square = Button(self.geometry_container, text='Figure square', bd=0, state='disabled',
+                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_square.grid(row=1, column=1, sticky='nsew')
 
-        self.set_lang_topicspage()
+        self.set_lang_geometrypage()
 
-    def set_lang_topicspage(self):
+    def set_lang_geometrypage(self):
         if current_language == "eng":
-            self.home_btn.config(text='Home')
-            self.topics_info.config(text='Choose topic:')
+            self.back_btn.config(text='Back')
+            self.geometry_info.config(text='Choose topic:')
             self.figure_squares.config(text='Figure\n squares ')
             self.figure_perimeters.config(text='Figure\nperimeters')
 
         elif current_language == 'rus':
-            self.home_btn.config(text='Назад')
-            self.topics_info.config(text='Выбери тему:')
+            self.back_btn.config(text='Назад')
+            self.geometry_info.config(text='Выбери тему:')
             self.figure_squares.config(text='Площади \nфигур')
             self.figure_perimeters.config(text='Периметр\nфигур')
 
     def topics_page_theme_update(self):
         self.config(bg=bg)
         self.placeholder.config(bg=bg)
-        self.topics_container.config(bg=bg)
-        self.topics_info.config(bg=bg, fg=fg)
-        self.figure_square.config(disabledforeground=bg, bg=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg)
-        self.figure_perimeters.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
-        self.figure_squares.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
-        self.home_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.geometry_container.config(bg=bg)
+        self.geometry_info.config(bg=bg, fg=fg)
+        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.figure_perimeters.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                      highlightbackground=bg)
+        self.figure_squares.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                   highlightbackground=num_bg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                             highlightbackground=num_bg)
 
 
 class AreasPage(Frame):
@@ -400,8 +451,9 @@ class AreasPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(GeometryPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
         self.back_btn.pack(side='bottom', fill='x', ipady=5)
         
         self.areas_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
@@ -420,20 +472,20 @@ class AreasPage(Frame):
         
         self.rectangles_a = Button(self.figures_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(RectanglesAPage))
+                                        command=lambda: controller.show_frame(RectanglesAPage), highlightbackground=bg)
         self.rectangles_a.grid(row=0, column=0, sticky='nsew')
 
         self.squares_a = Button(self.figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SquaresAPage))
+                                     command=lambda: controller.show_frame(SquaresAPage), highlightbackground=num_bg)
         self.squares_a.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg)
+                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
         
         self.figure_square = Button(self.figures_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg)
+                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_square.grid(row=1, column=1, sticky='nsew')
 
         self.set_lang_squarespage()
@@ -455,11 +507,14 @@ class AreasPage(Frame):
         self.placeholder.config(bg=bg)
         self.areas_info.config(bg=bg, fg=fg)
         self.figures_container.config(bg=bg)
-        self.figure_square.config(disabledforeground=bg, bg=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg)
-        self.rectangles_a.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
-        self.squares_a.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.rectangles_a.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                 highlightbackground=bg)
+        self.squares_a.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                              highlightbackground=num_bg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                             highlightbackground=num_bg)
 
 
 class SquaresAPage(Frame):
@@ -508,7 +563,8 @@ class SquaresAPage(Frame):
                 elif current_language == "rus":
                     self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
 
-        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1)
+        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
+                             highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
 
@@ -531,7 +587,8 @@ class SquaresAPage(Frame):
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
+                                highlightbackground=bg)
         self.answer_txt.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
@@ -565,21 +622,25 @@ class SquaresAPage(Frame):
             self.after(1000, self.next_btn.config(state='normal'))
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                  highlightbackground=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
-                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled")
+                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
+                                  highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
         
         self.answer_field.bind('<Button-1>', click)
 
         self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
-                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                                 highlightbackground=num_bg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
         self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
+                               highlightbackground=bg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_squaresapage()
@@ -621,13 +682,17 @@ class SquaresAPage(Frame):
         self.config(bg=bg)
         self.container.config(bg=bg)
         self.btn_container.config(bg=bg)
-        self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
+        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
+        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg)
+        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
+        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
+                                highlightbackground=bg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
+                             highlightbackground=bg)
 
     def set_lang_squaresapage(self):
         self.exercise.config(state='normal')
@@ -640,8 +705,8 @@ class SquaresAPage(Frame):
             self.confirm_btn.config(text=" Confirm")
             self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
         elif current_language == 'rus':
-            self.confirm_btn.config(text=" Подтвердить")
             self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
+            self.confirm_btn.config(text=" Подтвердить")
             self.next_btn.config(text='Новое задание')
             self.text_label.config(text=self.text_r)
             self.answer_txt.config(text='Ответ: ')
@@ -705,7 +770,8 @@ class RectanglesAPage(Frame):
             self.after(1000, self.next_btn.config(state='normal'))
 
 
-        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1)
+        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
+                             highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
 
@@ -728,7 +794,8 @@ class RectanglesAPage(Frame):
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
+                                 highlightbackground=bg)
         self.answer_txt.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
@@ -757,21 +824,25 @@ class RectanglesAPage(Frame):
             self.after(501, container_reset)
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg, 
+                                  highlightbackground=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
-                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled")
+                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
+                                  highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
         
         self.answer_field.bind('<Button-1>', click)
 
         self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
         self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
+                               highlightbackground=bg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_rectanglesaspage()
@@ -813,13 +884,17 @@ class RectanglesAPage(Frame):
         self.config(bg=bg)
         self.container.config(bg=bg)
         self.btn_container.config(bg=bg)
-        self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
+        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
+        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                             highlightbackground=num_bg)
+        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
+                                highlightbackground=bg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
+                             highlightbackground=bg)
 
     def set_lang_rectanglesaspage(self):
         self.exercise.config(state='normal')
@@ -847,8 +922,9 @@ class PerimetersPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(TopicsPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(GeometryPage), bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
         self.return_btn.pack(side='bottom', fill='x', ipady=5)
         
         self.perimeters_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
@@ -867,20 +943,20 @@ class PerimetersPage(Frame):
 
         self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SquaresPPage))
+                                     command=lambda: controller.show_frame(SquaresPPage), highlightbackground=num_bg)
         self.squares_p.grid(row=0, column=0, sticky='nsew')
         
         self.rectangles_p = Button(self.figures_container, bd=0, font=('Arial', 25),
                                         bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(RectanglesPPage))
+                                        command=lambda: controller.show_frame(RectanglesPPage), highlightbackground=bg)
         self.rectangles_p.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg)
+                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
         
         self.figure_square = Button(self.figures_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg)
+                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
         self.figure_square.grid(row=1, column=1, sticky='nsew')
 
         self.set_lang_perimeterspage()
@@ -902,11 +978,13 @@ class PerimetersPage(Frame):
         self.placeholder.config(bg=bg)
         self.figures_container.config(bg=bg)
         self.perimeters_info.config(bg=bg, fg=fg)
-        self.figure_square.config(disabledforeground=bg, bg=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg)
-        self.rectangles_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg)
-        self.squares_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
+        self.rectangles_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg, highlightbackground=bg)
+        self.squares_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                              highlightbackground=num_bg)
+        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
 
 
 class SquaresPPage(Frame):
@@ -955,7 +1033,8 @@ class SquaresPPage(Frame):
                 elif current_language == "rus":
                     self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
 
-        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1)
+        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
+                             highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
 
@@ -978,7 +1057,8 @@ class SquaresPPage(Frame):
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
+                                 highlightbackground=bg)
         self.answer_txt.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
@@ -1013,21 +1093,25 @@ class SquaresPPage(Frame):
 
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                  highlightbackground=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
-                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled")
+                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
+                                  highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
         
         self.answer_field.bind('<Button-1>', click)
 
         self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
-                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                                 highlightbackground=num_bg)
         self.return_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
         self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
+                               highlightbackground=bg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_squaresppage()
@@ -1069,13 +1153,17 @@ class SquaresPPage(Frame):
         self.config(bg=bg)
         self.container.config(bg=bg)
         self.btn_container.config(bg=bg)
-        self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
+        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
+        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg)
+        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
+        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
+                                highlightbackground=bg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
+                             highlightbackground=bg)
 
     def set_lang_squaresppage(self):
         self.exercise.config(state='normal')
@@ -1147,7 +1235,8 @@ class RectanglesPPage(Frame):
                 elif current_language == "rus":
                     self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
 
-        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1)
+        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
+                             highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
 
@@ -1170,7 +1259,8 @@ class RectanglesPPage(Frame):
         self.container.columnconfigure(1, weight=1)
         self.container.columnconfigure(2, weight=1)
 
-        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32))
+        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
+                                 highlightbackground=bg)
         self.answer_txt.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
@@ -1204,21 +1294,24 @@ class RectanglesPPage(Frame):
             self.after(1000, self.next_btn.config(state='normal'))
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=bg)
+                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=bg,
+                                  highlightbackground=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
-                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled")
+                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
+                                  highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
         
         self.answer_field.bind('<Button-1>', click)
 
-        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0,
+        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0, highlightbackground=num_bg,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
         self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task)
+                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
+                               highlightbackground=bg)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_rectanglesppage()
@@ -1260,13 +1353,17 @@ class RectanglesPPage(Frame):
         self.config(bg=bg)
         self.container.config(bg=bg)
         self.btn_container.config(bg=bg)
-        self.exercise.config(bg=bg, fg=fg)
         self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg)
+        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
+        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg)
+        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                             highlightbackground=num_bg)
+        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
+                                highlightbackground=bg)
+        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
+                             highlightbackground=bg)
 
     def set_lang_rectanglesppage(self):
         self.exercise.config(state='normal')
@@ -1322,17 +1419,17 @@ class SettingsPage(Frame):
         self.language_changers_container.columnconfigure(2, weight=1)
 
         self.language_info = Button(self.language_changers_container, bg=bg, disabledforeground=fg,
-                                    font=("Arial", 35), state='disabled', bd=0)
+                                    font=("Arial", 35), state='disabled', bd=0, highlightbackground=bg)
         self.language_info.grid(row=0, column=0, sticky="nsew")
 
         self.english_lang_btn = Button(self.language_changers_container, text="English", bg=num_bg, fg=num_fg,
-                                       font=("Arial", 35), disabledforeground=num_bg,
+                                       font=("Arial", 35), disabledforeground=num_bg, highlightbackground=num_bg,
                                        activeforeground=num_active_fg, activebackground=num_bg, bd=0,
                                        command=lambda: self.language_changer(_lang_="eng"))
         self.english_lang_btn.grid(row=0, column=1)
 
         self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
-                                       font=("Arial", 35), disabledforeground=bg,
+                                       font=("Arial", 35), disabledforeground=bg, highlightbackground=bg,
                                        activeforeground=active_fg, activebackground=bg, bd=0,
                                        command=lambda: self.language_changer(_lang_="rus"))
         self.russian_lang_btn.grid(row=0, column=2)
@@ -1354,12 +1451,12 @@ class SettingsPage(Frame):
         self.theme_info.grid(row=0, column=0, sticky="nsew")
 
         self.dark_theme_btn = Button(self.themes_changers_container, text="Dark", bg=num_bg, fg=num_fg,
-                                     font=("Arial", 40), command=self.change_theme_to_dark, bd=0,
+                                     font=("Arial", 40), command=self.change_theme_to_dark, bd=0, highlightbackground=num_bg,
                                      activeforeground=num_active_fg, activebackground=num_bg, disabledforeground=num_bg)
         self.dark_theme_btn.grid(row=0, column=1, sticky='nsew')
 
         self.light_theme_btn = Button(self.themes_changers_container, text="Light", bg=bg, fg=fg,
-                                      font=("Arial", 40),
+                                      font=("Arial", 40), highlightbackground=bg,
                                       activeforeground=active_fg, activebackground=bg, bd=0, disabledforeground=bg,
                                       command=self.change_theme_to_light)
         self.light_theme_btn.grid(row=0, column=3, sticky='nsew')
@@ -1370,7 +1467,8 @@ class SettingsPage(Frame):
 
         self.home_button = Button(self, text="Home", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
                                   activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
-                                  disabledforeground=num_bg, command=lambda: controller.show_frame(MainPage))
+                                  disabledforeground=num_bg, command=lambda: controller.show_frame(MainPage),
+                                  highlightbackground=num_bg)
         self.home_button.pack(fill='both', side='bottom', expand=True)
 
         # Checking for current theme
@@ -1437,17 +1535,17 @@ class SettingsPage(Frame):
         self.theme_info.config(bg=bg, fg=fg)
         self.themes_changers_container.config(bg=bg)
         self.language_changers_container.config(bg=bg)
-        self.language_info.config(bg=bg, disabledforeground=fg)
+        self.language_info.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
         self.dark_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
-                                   disabledforeground=num_bg)
+                                   disabledforeground=num_bg, highlightbackground=num_bg)
         self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
-                                    disabledforeground=bg)
+                                    disabledforeground=bg, highlightbackground=bg)
         self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg,
-                                     activebackground=bg)
+                                     activebackground=bg, highlightbackground=bg)
         self.home_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
-                                disabledforeground=num_bg)
+                                disabledforeground=num_bg, highlightbackground=num_bg)
         self.english_lang_btn.config(bg=num_bg, fg=num_fg, disabledforeground=num_bg, activeforeground=num_active_fg,
-                                     activebackground=num_bg)
+                                     activebackground=num_bg, highlightbackground=num_bg)
 
     def pages_update(self):
         page = self.controller.get_page(RectanglesAPage)
@@ -1462,8 +1560,10 @@ class SettingsPage(Frame):
         page.squares_a_page_theme_update()
         page = self.controller.get_page(SettingsPage)
         page.settings_page_theme_update()
-        page = self.controller.get_page(TopicsPage)
+        page = self.controller.get_page(GeometryPage)
         page.topics_page_theme_update()
+        page = self.controller.get_page(SubjectsPage)
+        page.subjects_page_theme_update()
         page = self.controller.get_page(AreasPage)
         page.areas_page_theme_update()
         page = self.controller.get_page(MainPage)
