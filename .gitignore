@@ -136,3 +136,7 @@ idea/
 launcher-cache/
 launcher-SetupFiles/
 launcher.aip
+
+# Created .exe files, except installer
+binaries/
+Math problem generator launcher.exe
