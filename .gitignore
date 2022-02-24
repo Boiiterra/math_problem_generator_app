@@ -140,3 +140,5 @@ launcher.aip
 # Created .exe files, except installer
 binaries/
 Math problem generator launcher.exe
+Math problem generator app.exe
+backup_data.txt
