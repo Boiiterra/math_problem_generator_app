@@ -24,6 +24,7 @@ num_btn_fore = #4d4d4d
 num_btn_active_fore = #787878
 
 [info]
+version = 0.6.1
 auto_update = False
 always_backup = False
 updated = False
