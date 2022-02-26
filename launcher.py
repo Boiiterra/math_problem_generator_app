@@ -2,6 +2,7 @@ from configparser import ConfigParser, NoSectionError
 from requests.exceptions import RequestException
 from tkinter import Button, Tk, Toplevel, Label
 from tkinter.messagebox import askyesno
+from pkg_resources import parse_version
 from tkinter.ttk import Progressbar
 from win32api import ShellExecute
 from PIL import Image, ImageTk
@@ -11,7 +12,7 @@ from requests import get
 from pathlib import Path
 from filecmp import cmp
 
-__version__ = '0.6'
+__version__ = '0.6.1'
 __author__ = "TerraBoii"
 # If you want to get less automated version check this project: 
 # https://github.com/vsantiago113/Tkinter-MyTestApp
@@ -161,7 +162,7 @@ if __name__ == "__main__":
         response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
         data = response.text
 
-        if float(data) > float(__version__):
+        if parse_version(data) > parse_version(__version__):
             update_prepare()
             update(tmp, data)
         else:
