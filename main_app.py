@@ -1,15 +1,18 @@
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
 from generators import perimeter_task, area_task
+from pyautogui import position as mouse_pos
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 from platform import system
+from pyperclip import copy
 
-__version__ = '0.6'
 author = "TerraBoii"
 
 # File reading section
 parser = ConfigParser()
 parser.read("data.txt")
+# Version
+__version__ = parser.get("info", "version")
 # Parameters:
 x_pos = parser.get('parameters', 'x')
 y_pos = parser.get('parameters', 'y')
@@ -116,12 +119,8 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     parser.set('parameters', 'width', _width_)
     parser.set('parameters', 'x', _x_)
     parser.set('parameters', 'y', _y_)
-
-
-def copy_to_clipboard(parent, argument):
-    # parent.clipboard_clear()
-    parent.clipboard_append(argument)
-    parent.update() # now it stays on the clipboard after the window is closed
+    with open("data.txt", 'w') as configfile:
+        parser.write(configfile)
 
 
 class ToolTip(object):
@@ -137,15 +136,25 @@ class ToolTip(object):
         self.text = text
         if self.tipwindow or not self.text:
             return
-        x, y, cx, cy = self.widget.bbox("insert")
-        x = x + self.widget.winfo_rootx() + 57
-        y = y + cy + self.widget.winfo_rooty() +27
+        mouse_x, mouse_y = mouse_pos()
+        if mouse_x <= 1700 and current_language == "eng":
+            x = mouse_x + 8
+            y = mouse_y + 1
+        elif mouse_x <= 1600 and current_language == "rus":
+            x = mouse_x + 8
+            y = mouse_y + 1
+        elif mouse_x > 1700 and current_language == "eng":
+            x = mouse_x - 200
+            y = mouse_y + 1
+        elif mouse_x > 1600 and current_language == "rus":
+            x = mouse_x - 312
+            y = mouse_y + 1
         self.tipwindow = tw = Toplevel(self.widget)
         tw.wm_overrideredirect(1)
         tw.wm_geometry("+%d+%d" % (x, y))
         label = Label(tw, text=self.text, justify="left",
                       background="#ffffe0", relief="solid", borderwidth=1,
-                      font=("tahoma", "8", "normal"))
+                      font=("tahoma", "10", "normal"))
         label.pack(ipadx=1)
 
     def hidetip(self):
@@ -157,9 +166,9 @@ class ToolTip(object):
 
 def CreateToolTip(widget, text):
     toolTip = ToolTip(widget)
-    def enter(event):
+    def enter(_):
         toolTip.showtip(text)
-    def leave(event):
+    def leave(_):
         toolTip.hidetip()
     widget.bind('<Enter>', enter)
     widget.bind('<Leave>', leave)
@@ -169,7 +178,7 @@ class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.title("Math problem generator")
+        self.title(f"Math problem generator - {__version__}")
         try:
             self.iconbitmap("images//main_icon.ico")
         except TclError:
@@ -647,6 +656,7 @@ class SquaresAPage(Frame):
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
+        self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
         self.text_label.pack(pady=4, expand=True)
@@ -703,15 +713,15 @@ class SquaresAPage(Frame):
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                  highlightbackground=bg)
+                                  highlightbackground=bg, highlightcolor=bg)
         self.answer_field.grid(row=0, column=1)
+
+        self.answer_field.bind('<Button-1>', click)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
                                   bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
                                   highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
-        
-        self.answer_field.bind('<Button-1>', click)
 
         self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
@@ -765,14 +775,14 @@ class SquaresAPage(Frame):
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
         self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                                highlightbackground=num_bg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
                                 highlightbackground=bg)
         self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
                              highlightbackground=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_squaresapage(self):
         self.exercise.config(state='normal')
@@ -784,7 +794,9 @@ class SquaresAPage(Frame):
             self.text_label.config(text=self.text_e)
             self.confirm_btn.config(text=" Confirm")
             self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
+            CreateToolTip(self.exercise, text="Click to copy exercise number")
         elif current_language == 'rus':
+            CreateToolTip(self.exercise, text="Нажмите, чтобы скопировать номер задачи")
             self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
             self.confirm_btn.config(text=" Подтвердить")
             self.next_btn.config(text='Новое задание')
@@ -855,6 +867,7 @@ class RectanglesAPage(Frame):
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
+        self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
         self.text_label.pack(pady=4, expand=True)
@@ -906,7 +919,7 @@ class RectanglesAPage(Frame):
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg, 
-                                  highlightbackground=bg)
+                                  highlightbackground=bg, highlightcolor=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
@@ -968,14 +981,14 @@ class RectanglesAPage(Frame):
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
         self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                              highlightbackground=num_bg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
                                 highlightbackground=bg)
         self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
                              highlightbackground=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_rectanglesaspage(self):
         self.exercise.config(state='normal')
@@ -987,7 +1000,9 @@ class RectanglesAPage(Frame):
             self.text_label.config(text=self.text_e)
             self.confirm_btn.config(text=" Confirm")
             self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
+            CreateToolTip(self.exercise, text="Click to copy exercise number")
         elif current_language == 'rus':
+            CreateToolTip(self.exercise, text="Нажмите, чтобы скопировать номер задачи")
             self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
             self.confirm_btn.config(text=" Подтвердить")
             self.next_btn.config(text="Новое задание")
@@ -1119,6 +1134,7 @@ class SquaresPPage(Frame):
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
+        self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
         self.text_label.pack(pady=4, expand=True)
@@ -1176,15 +1192,15 @@ class SquaresPPage(Frame):
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                  highlightbackground=bg)
+                                  highlightbackground=bg, highlightcolor=bg)
         self.answer_field.grid(row=0, column=1)
+
+        self.answer_field.bind('<Button-1>', click)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
                                   bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
                                   highlightbackground=bg)
         self.confirm_btn.grid(row=0, column=2)
-        
-        self.answer_field.bind('<Button-1>', click)
 
         self.return_btn = Button(self.btn_container, font=("Arial", 35), command=lambda: self.return_back(), bd=0,
                                  bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
@@ -1238,14 +1254,14 @@ class SquaresPPage(Frame):
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
         self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg)
         self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                                highlightbackground=num_bg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
                                 highlightbackground=bg)
         self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
                              highlightbackground=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_squaresppage(self):
         self.exercise.config(state='normal')
@@ -1257,7 +1273,9 @@ class SquaresPPage(Frame):
             self.text_label.config(text=self.text_e)
             self.confirm_btn.config(text=" Confirm")
             self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
+            CreateToolTip(self.exercise, text="Click to copy exercise number")
         elif current_language == 'rus':
+            CreateToolTip(self.exercise, text="Нажмите, чтобы скопировать номер задачи")
             self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
             self.confirm_btn.config(text=" Подтвердить")
             self.next_btn.config(text="Новое задание")
@@ -1272,7 +1290,6 @@ class RectanglesPPage(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
-        self.parent = parent
 
         task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
                                 self.winfo_screenwidth(), self.winfo_screenheight())
@@ -1322,7 +1339,7 @@ class RectanglesPPage(Frame):
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
         self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
-        CreateToolTip(self.exercise, text="Click to copy exercise number")
+        self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
         self.text_label.pack(pady=4, expand=True)
@@ -1379,7 +1396,7 @@ class RectanglesPPage(Frame):
 
         self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
                                   bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=bg,
-                                  highlightbackground=bg)
+                                  highlightbackground=bg, highlightcolor=bg)
         self.answer_field.grid(row=0, column=1)
 
         self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
@@ -1440,14 +1457,14 @@ class RectanglesPPage(Frame):
         self.text_label.config(bg=bg, fg=fg)
         self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
         self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg)
         self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                              highlightbackground=num_bg)
         self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
                                 highlightbackground=bg)
         self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
                              highlightbackground=bg)
+        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
+                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_rectanglesppage(self):
         self.exercise.config(state='normal')
@@ -1459,7 +1476,9 @@ class RectanglesPPage(Frame):
             self.text_label.config(text=self.text_e)
             self.confirm_btn.config(text=" Confirm")
             self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
+            CreateToolTip(self.exercise, text="Click to copy exercise number")
         elif current_language == 'rus':
+            CreateToolTip(self.exercise, text="Нажмите, чтобы скопировать номер задачи")
             self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
             self.confirm_btn.config(text=" Подтвердить")
             self.next_btn.config(text="Новое задание")
@@ -1620,16 +1639,16 @@ class SettingsPage(Frame):
         self.themes_changers_container.config(bg=bg)
         self.language_changers_container.config(bg=bg)
         self.language_info.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
+        self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg, disabledforeground=bg,
+                                    highlightbackground=bg)
+        self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg, activebackground=bg,
+                                     highlightbackground=bg)
         self.dark_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
                                    disabledforeground=num_bg, highlightbackground=num_bg)
-        self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg,
-                                    disabledforeground=bg, highlightbackground=bg)
-        self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg,
-                                     activebackground=bg, highlightbackground=bg)
-        self.home_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
-                                disabledforeground=num_bg, highlightbackground=num_bg)
         self.english_lang_btn.config(bg=num_bg, fg=num_fg, disabledforeground=num_bg, activeforeground=num_active_fg,
                                      activebackground=num_bg, highlightbackground=num_bg)
+        self.home_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
+                                disabledforeground=num_bg, highlightbackground=num_bg)
 
     def pages_update(self):
         page = self.controller.get_page(RectanglesAPage)
@@ -1644,10 +1663,10 @@ class SettingsPage(Frame):
         page.squares_a_page_theme_update()
         page = self.controller.get_page(SettingsPage)
         page.settings_page_theme_update()
-        page = self.controller.get_page(GeometryPage)
-        page.topics_page_theme_update()
         page = self.controller.get_page(SubjectsPage)
         page.subjects_page_theme_update()
+        page = self.controller.get_page(GeometryPage)
+        page.topics_page_theme_update()
         page = self.controller.get_page(AreasPage)
         page.areas_page_theme_update()
         page = self.controller.get_page(MainPage)
