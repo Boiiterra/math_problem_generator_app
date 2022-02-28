@@ -1,8 +1,8 @@
-from configparser import ConfigParser, NoSectionError
 from requests.exceptions import RequestException
 from tkinter import Button, Tk, Toplevel, Label
 from tkinter.messagebox import askyesno
 from pkg_resources import parse_version
+from configparser import ConfigParser
 from tkinter.ttk import Progressbar
 from win32api import ShellExecute
 from PIL import Image, ImageTk
@@ -10,7 +10,6 @@ from os import path as os_path
 from threading import Thread
 from requests import get
 from pathlib import Path
-from filecmp import cmp
 
 __version__ = '0.6.1'
 __author__ = "TerraBoii"
@@ -75,59 +74,6 @@ class UpdateManager(Toplevel):
         self.start_manager.start()
 
 
-def backup_data():
-    with open("data.txt") as source_file:
-        with open("backup\\backup_data.txt", "w") as destination_file:
-            for line in source_file:
-                destination_file.write(line)
-            destination_file.close()
-        source_file.close()
-
-
-def check_for_backup():
-    parser = ConfigParser()
-    parser.read("data.txt")
-    parser.set("info", "updated", "True")
-    with open("data.txt", 'w') as configfile:
-        parser.write(configfile)
-    try:
-        if not cmp("data.txt", "backup\\backup_data.txt"):
-            backup_data()
-    except FileNotFoundError:
-        open("backup\\backup_data.txt", "w").close()
-        backup_data()
-
-
-def check_and_restore():
-    try:
-        open("backup\\backup_data.txt", "r").close()
-        parser = ConfigParser()
-        parser.read('backup\\backup_data.txt')
-        if parser.get("info", "updated") == "True":
-            parser.set("info", "updated", "False")
-            with open("backup\\backup_data.txt", 'w') as configfile:
-                parser.write(configfile)
-            with open("backup\\backup_data.txt") as source_file:
-                with open("data.txt", "w") as destination_file:
-                    for line in source_file:
-                        destination_file.write(line)
-                    destination_file.close()
-                source_file.close()
-    except FileNotFoundError and NoSectionError:
-        pass
-
-
-def update_prepare():
-    parser = ConfigParser()
-    parser.read("data.txt")
-    if parser.get('info', "always_backup") == "False":
-        ask_for_backup = askyesno("Backup", 'Do you want to backup your data before update?')
-        if ask_for_backup is True:
-            check_for_backup()
-    else:
-        check_for_backup()
-
-
 def run(): # Execute main .exe and destroy tmp window
     tmp.after(0, tmp.destroy)
     ShellExecute(0, 'open', f'binaries\\{_AppName_}.exe', None, None, 10)
@@ -157,13 +103,10 @@ if __name__ == "__main__":
 
     try:
 
-        check_and_restore()
-
         response = get('https://raw.githubusercontent.com/TerraBoii/math_problem_generator_app/main/version.txt')
         data = response.text
 
         if parse_version(data) > parse_version(__version__):
-            update_prepare()
             update(tmp, data)
         else:
             run()
