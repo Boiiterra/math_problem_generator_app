@@ -6,13 +6,12 @@ from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
 
+__version__ = "0.6.1"
 author = "TerraBoii"
 
 # File reading section
 parser = ConfigParser()
 parser.read("data.txt")
-# Version
-__version__ = parser.get("info", "version")
 # Parameters:
 x_pos = parser.get('parameters', 'x')
 y_pos = parser.get('parameters', 'y')
