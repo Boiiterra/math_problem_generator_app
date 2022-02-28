@@ -563,8 +563,8 @@ class AreasPage(Frame):
         self.rectangles_a.grid(row=0, column=0, sticky='nsew')
 
         self.squares_a = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                     bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SquaresAPage), highlightbackground=num_bg)
+                                bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                command=lambda: controller.show_frame(SquaresAPage), highlightbackground=num_bg)
         self.squares_a.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
@@ -612,7 +612,7 @@ class SquaresAPage(Frame):
         self.parent = parent
 
         task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                self.winfo_screenwidth(), self.winfo_screenheight())
+                              self.winfo_screenwidth(), self.winfo_screenheight())
 
         # Variables:
         self.exercise_no = task_data[-1]
@@ -628,7 +628,7 @@ class SquaresAPage(Frame):
         def update_task(full_reset=None):
             if full_reset is None:
                 task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                        self.winfo_screenwidth(), self.winfo_screenheight())
+                                      self.winfo_screenwidth(), self.winfo_screenheight())
                 self.exercise_no = task_data[-1]
                 self.answer = task_data[1]
                 self.param = task_data[0]
@@ -676,7 +676,7 @@ class SquaresAPage(Frame):
         self.container.columnconfigure(2, weight=1)
 
         self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
-                                highlightbackground=bg)
+                                 highlightbackground=bg)
         self.answer_txt.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
@@ -1016,8 +1016,8 @@ class PerimetersPage(Frame):
         self.controller = controller
 
         self.return_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(GeometryPage), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
+                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                                 highlightbackground=num_bg)
         self.return_btn.pack(side='bottom', fill='x', ipady=5)
         
         self.perimeters_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
@@ -1035,13 +1035,13 @@ class PerimetersPage(Frame):
         self.figures_container.columnconfigure(1, weight=1)
 
         self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                     bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                     command=lambda: controller.show_frame(SquaresPPage), highlightbackground=bg)
+                                bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
+                                command=lambda: controller.show_frame(SquaresPPage), highlightbackground=bg)
         self.squares_p.grid(row=0, column=0, sticky='nsew')
         
         self.rectangles_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                        bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                        command=lambda: controller.show_frame(RectanglesPPage), highlightbackground=num_bg)
+                                   bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
+                                   command=lambda: controller.show_frame(RectanglesPPage), highlightbackground=num_bg)
         self.rectangles_p.grid(row=0, column=1, sticky='nsew')
         
         self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
@@ -1088,7 +1088,7 @@ class SquaresPPage(Frame):
         self.parent = parent
 
         task_data = perimeter_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                self.winfo_screenwidth(), self.winfo_screenheight())
+                                   self.winfo_screenwidth(), self.winfo_screenheight())
 
         # Variables:
         self.exercise_no = task_data[-1]
@@ -1104,7 +1104,7 @@ class SquaresPPage(Frame):
         def update_task(full_reset=None):
             if full_reset is None:
                 task_data = perimeter_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                        self.winfo_screenwidth(), self.winfo_screenheight())
+                                           self.winfo_screenwidth(), self.winfo_screenheight())
                 self.exercise_no = task_data[-1]
                 self.answer = task_data[1]
                 self.param = task_data[0]
@@ -1288,7 +1288,7 @@ class RectanglesPPage(Frame):
         self.controller = controller
 
         task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
-                                self.winfo_screenwidth(), self.winfo_screenheight())
+                                   self.winfo_screenwidth(), self.winfo_screenheight())
 
         # Variables:
         self.exercise_no = task_data[-1]
@@ -1306,7 +1306,7 @@ class RectanglesPPage(Frame):
         def update_task(full_reset=None):
             if full_reset is None:
                 task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
-                                        self.winfo_screenwidth(), self.winfo_screenheight())
+                                           self.winfo_screenwidth(), self.winfo_screenheight())
                 self.answer = task_data[2]
                 self.exercise_no = task_data[-1]
                 self.param = (task_data[0], task_data[1])
