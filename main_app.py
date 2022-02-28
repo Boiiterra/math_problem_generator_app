@@ -655,7 +655,6 @@ class SquaresAPage(Frame):
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
-        self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
         self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
@@ -866,7 +865,6 @@ class RectanglesAPage(Frame):
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
-        self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
         self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
@@ -1133,7 +1131,6 @@ class SquaresPPage(Frame):
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
-        self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
         self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
@@ -1338,7 +1335,6 @@ class RectanglesPPage(Frame):
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
                              highlightcolor=bg)
         self.exercise.pack(fill="x", pady=8, side='top')
-        self.exercise.configure(inactiveselectbackground=self.exercise.cget("selectbackground"))
         self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
 
         self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
