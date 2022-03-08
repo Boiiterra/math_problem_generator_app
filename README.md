@@ -1,3 +1,6 @@
-# math_problem_generator_app
-This is my school project, soon it will grow. At first it will create four different tasks. 
-Available languages: Russian and English.
+# Math problem generator app
+### This app can generate certain math tasks. Available languages: Russian and English. 
+
+## Issues:
++ Task's text is small if window is big
++ versions up to 0.6.1 struggle to update
