@@ -1870,11 +1870,11 @@ class SettingsPage(Frame):
 
         # Checking for current theme
         if current_theme == 'dark':
-            self.dark_theme_btn.config(state='disabled', cursor="arrow")
+            self.dark_theme_btn.config(state='disabled', cursor="")
             self.light_theme_btn.config(state='normal', cursor="hand2")
         elif current_theme == 'light':
             self.dark_theme_btn.config(state='normal', cursor="hand2")
-            self.light_theme_btn.config(state='disabled', cursor="arrow")
+            self.light_theme_btn.config(state='disabled', cursor="")
 
         self.bind("<Configure>", lambda params: self.font_changer(params.width))
 
@@ -1906,8 +1906,8 @@ class SettingsPage(Frame):
 
     def set_lang_settingspage(self):
         if current_language == "eng":
-            self.english_lang_btn.config(state='disabled', cursor="arrow")
             self.russian_lang_btn.config(state='normal', cursor="hand2")
+            self.english_lang_btn.config(state='disabled', cursor="")
             self.language_info.config(text='Language:')
             self.light_theme_btn.config(text='Light')
             self.dark_theme_btn.config(text='Dark')
@@ -1919,8 +1919,8 @@ class SettingsPage(Frame):
             self.language_info.config(text='Язык:')
             self.dark_theme_btn.config(text='Тёмная')
             self.light_theme_btn.config(text='Светлая')
+            self.russian_lang_btn.config(state='disabled', cursor="")
             self.english_lang_btn.config(state='normal', cursor="hand2")
-            self.russian_lang_btn.config(state='disabled', cursor="arrow")
         self.font_changer(self.winfo_width())
 
     def settings_page_theme_update(self):
