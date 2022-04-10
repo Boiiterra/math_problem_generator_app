@@ -177,7 +177,7 @@ class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.title(f"Math problem generator - 0.7 BETA")#{__version__}")
+        self.title(f"Math problem generator - {__version__}")
         try:
             self.iconbitmap("images//main_icon.ico")
         except TclError:
