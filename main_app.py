@@ -1,12 +1,12 @@
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
-from generators import perimeter_task, area_task
+from generators import perimeter_task, area_task, square_equation
 from pyautogui import position as mouse_pos
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
 
-__version__ = "0.6.2"
+__version__ = "0.7"
 author = "TerraBoii"
 
 # File reading section
@@ -177,7 +177,7 @@ class MainAppBody(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.title(f"Math problem generator - {__version__}")
+        self.title(f"Math problem generator - 0.7 BETA")#{__version__}")
         try:
             self.iconbitmap("images//main_icon.ico")
         except TclError:
@@ -540,11 +540,14 @@ class SqEquationPage(Frame):
 
         # Variables:
         self.exercise_no = 0
+        self.x1 = None
+        self.x2 = None
         self.param = None
         self.answer = None
         self.text_e = None
         self.text_r = None
         self.start = 0
+        self.task_type = None
 
         def container_reset():
             self.container.pack_forget()
@@ -555,13 +558,50 @@ class SqEquationPage(Frame):
                 container_reset()
                 self.start = 1
             if full_reset is None:
-                # task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
-                                        # self.winfo_screenwidth(), self.winfo_screenheight())
-                self.answer = None
-                self.exercise_no = 0
-                self.param = None
-                self.text_e = "Under developmant"
-                self.text_r = "В разработке"
+                task_data = square_equation(__version__, self.winfo_width(), self.winfo_height(), 
+                                            self.winfo_screenwidth(), self.winfo_screenheight())
+                self.x1 = task_data[0]
+                self.x2 = task_data[1]
+
+                if self.x1 != 0 and self.x2 != 0:
+                    if self.x1 > self.x2:
+                        self.answer = self.x2
+                        self.task_type = 1
+                    elif self.x1 < self.x2:
+                        self.answer = self.x2
+                        self.task_type = 2
+                    else:
+                        self.answer = self.x2
+                        self.task_type = 3
+                elif self.x1 == 0 and self.x2 > self.x1:
+                    self.answer = self.x2
+                    self.task_type = 2
+                elif self.x1 == 0 and self.x2 < self.x1:
+                    self.answer = self.x1
+                    self.task_type = 1
+                elif self.x2 == 0 and self.x1 > self.x2:
+                    self.answer = self.x1
+                    self.task_type = 2
+                elif self.x2 == 0 and self.x1 < self.x2:
+                    self.answer = self.x1
+                    self.task_type = 1
+
+                extra_text_e = ""
+                extra_text_r = ""
+                if self.task_type == 1:
+                    extra_text_e = "Find the smallest equation's root."
+                    extra_text_r = "Найдите наименьший корень уравнения."
+                elif self.task_type == 2:
+                    extra_text_e = "Find the biggest equation's root."
+                    extra_text_r = "Найлите наибольший корень уравнения."
+                elif self.task_type == 3:
+                    extra_text_e = "Find any equation's root."
+                    extra_text_r = "Найдите любой корень уравнения"
+
+                self.exercise_no = task_data[-1]
+                self.param = task_data[-2]
+                self.text_e = f"{self.param}\n" + extra_text_e
+                self.text_r = f"{self.param}\n" + extra_text_r
                 self.exercise.config(state='normal')
                 self.exercise.delete("0.0", 'end')
                 if current_language == "eng":
@@ -584,7 +624,7 @@ class SqEquationPage(Frame):
         def new_task():
             self.next_btn.config(state='disabled')
             update_task()
-            # self.after(1000, self.next_btn.config(state='normal'))
+            self.after(1000, self.next_btn.config(state='normal'))
 
 
         self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
@@ -622,10 +662,14 @@ class SqEquationPage(Frame):
 
         def confirm():
             self.next_btn.config(state='disabled')
-            _input = int(self.answer_field.get())
+            _input = 0
+            if self.answer_field.get() != "-":
+                _input = int(self.answer_field.get())
+            else:
+                self.answer_field.insert("end", 1)
             self.answer_field.delete(0, 'end')
             self.answer_field.config(state='disabled')
-            # self.after(1000, self.next_btn.config(state='normal'))
+            self.after(1000, self.next_btn.config(state='normal'))
             if _input == self.answer:
                 if current_language == "eng":
                     self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
@@ -658,9 +702,8 @@ class SqEquationPage(Frame):
                                highlightbackground=num_bg)
         self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
 
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
-                               highlightbackground=bg)
+        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, highlightbackground=bg, bg=bg, 
+                               activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,)
         self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
         self.set_lang_sqequationpage()
@@ -683,19 +726,22 @@ class SqEquationPage(Frame):
         """Enter only integer values"""
         # Integers does not start from zero and there is input limit
         if value != "":
-            if index == "0" and value[0] == "0":
+            if (index == "0" and value[0] == "0") or (index == "1" and value[0:2] == "-0"):
                 return False
             if len(value) >= 7:
                 return False
+        
+        if index != "0" and value[-1] == "-" and action == "1":
+            return False
         # Confirm button status
-        if value == "" and index == "0" and all(_ in "0123456789" for _ in value):
+        if value == "" and index == "0" and all(_ in "0123456789-" for _ in value):
             self.confirm_btn.config(state="disabled")
-        elif "0" == index < "6" and all(_ in "0123456789" for _ in value):
+        elif "0" == index < "6" and all(_ in "0123456789-" for _ in value):
             self.confirm_btn.config(state="normal")
         # Entry validation
         if len(self.answer_field.get()) >= 6 and index != "5" and action == "1":  # Limiting input length
             return False
-        elif all(_ in "0123456789" for _ in value):  # Allowed values
+        elif all(_ in "0123456789-" for _ in value):  # Allowed values
             return True
         else:
             return False
