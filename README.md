@@ -5,11 +5,15 @@ ___
 - [Math problem generator app](#math-problem-generator-app)
     - [Description:](#description)
   - [Working on:](#working-on)
-- [Генератор задач по математике](#генератор-задач-по-математике)
-    - [Описание:](#описание)
-  - [В данные момент работаю над:](#в-данные-момент-работаю-над)
-- [Known issues](#known-issues)
+- [Main issues](#main-issues)
+
 ___
+
+<p align="center">Description in another languages:</p>
+<p align="center"> <strong>--</strong> <a href="[LICENSE](https://github.com/TerraBoii/math_problem_generator_app/blob/main/README_ru.md)", title="test">Russian</a> <strong>--</strong> </p>
+
+___
+
 
 # Installation
 ### Windows
@@ -19,10 +23,10 @@ ___
 3. Press download button
 4. After installation open installed file
 5. Complete installation by choosing options you like
-6. After finishing this process app will be opened or yoou need to double click it on your desktop, start menu or find it in the destination folder you picked (Targeted file is `Math problem generator app.exe` or `Math problem generator launcher.exe`)
+6. After finishing this process app will be opened or you need to double click it on your desktop, start menu or find it in the destination folder you picked (Targeted file is `Math problem generator app.exe` or `Math problem generator launcher.exe`)
 
 ### Linux
-Currently working on it. But you can do: \
+Currently working on it. But you can do this in console: \
 SSH:
 ```sh
 git clone git@github.com:TerraBoii/math_problem_generator_app.git
@@ -54,22 +58,8 @@ This app generates certain math problems. Math problems has their unique number 
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
 
-# Генератор задач по математике
-### Описание:
-Данное приложение генерирует определённые задачи по математике. Задачки имеют уникальный номер, при помощи которого можно будет получить к ним доступ в любое время и прорешать их сколько угодно раз.
 
-## В данные момент работаю над:
-- Квадратными уравнениями
-- Возвращением к задачи, используя её номер
-- Авто обновлениями
-- Поддержкой на линуксе
-- Улучшением дизайна
-  - Увеличением количества условий для задач
-
-
-<p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
-
-# Known issues
+# Main issues
 + Task's text is small if window is big
 + versions up to 0.6.1 struggle to update (Cannot be fixed)
 
