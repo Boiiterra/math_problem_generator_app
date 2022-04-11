@@ -10,7 +10,7 @@ ___
 ___
 
 <p align="center">Description in another languages:</p>
-<p align="center"> <strong>--</strong> <a href="[LICENSE](https://github.com/TerraBoii/math_problem_generator_app/blob/main/README_ru.md)", title="test">Russian</a> <strong>--</strong> </p>
+<p align="center"> <strong>--</strong> <a href="https://github.com/TerraBoii/math_problem_generator_app/blob/main/README_ru.md", title="test">Russian</a> <strong>--</strong> </p>
 
 ___
 
