@@ -13,9 +13,9 @@ ___
 # Установка
 ### Windows
 
-1. Перейти в папку `app_installer` на главной странице проекта
-2. Нажать на `mathproblemgenerator_setup.exe`
-3. Нажать на кнопку `Download` или `Скачать`
+1. Перейдите в [Релизы (Releases)](https://github.com/TerraBoii/math_problem_generator_app/releases "Releases")
+2. Найдите релиз с тэгом: `Latest` или `Current`
+3. Нажмите на файл - `mathproblemgenerator_setup.exe` и скачайте его
 4. После скачивания запустить установленный файл
 5. Продолжить установку выбирая необходимые опции
 6. После окончания установки приложение само запустится или придется найти его на рабочем столе, меню пуск или папке, куда оно было утановлено и запустить его (Требуемый файл `Math problem generator app.exe` or `Math problem generator launcher.exe`)

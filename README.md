@@ -19,8 +19,8 @@ ___
 ### Windows
 
 1. Go to [Releases](https://github.com/TerraBoii/math_problem_generator_app/releases "Releases")
-2. Search for `Latest` or `Current` release
-3. Click on `mathproblemgenerator_setup.exe` file
+2. Search for release with tag: `Latest` or `Current` 
+3. Click on `mathproblemgenerator_setup.exe` file and download it
 4. After installation open installed file
 5. Complete installation by choosing options you like
 6. After finishing this process app will be opened or you need to double click it on your desktop, start menu or find it in the destination folder you picked (Targeted file is `Math problem generator app.exe` or `Math problem generator launcher.exe`)
