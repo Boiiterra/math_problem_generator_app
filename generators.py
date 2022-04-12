@@ -1,4 +1,5 @@
 """This file contains all generators used in the MAIN application"""
+from curses.textpad import rectangle
 from requests.exceptions import RequestException
 from pyautogui import position as mouse_pos
 from random import seed, randint
@@ -52,6 +53,31 @@ def area_task(figure: str, app_version: str, app_width: int, app_height: int, sc
         width = randint(5, 75) + (height//2) + 1
         answer = height * width
         return height, width, answer, new_seed
+
+
+class Rectangle:
+
+
+    def perimeter_task(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
+        new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
+        seed(new_seed)
+
+        height = randint(10, 120)
+        width = randint(5, 75) + (height // 2) + 1
+        answer = 2 * (height + width)
+        return height, width, answer, new_seed
+
+
+    def area_task(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
+        new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
+        seed(new_seed)
+
+        height = randint(10, 120)
+        width = randint(5, 75) + (height//2) + 1
+        answer = height * width
+
+        return height, width, answer, new_seed
+
 
 def square_equation(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):
     new_seed = __create_seed(app_version, app_width, app_height, screen_width, screen_height)
