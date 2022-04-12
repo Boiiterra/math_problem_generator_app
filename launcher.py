@@ -11,11 +11,15 @@ from threading import Thread
 from requests import get
 from pathlib import Path
 
-__version__ = '0.6.1'
+__version__ = '0.7'
 __author__ = "TerraBoii"
 # If you want to get less automated version check this project: 
 # https://github.com/vsantiago113/Tkinter-MyTestApp
 _AppName_ = 'Math problem generator app'
+
+parser = ConfigParser()
+parser.read("data.txt")
+lang = parser.get("language", "language")
 
 # url for installer
 url = "https://github.com/TerraBoii/math_problem_generator_app/raw/main/app_installer/mathproblemgenerator_setup.exe"
@@ -83,8 +87,13 @@ def update(tmp, data):
     parser = ConfigParser()
     parser.read("data.txt")
     if parser.get("info", "auto_update") == "False":
-        get_update = askyesno('Software update available!\n',
-                              f'{_AppName_} {__version__} needs to update to version {data}')
+        if lang == "rus":
+            title = 'Доступно обновление приложения!'
+            text = f"{_AppName_} '{__version__}' должно быть обновлено до версии '{data}'." 
+        else:
+            title = 'Software update available!'
+            text = f"{_AppName_} '{__version__}' needs to update to version '{data}'."
+        get_update = askyesno(title, text)
         if get_update is True:
             UpdateManager(tmp)
         elif get_update is False:
