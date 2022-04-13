@@ -1,5 +1,4 @@
 """This file contains all generators used in the MAIN application"""
-from requests.exceptions import RequestException
 from pyautogui import position as mouse_pos
 from random import seed, randint
 from time import time, sleep
