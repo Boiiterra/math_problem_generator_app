@@ -4,7 +4,7 @@ ___
     - [Linux](#linux)
 - [Math problem generator app](#math-problem-generator-app)
     - [Description:](#description)
-  - [Working on:](#working-on)
+    - [Working on:](#working-on)
 - [Main issues](#main-issues)
 
 ___
@@ -51,8 +51,7 @@ python main_app.py
 
 This app generates certain math problems. Math problems has their unique number which allows you to return to that specific exercise at any time and solve it as many times as you want.
 
-## Working on:
-- Square equations
+### Working on:
 - Return to specific exercise using its number
 - Auto updates
 - Linux support
