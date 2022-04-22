@@ -14,7 +14,7 @@ ___
 
 ___
 
-<p align="center" href="https://terraboii.github.io/math_problem_generator_app" text="Projects's website">Project's website</p>
+<p align="center"><a href="https://terraboii.github.io/math_problem_generator_app", title="Projects's website">Test</a></p>
 
 ___
 
