@@ -14,6 +14,10 @@ ___
 
 ___
 
+<p align="center" href="https://terraboii.github.io/math_problem_generator_app" text="Projects's website">Project's website</p>
+
+___
+
 
 # Installation
 ### Windows
