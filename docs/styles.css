@@ -6,7 +6,7 @@
 }
 
 .navbar {
-    background-color: #131313;
+    background-color: #0c0707;
     height: 80px;
     display: flex;
     justify-content: center;
@@ -52,9 +52,9 @@
     background-image: linear-gradient(to top, #2fc25b, #ffb199);
 }
 
-/* .logo__img {
+.logo__img {
     margin-right: 0.5rem;
-} */
+}
 
 .navbar__menu {
     display: flex;
@@ -82,7 +82,7 @@
     color: #5eac67;
 }
 
-@media screen and (max-width: 870px) {
+@media screen and (max-width: 700px) {
 
     .navbar__container {
         display: flex;
