@@ -28,7 +28,12 @@
     padding: 0 50px;
 }
 
-#navbar__logo {
+.navbar__logo {
+    margin-right: 0.5rem;
+    width: 80px;
+}
+
+#navbar__home {
     background-color: #044a2c;
     background-image: -webkit-linear-gradient(to top, #0e6127, 0%, #ffb199, 100%);
     background-image: -moz-linear-gradient(bottom, #0e6127, #ffb199);
@@ -46,15 +51,12 @@
     font-size: 1.7rem;
 }
 
-#navbar__logo:hover {
+#navbar__home:hover {
     background-image: -webkit-linear-gradient(to top, #2fc25b, 0%, #ffb199, 100%);
     background-image: -moz-linear-gradient(bottom, #2fc25b, #ffb199);
     background-image: linear-gradient(to top, #2fc25b, #ffb199);
 }
 
-.logo__img {
-    margin-right: 0.5rem;
-}
 
 .navbar__menu {
     display: flex;
@@ -103,13 +105,13 @@
         top: -1000px;
         opacity: 0;
         transition: all 0.5s ease;
-        height: 50vh;
+        height: 80vh;
         z-index: -1;
-        background-color: #131313;
+        background-color: #0c0707;
     }
 
     .navbar__menu.active {
-        background-color: #131313;
+        background-color: #0c0707;
         top: 100%;
         opacity: 1;
         transition: all 0.5 ease;
@@ -118,7 +120,7 @@
         font-size: 1.6rem;
     }
 
-    #navbar__logo {
+    #navbar__home {
         padding-left: 30px;
     }
 
