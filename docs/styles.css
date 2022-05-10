@@ -5,6 +5,8 @@
     font-family: "Gill Sans", Arial, Colibri, sans-serif;
 }
 
+/* Navigation bar */
+
 .navbar {
     background-color: #0c0707;
     height: 80px;
@@ -57,6 +59,9 @@
     background-image: linear-gradient(to top, #2fc25b, #ffb199);
 }
 
+.navbar__txt {
+    font-size: 0;
+}
 
 .navbar__menu {
     display: flex;
@@ -107,11 +112,11 @@
         transition: all 0.5s ease;
         height: 80vh;
         z-index: -1;
-        background-color: #0c0707;
+        background-color: #fffefe;
     }
 
     .navbar__menu.active {
-        background-color: #0c0707;
+        background-color: #100c0c;
         top: 100%;
         opacity: 1;
         transition: all 0.5 ease;
@@ -155,6 +160,12 @@
         cursor: pointer;
     }
 
+    .navbar__txt {
+        color: #cfcfcf;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
     #mobile-menu.is-active .bar:nth-child(2) {
         opacity: 0;
     }
@@ -167,3 +178,60 @@
         transform: translateY(-8px) rotate(45deg);
     }
 }
+
+/* Hero section */
+
+.hero {
+    background-color: #141414;
+    background-image: linear-gradient(to bottom, #0c0707, #353333, #0c0707);
+    padding: 200px 0;
+}
+
+.hero__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 90%;
+    text-align: center;
+    padding: 30px;
+}
+
+.hero__heading {
+    font-size: 100px;
+    margin-bottom: 24px;
+    color: #67AA56;
+}
+
+.hero__subheading {
+    font-size: 30px;
+    margin-bottom: 18px;
+    color: #50963f;
+}
+
+.highlight {
+    border-bottom: 4px solid #f3f8f8;
+}
+
+@media screen and (max-width: 930px) {
+    .hero__heading {
+        font-size: 40px;
+    }
+
+    .hero__subheading {
+        font-size: 20px;
+    }
+}
+
+/* Separators */
+
+.separator {
+    display: block;
+    width: 100%;
+    height: 100px;
+    background-color: #0c0707;
+}
+
+/* Download section */
