@@ -1,6 +1,6 @@
 [language]
-state = ask
-language = unknown
+state = keep
+language = eng
 
 [parameters]
 zoomed = no

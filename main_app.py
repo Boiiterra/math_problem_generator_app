@@ -113,11 +113,17 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     # Saves given params to data.txt file
     global parser
     parser.read("data.txt")
-    parser.set('parameters', 'height', _height_)
-    parser.set('parameters', 'zoomed', _state_)
-    parser.set('parameters', 'width', _width_)
-    parser.set('parameters', 'x', _x_)
-    parser.set('parameters', 'y', _y_)
+    if _state_ == "0":
+        parser.set('parameters', 'height', _height_)
+        parser.set('parameters', 'width', _width_)
+        parser.set('parameters', 'x', _x_)
+        parser.set('parameters', 'y', _y_)
+    else:
+        parser.set('parameters', 'height', _height)
+        parser.set('parameters', 'width', _width)
+        parser.set('parameters', 'x', x_pos)
+        parser.set('parameters', 'y', y_pos)
+    parser.set('parameters', 'zoomed', _state)
     with open("data.txt", 'w') as configfile:
         parser.write(configfile)
 
@@ -197,8 +203,8 @@ class MainAppBody(Tk):  # Main application with page logic
         # Rewriting default delete method in order to save window parameters
         if system() == "Windows":
             self.protocol('WM_DELETE_WINDOW', self.delete_window)
-            if _state == 'yes':
-                self.state('zoomed')
+        if _state == 'yes':
+            self.state('zoomed')
 
 
         container = Frame(self, bg="black")
@@ -226,10 +232,10 @@ class MainAppBody(Tk):  # Main application with page logic
     def delete_window(self):  # saves parameters and then deletes window
         if self.wm_state() == "zoomed" and lng_state != "ask" and current_language != "unknown":
             save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                   str(self.winfo_rootx()), str(self.winfo_rooty()), 'yes')
+                                   str(self.winfo_rootx()), str(self.winfo_rooty()), '1')
         elif self.wm_state() != "zoomed" and lng_state != "ask" and current_language != "unknown":
             save_window_parameters(str(self.winfo_width()), str(self.winfo_height()),
-                                   str(self.winfo_rootx()), str(self.winfo_rooty()), 'no')
+                                   str(self.winfo_rootx()), str(self.winfo_rooty()), '0')
         self.destroy()
 
     def show_frame(self, cont):
