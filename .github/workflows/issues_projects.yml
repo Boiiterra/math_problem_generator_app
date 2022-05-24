@@ -12,5 +12,5 @@ jobs:
     steps:
       - uses: actions/add-to-project@v0.0.3
         with:
-          project-url: https://github.com/TerraBoii/math_problem_generator_app/projects/1
+          project: Tasks
           github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
