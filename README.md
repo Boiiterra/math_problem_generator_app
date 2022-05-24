@@ -1,4 +1,6 @@
-___
+<details>
+<summary>Navigation</summary>
+
 - [Installation](#installation)
     - [Windows](#windows)
     - [Linux](#linux)
@@ -6,6 +8,8 @@ ___
     - [Description:](#description)
     - [Working on:](#working-on)
 - [Main issues](#main-issues)
+
+</details>
 
 ___
 
