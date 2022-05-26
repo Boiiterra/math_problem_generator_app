@@ -211,6 +211,10 @@
     color: #50963f;
 }
 
+.hero__subheading span {
+    color: #99a14e;
+}
+
 .highlight {
     border-bottom: 4px solid #f3f8f8;
 }
