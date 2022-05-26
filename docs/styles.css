@@ -242,3 +242,134 @@
 }
 
 /* Download section */
+
+.download {
+    background-color: #0c0707;
+}
+
+.download__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-self: center;
+    margin: 0 auto;
+    height: 90hv;
+    background-color: #0c0707;
+    z-index: 1;
+    width: 100%;
+    max-width: 1300px;
+    padding: 0 25px;
+    text-align: center;
+}
+
+.download__content h1 {
+    font-size: 3.75rem;
+    background-color: #56f2af;
+    background-size: 100%;
+    background-image: -webkit-linear-gradient(to bottom, #56f2af, 0%, #0e6127, 100%);
+    background-image: linear-gradient(to bottom, #56f2af, #0e6127); 
+    background-image: -moz-linear-gradient(top, #56f2af, #0e6127);
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+.download__content p {
+    color: #3b7942;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    font-weight: 700;
+}
+
+.download__btn {
+    font-size: 1rem;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 15px;
+    background-image: linear-gradient(to top, #56f2af, #0e6127);
+    background-image: -moz-linear-gradient(bottom, #56f2af, #0e6127);
+    background-image: -webkit-linear-gradient(to top, #56f2af, 0%, #0e6127, 100%);
+    margin-top: 2rem;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.35s;
+    outline: none;
+}
+
+.download__btn a {
+    position: relative;
+    z-index: 2;
+    color: #4d184b;
+    text-decoration: none;
+}
+
+.download__btn::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-image: linear-gradient(to top, #a90d50, #f19ed8);
+    background-image: -moz-linear-gradient(bottom, #a90d50, #f19ed8);
+    background-image: -webkit-linear-gradient(to top, #a90d50, 0%, #f19ed8, 100%);
+    transition: all 0.5s;
+    border-radius: 10px;
+}
+
+.download__btn:hover {
+    color: #4d184b;
+}
+
+.download__btn a :hover {
+    color: #b2e7b4;
+}
+
+.download__btn:hover:after {
+    width: 100%;
+}
+
+.download__img--container {
+    text-align: center;
+}
+
+#download__img {
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 700px) {
+
+    .download__container {
+        display: grid;
+        grid-template-columns: auto;
+        align-items: center;
+        justify-self: center;
+        width: 100%;
+        margin: 0 auto;
+        height: 90hv;
+    }
+
+    .download__content {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .download__content h1 {
+        font-size: 2.5rem;
+        margin-top: 2rem;
+    }
+
+    .download__content p {
+        font-size: 1.25rem;
+        margin-top: 0.85rem;
+    }
+
+    .download__btn {
+        padding: 12px 36px;
+        margin: 1.5rem 0;
+    }
+
+}
