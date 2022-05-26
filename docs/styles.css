@@ -177,6 +177,7 @@
     #mobile-menu.is-active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(45deg);
     }
+
 }
 
 /* Hero section */
@@ -220,6 +221,7 @@
 }
 
 @media screen and (max-width: 930px) {
+
     .hero__heading {
         font-size: 40px;
     }
@@ -227,6 +229,7 @@
     .hero__subheading {
         font-size: 20px;
     }
+
 }
 
 /* Separators */
