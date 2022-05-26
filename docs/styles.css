@@ -298,37 +298,32 @@
     outline: none;
 }
 
-.download__btn a {
+.download__btn b {
     position: relative;
     z-index: 2;
-    color: #4d184b;
+    color: #271136;
     text-decoration: none;
 }
 
-.download__btn::after {
+.download__btn:after {
     position: absolute;
     content: "";
-    top: 0;
-    left: 0;
+    bottom: 50%;
+    left: 50%;
+    height: 0;
     width: 0;
-    height: 100%;
     background-image: linear-gradient(to top, #a90d50, #f19ed8);
     background-image: -moz-linear-gradient(bottom, #a90d50, #f19ed8);
     background-image: -webkit-linear-gradient(to top, #a90d50, 0%, #f19ed8, 100%);
     transition: all 0.5s;
-    border-radius: 10px;
-}
-
-.download__btn:hover {
-    color: #4d184b;
-}
-
-.download__btn a :hover {
-    color: #b2e7b4;
+    border-radius: 15px;
 }
 
 .download__btn:hover:after {
+    height: 100%;
     width: 100%;
+    bottom: 0;
+    left: 0;
 }
 
 .download__img--container {
