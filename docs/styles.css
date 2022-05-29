@@ -231,16 +231,7 @@
 }
 
 .hero__btn b {
-    background-color: #8b168b;
-    background-image: -webkit-linear-gradient(to left, #4b1ba3, #af097d);
-    background-image: -moz-linear-gradient(right, #4b1ba3, #af097d);
-    background-image: linear-gradient(to left, #4b1ba3, #af097d);
-    background-size: 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
+    color: #3f0909;
 }
 
 .hero__btn:hover {
@@ -254,10 +245,7 @@
 
 .hero__btn:hover b {
     transition: all 0.5s;
-    background-color: #4b1ba3;
-    background-image: -webkit-linear-gradient(to right, #4b1ba3, #af097d);
-    background-image: -moz-linear-gradient(left, #4b1ba3, #af097d);
-    background-image: linear-gradient(to right, #4b1ba3, #af097d);
+    color: #4b1ba3;
 }
 
 .highlight {
@@ -272,6 +260,18 @@
 
     .hero__subheading {
         font-size: 20px;
+    }
+
+    .hero__btn {
+        font-size: 1.15rem;
+    }
+
+}
+
+@media screen and (max-width: 700px) {
+
+    .hero__btn {
+        font-size: 1rem;
     }
 
 }
