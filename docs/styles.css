@@ -171,6 +171,7 @@
     .navbar__menu.active {
         background-color: #100c0c;
         top: 100%;
+        align-items: center;
         opacity: 1;
         transition: all 0.5 ease;
         z-index: 99;
@@ -196,7 +197,7 @@
 
     .navbar__links {
         text-align: center;
-        padding: 2rem;
+        padding: 1rem;
         width: 100%;
         display: table;
     }
@@ -229,6 +230,18 @@
 
     #mobile-menu.is-active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(45deg);
+    }
+
+    .language__menu {
+        display: none;
+    }
+
+    .navbar__item--mobile {
+        display: flex;
+    }
+
+    .navbar__item {
+        height: 70px;
     }
 
 }
