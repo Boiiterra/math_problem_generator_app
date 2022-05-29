@@ -409,9 +409,9 @@
     left: 50%;
     height: 0;
     width: 0;
-    background-image: linear-gradient(to top, #a90d50, #f19ed8);
-    background-image: -moz-linear-gradient(bottom, #a90d50, #f19ed8);
-    background-image: -webkit-linear-gradient(to top, #a90d50, 0%, #f19ed8, 100%);
+    background-image: linear-gradient(to bottom, #56f2af, #f19ed8);
+    background-image: -moz-linear-gradient(top, #56f2af, #f19ed8);
+    background-image: -webkit-linear-gradient(to bottom, #56f2af, 0%, #f19ed8, 100%);
     transition: all 0.5s;
     border-radius: 15px;
 }
