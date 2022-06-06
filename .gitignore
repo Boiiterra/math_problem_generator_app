@@ -140,3 +140,6 @@ launcher.aip
 # Created .exe files, except installer
 binaries/
 Math problem*.exe
+
+# Visual Studio Code
+.vscode/
