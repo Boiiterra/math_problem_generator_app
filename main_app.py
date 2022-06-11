@@ -1997,6 +1997,7 @@ class SettingsPage(Frame):
                                 disabledforeground=num_bg, highlightbackground=num_bg)
 
     def pages_update(self):
+        # Get page's method that changes its theme
         self.controller.get_page(RectanglesAPage).rectangles_a_page_theme_update()
         self.controller.get_page(RectanglesPPage).rectangles_p_page_theme_update()
         self.controller.get_page(SqEquationPage).sq_equation_page_theme_update()
