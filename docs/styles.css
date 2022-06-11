@@ -351,6 +351,12 @@
     background-color: #0c0707;
 }
 
+/* Highlight */
+
+.highlight {
+    background-color: #31363B;
+}
+
 /* Download section */
 
 .download {
@@ -478,4 +484,28 @@
         margin: 1.5rem 0;
     }
 
+}
+
+/* Description section */
+
+.description {
+    padding: 200px 0;
+}
+
+.desc__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 90%;
+    text-align: center;
+    padding: 30px;
+}
+
+.desc__heading {
+    font-size: 3.5rem;
+    margin-bottom: 24px;
+    color: #67AA56;
 }
