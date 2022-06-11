@@ -6,7 +6,6 @@
     - [Linux](#linux)
 - [Math problem generator app](#math-problem-generator-app)
     - [Description:](#description)
-    - [Working on:](#working-on)
 - [Main issues](#main-issues)
 
 </details>
@@ -27,7 +26,7 @@ ___
 ### Windows
 
 1. Go to [Releases](https://github.com/TerraBoii/math_problem_generator_app/releases "Releases")
-2. Search for release with tag: `Latest` or `Current` 
+2. Search for release with tag: `Latest` 
 3. Click on `mathproblemgenerator_setup.exe` file and download it
 4. After installation open installed file
 5. Complete installation by choosing options you like
@@ -53,15 +52,7 @@ python main_app.py
 # Math problem generator app
 ### Description:
 
-This app generates certain math problems. Math problems has their unique number which allows you to return to that specific exercise at any time and solve it as many times as you want.
-
-### Working on:
-- Return to specific exercise using its number
-- Auto updates
-- Linux support
-- Better UI
-  - Task's text randomization
-
+This app generates certain math problems. Math problems has their unique number which allows you to return to that specific exercise at any time and solve it as many times as you want. (Will be changed)
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
 
