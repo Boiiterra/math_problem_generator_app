@@ -2012,14 +2012,14 @@ class SettingsPage(Frame):
         self.controller.get_page(MainPage).main_page_theme_update()
 
     def change_theme_to_dark(self):
-        self.dark_theme_btn.config(state='disabled', cursor="arrow")
         self.light_theme_btn.config(state='normal', cursor="hand2")
+        self.dark_theme_btn.config(state='disabled', cursor="")
         dark_theme()
         self.pages_update()
 
     def change_theme_to_light(self):
-        self.light_theme_btn.config(state='disabled', cursor="arrow")
         self.dark_theme_btn.config(state='normal', cursor="hand2")
+        self.light_theme_btn.config(state='disabled', cursor="")
         light_theme()
         self.pages_update()
 
