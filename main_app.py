@@ -1,6 +1,7 @@
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
 from generators import perimeter_task, area_task, square_equation
 from pyautogui import position as mouse_pos
+from tkinter.messagebox import showinfo
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 from platform import system
@@ -216,7 +217,8 @@ class MainAppBody(Tk):  # Main application with page logic
         self.frames = {}
 
         frame_collection = (FLaunchPage, GeometryPage, MainPage, SettingsPage, AreasPage, PerimetersPage, SquaresAPage, 
-                            RectanglesAPage, SquaresPPage, RectanglesPPage, SubjectsPage, AlgebraPage, SqEquationPage)
+                            RectanglesAPage, SquaresPPage, RectanglesPPage, SubjectsPage, AlgebraPage, SqEquationPage,
+                            TaskCreationPage, ShowTaskPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -329,6 +331,7 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         self.controller.get_page(RectanglesPPage).set_lang_rectanglesppage()
         self.controller.get_page(SqEquationPage).set_lang_sqequationpage()
         self.controller.get_page(PerimetersPage).set_lang_perimeterspage()
+        self.controller.get_page(ShowTaskPage).set_lang_showtaskpage()
         self.controller.get_page(SettingsPage).set_lang_settingspage()
         self.controller.get_page(SquaresAPage).set_lang_squaresapage()
         self.controller.get_page(SquaresPPage).set_lang_squaresppage()
@@ -353,7 +356,7 @@ class MainPage(Frame):
 
         self.start_button = Button(self, bg=num_bg, fg=fg, font=("Arial", 45),
                                    activeforeground=active_fg, activebackground=num_bg, bd=0, highlightbackground=num_bg,
-                                   disabledforeground=num_bg, command=lambda: controller.show_frame(SubjectsPage))
+                                   disabledforeground=num_bg, command=lambda: controller.show_frame(ShowTaskPage))
         self.start_button.pack(fill='both', pady=2, expand=True)
 
         self.settings_button = Button(self, bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
@@ -1820,6 +1823,105 @@ class RectanglesPPage(Frame):
             self.answer_txt.config(text='Ответ: ')
             self.back_btn.config(text='Назад')
         self.exercise.config(state='disabled')
+
+
+class TaskCreationPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+
+class ShowTaskOptions(Toplevel):
+
+    def __init__(self, parent):
+        Toplevel.__init__(self, parent)
+
+        self.title("Show tasks for generation")
+        self.geometry("400x400")
+        self.transient(parent)
+        self.grab_set()
+
+
+class ShowTaskPage(Frame):
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+        def load_task():
+            print("Task loaded.")
+
+        def rand_task():
+            print("Random task is generated.")
+
+        btn_container = Label(self, bg=bg)
+        btn_container.pack(side="bottom", fill="x")
+        self.btn_container = btn_container
+
+        btn_container.rowconfigure(0, weight=1)
+        btn_container.columnconfigure(0, weight=1)
+        btn_container.columnconfigure(1, weight=1)
+        btn_container.columnconfigure(2, weight=1)
+
+        is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
+
+        exercise = Entry(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
+        exercise.pack(fill="x", pady=8, side='top')
+        self.exercise = exercise
+
+        return_btn = Button(btn_container, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0, bg=num_bg,
+                            activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
+        return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
+        self.return_btn = return_btn
+
+        rand_btn = Button(btn_container, font=("Arial", 35), bd=0, highlightbackground=bg, bg=num_bg, fg=num_fg,
+                               activebackground=num_bg, activeforeground=num_active_fg, command=rand_task)
+        rand_btn.grid(row=0, column=2, ipady=5, sticky="nsew", padx=1)
+        self.rand_btn = rand_btn
+
+        load_btn = Button(btn_container, font=("Arial", 35), bd=0, highlightbackground=bg, bg=bg, state="disabled",
+                               activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=load_task)
+        load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
+        self.load_btn = load_btn
+
+        self.set_lang_showtaskpage()
+
+    def set_lang_showtaskpage(self):
+        if current_language == "eng":
+            self.return_btn.config(text="Back")
+            self.exercise.insert(0, " Exercise: ")
+            self.load_btn.config(text="Load task")
+            self.rand_btn.config(text="Random task")
+        elif current_language == "rus":
+            self.return_btn.config(text="Назад")
+            self.exercise.insert(0, "    Номер: ")
+            self.load_btn.config(text="Загрузить")
+            self.rand_btn.config(text="Случайное")
+
+
+    def validate(self, action, index, value):
+        # Insert phrase
+        if index == "0" and (value == " Exercise: " or value == "    Номер: ") and action == "1":
+            return True
+        # Remove ability to edit phrase 
+        if int(index) < 11 and ((value[:11] != " Exercise: " or value[:11] != "    Номер: ") or (value[:10] == "" and index == "0" and action == "0")):
+            return False
+        # Integers does not start from zero
+        if len(value) != 11 and index == "11" and value[11] == "0":
+            return False
+        # Load task button activation
+        if len(value[11:]) >= 5 and all(symbol in "0123456789" for symbol in value[11:]):
+            self.load_btn.config(state="normal")
+        else:
+            self.load_btn.config(state="disabled")
+        # Entry validation
+        if len(value) > 42 and action == "1":  # Limiting input length
+            return False
+        elif all(symbol in "0123456789" for symbol in value[11:]):  # Allowed values
+            return True
+        else:
+            return False
 
 
 class SettingsPage(Frame):
