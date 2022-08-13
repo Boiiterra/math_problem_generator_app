@@ -36,12 +36,10 @@ I think no. This project is my small experiment.
 
 ### Windows
 
-1. Go to [Releases](https://github.com/TerraBoii/math_problem_generator_app/releases "Releases")
-2. Search for release with tag: `Latest`
-3. Click on `mathproblemgenerator_setup.exe` file and download it
-4. After installation open installed file
-5. Complete installation by choosing options you like
-6. After finishing this process app will be opened or you need to double click it on your desktop, start menu or find it in the destination folder you picked (Targeted file is `Math problem generator app.exe` or `Math problem generator launcher.exe`)
+1. [Click me to start downloading "mathproblemgenerator_setup.exe" file](https://github.com/TerraBoii/math_problem_generator_app/raw/main/app_installer/mathproblemgenerator_setup.exe)
+2. After download is finished open `mathproblemgenerator_setup.exe`
+3. Complete installation by choosing options you like
+4. After finishing this process app will be opened or you need to double click it on your desktop, start menu or find it in the destination folder you picked (Targeted file is `Math problem generator launcher.exe`)
 
 ### Linux
 
