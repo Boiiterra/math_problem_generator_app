@@ -356,7 +356,7 @@ class MainPage(Frame):
 
         self.start_button = Button(self, bg=num_bg, fg=fg, font=("Arial", 45),
                                    activeforeground=active_fg, activebackground=num_bg, bd=0, highlightbackground=num_bg,
-                                   disabledforeground=num_bg, command=lambda: controller.show_frame(ShowTaskPage))
+                                   disabledforeground=num_bg, command=lambda: controller.show_frame(SubjectsPage))
         self.start_button.pack(fill='both', pady=2, expand=True)
 
         self.settings_button = Button(self, bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
