@@ -23,31 +23,16 @@ _height = parser.get('parameters', 'height')
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
 # Colors and theme
-home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-num_active_fg = parser.get("colors", "num_btn_active_fore")
-active_fg = parser.get("colors", "active_foreground")
-current_theme = parser.get('theme', "current_theme")
-home_btn_fg = parser.get("colors", "home_btn_fore")
-main_btn_bg = parser.get("colors", "main_btn_back")
-num_bg = parser.get("colors", "num_btn_back")
-num_fg = parser.get("colors", "num_btn_fore")
-fg = parser.get("colors", "foreground")
-bg = parser.get("colors", "background")
 
-
-def set_theme():  # This function updates colors after theme changed
-    global current_theme, bg, fg, active_fg, home_btn_active_fg, home_btn_fg, main_btn_bg, num_bg, num_fg, num_active_fg
-    home_btn_active_fg = parser.get("colors", "home_bts_active_fore")
-    num_active_fg = parser.get("colors", "num_btn_active_fore")
-    active_fg = parser.get("colors", "active_foreground")
-    current_theme = parser.get('theme', "current_theme")
-    home_btn_fg = parser.get("colors", "home_btn_fore")
-    main_btn_bg = parser.get("colors", "main_btn_back")
-    num_bg = parser.get("colors", "num_btn_back")
-    num_fg = parser.get("colors", "num_btn_fore")
-    fg = parser.get("colors", "foreground")
-    bg = parser.get("colors", "background")
-
+bg = "#bababa"
+fg = "#000000"
+active_fg = "#000000"
+home_btn_fg = "#404040"
+main_btn_bg = "#292929"
+num_bg = "#999999"
+num_fg = "#4d4d4d"
+num_active_fg = "#787878"
+home_btn_active_fg = "#5e5e5e"
 
 def change_language(language: str):  # This function changes language for whole application
     global parser, current_language, lng_state
@@ -68,46 +53,6 @@ def change_language(language: str):  # This function changes language for whole 
             parser.write(configfile)
         lng_state = parser.get('language', 'state')
         current_language = parser.get('language', 'language')
-
-
-def dark_theme():  # This function changes colors and theme to dark and saves changes to file
-    global parser
-    parser.read("data.txt")
-    parser.set("theme", "current_theme", "dark")
-    parser.set("colors", "background", "#000000")
-    parser.set("colors", "num_btn_back", "#0a0a0a")
-    parser.set("colors", "home_btn_fore", "#474747")
-    parser.set("colors", "active_foreground", "#5e5e5e")
-    parser.set("colors", "home_bts_active_fore", "#333333")
-    parser.set("colors", "num_btn_active_fore", "#5e5e5e")
-    parser.set("colors", "main_btn_back", "#000000")
-    parser.set("colors", "num_btn_fore", "#8c8c8c")
-    parser.set("colors", "foreground", "#ffffff")
-    with open("data.txt", 'w') as configfile:
-        parser.write(configfile)
-    # Set colors
-    parser.read("data.txt")
-    set_theme()
-
-
-def light_theme():  # This function changes colors and theme to light and saves changes to file
-    global parser
-    parser.read("data.txt")
-    parser.set('theme', "current_theme", "light")
-    parser.set("colors", "num_btn_back", "#999999")
-    parser.set("colors", "home_btn_fore", "#404040")
-    parser.set("colors", "active_foreground", "#000000")
-    parser.set("colors", "home_bts_active_fore", "#5e5e5e")
-    parser.set("colors", "num_btn_active_fore", "#787878")
-    parser.set("colors", "main_btn_back", "#292929")
-    parser.set("colors", "num_btn_fore", "#4d4d4d")
-    parser.set("colors", "foreground", "#000000")
-    parser.set("colors", "background", "#bababa")
-    with open("data.txt", 'w') as configfile:
-        parser.write(configfile)
-    # Set colors
-    parser.read("data.txt")
-    set_theme()
 
 
 def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
@@ -382,15 +327,6 @@ class MainPage(Frame):
             self.start_button.config(text="Начать")
             self.settings_button.config(text="Настройки")
 
-    def main_page_theme_update(self):
-        self.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.start_button.config(bg=num_bg, fg=fg, activeforeground=num_active_fg, activebackground=num_bg,
-                                 highlightbackground=num_bg)
-        self.settings_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
-                                    highlightbackground=num_bg)
-
-
 class SubjectsPage(Frame):
 
     def __init__(self, parent, controller):
@@ -449,17 +385,6 @@ class SubjectsPage(Frame):
             self.algebra.config(text="Алгебра")
             self.geometry.config(text="Геометрия")
 
-    def subjects_page_theme_update(self):
-        self.config(bg=bg)
-        self.placeholder.config(bg=bg)
-        self.subjects_container.config(bg=bg)
-        self.subjects_info.config(bg=bg, fg=fg)
-        self.custom.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.number.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.algebra.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, highlightbackground=bg)
-        self.geometry.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg, highlightbackground=num_bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
-
 
 class AlgebraPage(Frame):
 
@@ -515,17 +440,6 @@ class AlgebraPage(Frame):
             self.back_btn.config(text="Назад")
             self.algebra_info.config(text='Выбери тему:')
             self.square_equation.config(text='Квадратные\nуравнения')
-
-    def algebra_page_theme_update(self):
-        self.config(bg=bg)
-        self.placeholder.config(bg=bg)
-        self.algebra_container.config(bg=bg)
-        self.algebra_info.config(bg=bg, fg=fg)
-        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeters.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.square_equation.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg, highlightbackground=num_bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
 
 
 class SqEquationPage(Frame):
@@ -743,22 +657,6 @@ class SqEquationPage(Frame):
         else:
             return False
 
-    def sq_equation_page_theme_update(self):
-        self.config(bg=bg)
-        self.container.config(bg=bg)
-        self.btn_container.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                             highlightbackground=num_bg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=bg,
-                                highlightbackground=bg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
-                             highlightbackground=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg, highlightcolor=bg)
-
     def set_lang_sqequationpage(self):
         self.exercise.config(state='normal')
         self.exercise.delete("0.0", 'end')
@@ -839,20 +737,6 @@ class GeometryPage(Frame):
             self.figure_squares.config(text='Площади \nфигур')
             self.figure_perimeters.config(text='Периметр\nфигур')
 
-    def geometry_page_theme_update(self):
-        self.config(bg=bg)
-        self.placeholder.config(bg=bg)
-        self.geometry_container.config(bg=bg)
-        self.geometry_info.config(bg=bg, fg=fg)
-        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeters.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                      highlightbackground=bg)
-        self.figure_squares.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                   highlightbackground=num_bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                             highlightbackground=num_bg)
-
 
 class AreasPage(Frame):
 
@@ -910,20 +794,6 @@ class AreasPage(Frame):
             self.areas_info.config(text='Выберите фигуру:')
             self.squares_a.config(text='Площадь\nквадрата')
             self.back_btn.config(text='Назад')
-
-    def areas_page_theme_update(self):
-        self.config(bg=bg)
-        self.placeholder.config(bg=bg)
-        self.areas_info.config(bg=bg, fg=fg)
-        self.figures_container.config(bg=bg)
-        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.rectangles_a.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                 highlightbackground=bg)
-        self.squares_a.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                              highlightbackground=num_bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                             highlightbackground=num_bg)
 
 
 class SquaresAPage(Frame):
@@ -1093,22 +963,6 @@ class SquaresAPage(Frame):
             return True
         else:
             return False
-
-    def squares_a_page_theme_update(self):
-        self.config(bg=bg)
-        self.container.config(bg=bg)
-        self.btn_container.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
-                                highlightbackground=bg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
-                             highlightbackground=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_squaresapage(self):
         self.exercise.config(state='normal')
@@ -1303,22 +1157,6 @@ class RectanglesAPage(Frame):
         else:
             return False
 
-    def rectangles_a_page_theme_update(self):
-        self.config(bg=bg)
-        self.container.config(bg=bg)
-        self.btn_container.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                             highlightbackground=num_bg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
-                                highlightbackground=bg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
-                             highlightbackground=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg, highlightcolor=bg)
-
     def set_lang_rectanglesaspage(self):
         self.exercise.config(state='normal')
         self.exercise.delete("0.0", 'end')
@@ -1397,19 +1235,6 @@ class PerimetersPage(Frame):
             self.perimeters_info.config(text='Выберите фигуру:')
             self.squares_p.config(text="Периметр\nквадрата")
             self.return_btn.config(text='Назад')
-
-    def perimeters_page_theme_update(self):
-        self.config(bg=bg)
-        self.placeholder.config(bg=bg)
-        self.figures_container.config(bg=bg)
-        self.perimeters_info.config(bg=bg, fg=fg)
-        self.figure_square.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.config(disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.squares_p.config(bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg, highlightbackground=bg)
-        self.rectangles_p.config(bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                 highlightbackground=num_bg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
 
 
 class SquaresPPage(Frame):
@@ -1580,22 +1405,6 @@ class SquaresPPage(Frame):
             return True
         else:
             return False
-
-    def squares_p_page_theme_update(self):
-        self.config(bg=bg)
-        self.container.config(bg=bg)
-        self.btn_container.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.return_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
-                                highlightbackground=bg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
-                             highlightbackground=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg, highlightcolor=bg)
 
     def set_lang_squaresppage(self):
         self.exercise.config(state='normal')
@@ -1787,22 +1596,6 @@ class RectanglesPPage(Frame):
         else:
             return False
 
-    def rectangles_p_page_theme_update(self):
-        self.config(bg=bg)
-        self.container.config(bg=bg)
-        self.btn_container.config(bg=bg)
-        self.text_label.config(bg=bg, fg=fg)
-        self.answer_txt.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.exercise.config(bg=bg, fg=fg, highlightbackground=bg, highlightcolor=bg)
-        self.back_btn.config(bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                             highlightbackground=num_bg)
-        self.confirm_btn.config(bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, disabledforeground=active_fg,
-                                highlightbackground=bg)
-        self.next_btn.config(bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, disabledforeground=active_fg,
-                             highlightbackground=bg)
-        self.answer_field.config(bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg,
-                                 highlightbackground=bg, highlightcolor=bg)
-
     def set_lang_rectanglesppage(self):
         self.exercise.config(state='normal')
         self.exercise.delete("0.0", 'end')
@@ -1973,145 +1766,31 @@ class SettingsPage(Frame):
                                        command=lambda: self.language_changer(_lang_="rus"))
         self.russian_lang_btn.grid(row=0, column=2)
 
-        # Separator or placeholder
-        self.place_h1 = Label(self, bg=bg, font=('Arial', 30))
-        self.place_h1.pack()
-
-        self.themes_changers_container = Label(self, bg=bg)
-        self.themes_changers_container.pack(anchor='n')
-
-        self.themes_changers_container.rowconfigure(0, weight=1)
-        self.themes_changers_container.columnconfigure(0, weight=1)
-        self.themes_changers_container.columnconfigure(1, weight=1)
-        self.themes_changers_container.columnconfigure(2, weight=1)
-        self.themes_changers_container.columnconfigure(3, weight=1)
-        
-        self.theme_info = Label(self.themes_changers_container, bg=bg, fg=fg, font=("Arial", 35))
-        self.theme_info.grid(row=0, column=0, sticky="nsew")
-
-        self.dark_theme_btn = Button(self.themes_changers_container, text="Dark", bg=num_bg, fg=num_fg,
-                                     font=("Arial", 40), command=self.change_theme_to_dark, bd=0, highlightbackground=num_bg,
-                                     activeforeground=num_active_fg, activebackground=num_bg, disabledforeground=num_bg)
-        self.dark_theme_btn.grid(row=0, column=1, sticky='nsew')
-
-        self.light_theme_btn = Button(self.themes_changers_container, text="Light", bg=bg, fg=fg,
-                                      font=("Arial", 40), highlightbackground=bg,
-                                      activeforeground=active_fg, activebackground=bg, bd=0, disabledforeground=bg,
-                                      command=self.change_theme_to_light)
-        self.light_theme_btn.grid(row=0, column=3, sticky='nsew')
-
-        # Separator or placeholder
-        self.place_h2 = Label(self, bg=bg, font=('Arial', 20))
-        self.place_h2.pack()
-
         self.home_button = Button(self, text="Home", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
                                   activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
                                   disabledforeground=num_bg, command=lambda: controller.show_frame(MainPage),
-                                  highlightbackground=num_bg)
-        self.home_button.pack(fill='both', side='bottom', expand=True)
-
-        # Checking for current theme
-        if current_theme == 'dark':
-            self.dark_theme_btn.config(state='disabled', cursor="")
-            self.light_theme_btn.config(state='normal', cursor="hand2")
-        elif current_theme == 'light':
-            self.dark_theme_btn.config(state='normal', cursor="hand2")
-            self.light_theme_btn.config(state='disabled', cursor="")
-
-        self.bind("<Configure>", lambda params: self.font_changer(params.width))
+                                  highlightbackground=num_bg, height=3)
+        self.home_button.pack(fill='x', side='bottom')
 
         self.set_lang_settingspage()
 
-    def font_changer(self, width):
-        """Changing font size based on window width"""
-        if width <= 959:
-            self.theme_info.config(font=('Arial', 42))
-            self.home_button.config(font=('Arial', 45))
-            self.dark_theme_btn.config(font=('Arial', 42))
-            self.light_theme_btn.config(font=('Arial', 42))
-        elif 959 < width <= 1160:
-            self.light_theme_btn.config(font=('Arial', 50))
-            self.dark_theme_btn.config(font=('Arial', 50))
-            self.home_button.config(font=('Arial', 55))
-            self.theme_info.config(font=('Arial', 50))
-        elif width > 1160:
-            self.theme_info.config(font=('Arial', 55))
-            self.home_button.config(font=('Arial', 55))
-            self.dark_theme_btn.config(font=('Arial', 55))
-            self.light_theme_btn.config(font=('Arial', 55))
 
     def language_changer(self, _lang_: str):
         """Changes language from setting page and fixes its font"""
         _page = self.controller.get_page(FLaunchPage)  # Getting access to FLaunchPage in oreder to use new_lang method
         _page.new_lang('', lang=_lang_, _from='')
-        self.font_changer(self.winfo_width())  # Changing font size so everything will fit in the window
 
     def set_lang_settingspage(self):
         if current_language == "eng":
             self.russian_lang_btn.config(state='normal', cursor="hand2")
             self.english_lang_btn.config(state='disabled', cursor="")
             self.language_info.config(text='Language:')
-            self.light_theme_btn.config(text='Light')
-            self.dark_theme_btn.config(text='Dark')
-            self.theme_info.config(text='Theme:')
             self.home_button.config(text='Home')
         elif current_language == 'rus':
-            self.theme_info.config(text='Тема:')
             self.home_button.config(text='Назад')
             self.language_info.config(text='Язык:')
-            self.dark_theme_btn.config(text='Тёмная')
-            self.light_theme_btn.config(text='Светлая')
             self.russian_lang_btn.config(state='disabled', cursor="")
             self.english_lang_btn.config(state='normal', cursor="hand2")
-        self.font_changer(self.winfo_width())
-
-    def settings_page_theme_update(self):
-        self.config(bg=bg)
-        self.place_h0.config(bg=bg)
-        self.place_h1.config(bg=bg)
-        self.place_h2.config(bg=bg)
-        self.created_by.config(bg=bg)
-        self.theme_info.config(bg=bg, fg=fg)
-        self.themes_changers_container.config(bg=bg)
-        self.language_changers_container.config(bg=bg)
-        self.language_info.config(bg=bg, disabledforeground=fg, highlightbackground=bg)
-        self.light_theme_btn.config(bg=bg, fg=fg, activeforeground=active_fg, activebackground=bg, disabledforeground=bg,
-                                    highlightbackground=bg)
-        self.russian_lang_btn.config(bg=bg, fg=fg, disabledforeground=bg, activeforeground=active_fg, activebackground=bg,
-                                     highlightbackground=bg)
-        self.dark_theme_btn.config(bg=num_bg, fg=num_fg, activeforeground=num_active_fg, activebackground=num_bg,
-                                   disabledforeground=num_bg, highlightbackground=num_bg)
-        self.english_lang_btn.config(bg=num_bg, fg=num_fg, disabledforeground=num_bg, activeforeground=num_active_fg,
-                                     activebackground=num_bg, highlightbackground=num_bg)
-        self.home_button.config(bg=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, activebackground=num_bg,
-                                disabledforeground=num_bg, highlightbackground=num_bg)
-
-    def pages_update(self):
-        # Get page's method that changes its theme
-        self.controller.get_page(RectanglesAPage).rectangles_a_page_theme_update()
-        self.controller.get_page(RectanglesPPage).rectangles_p_page_theme_update()
-        self.controller.get_page(SqEquationPage).sq_equation_page_theme_update()
-        self.controller.get_page(PerimetersPage).perimeters_page_theme_update()
-        self.controller.get_page(SquaresPPage).squares_p_page_theme_update()
-        self.controller.get_page(SquaresAPage).squares_a_page_theme_update()
-        self.controller.get_page(SettingsPage).settings_page_theme_update()
-        self.controller.get_page(SubjectsPage).subjects_page_theme_update()
-        self.controller.get_page(GeometryPage).geometry_page_theme_update()
-        self.controller.get_page(AlgebraPage).algebra_page_theme_update()
-        self.controller.get_page(AreasPage).areas_page_theme_update()
-        self.controller.get_page(MainPage).main_page_theme_update()
-
-    def change_theme_to_dark(self):
-        self.light_theme_btn.config(state='normal', cursor="hand2")
-        self.dark_theme_btn.config(state='disabled', cursor="")
-        dark_theme()
-        self.pages_update()
-
-    def change_theme_to_light(self):
-        self.dark_theme_btn.config(state='normal', cursor="hand2")
-        self.light_theme_btn.config(state='disabled', cursor="")
-        light_theme()
-        self.pages_update()
 
 
 class ExtraSettings(Toplevel):
