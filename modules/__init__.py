@@ -1,0 +1,1 @@
+from .generators import perimeter_task, area_task, square_equation

@@ -1,5 +1,5 @@
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
-from generators import perimeter_task, area_task, square_equation
+from modules import perimeter_task, area_task, square_equation
 from pyautogui import position as mouse_pos
 from tkinter.messagebox import showinfo
 from configparser import ConfigParser
