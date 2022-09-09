@@ -3,7 +3,6 @@
 
 - [Math Problem Generator App](#math-problem-generator-app)
   - [Description](#description)
-    - [Will the application be updated?](#will-the-application-be-updated)
   - [Installation](#installation)
     - [Windows](#windows)
     - [Linux](#linux)
