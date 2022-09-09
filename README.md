@@ -28,10 +28,6 @@ ___
 
 This application was created as school project and it generates certain math problems. Math problems has their unique number which allows you to return to that specific exercise at any time and solve it as many times as you want.
 
-### Will the application be updated?
-
-I think no. This project is my small experiment.
-
 ## Installation
 
 ### Windows
