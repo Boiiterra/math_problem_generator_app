@@ -134,9 +134,6 @@ class MainAppBody(Tk):  # Main application with page logic
             self.iconbitmap("images//main_icon.ico")
         except TclError:
             print("Unable to find icon file")
-        # Setting max and min sizes for the app
-        self.minsize(width=800, height=600)
-        self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
         self.geometry(f"{_width}x{_height}+{int((self.winfo_screenwidth() - _width) / 2)}+{int((self.winfo_screenheight() - _height) / 2)}")  # Middle pos on the screen
         self.resizable(0, 0)
 
