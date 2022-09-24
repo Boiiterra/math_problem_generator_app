@@ -275,48 +275,48 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         self.controller.get_page(SubjectsPage).set_lang_subjectspage()
         self.controller.get_page(AlgebraPage).set_lang_algebrapage()
         self.controller.get_page(AreasPage).set_lang_squarespage()
-        self.controller.get_page(MainPage).set_lang_mainpage()
+        self.controller.get_page(MainPage).set_lang()
 
         if _from is None:  # We don't need to go to main page after switching language in settings
             self.controller.show_frame(MainPage)
 
 
 class MainPage(Frame):
-
     def __init__(self, parent, controller):
-        Frame.__init__(self, parent, bg=bg)
+        Frame.__init__(self, parent)
         self.controller = controller
 
-        self.text_label = Label(self, font=("Verdana", 45), bg=bg, fg=fg)
-        self.text_label.pack(fill='both', expand=True)
+        title = Label(self, font=("Verdana", 45))
+        title.pack(fill="both", expand=True)
 
-        self.start_button = Button(self, bg=num_bg, fg=fg, font=("Arial", 45),
-                                   activeforeground=active_fg, activebackground=num_bg, bd=0, highlightbackground=num_bg,
-                                   disabledforeground=num_bg, command=lambda: controller.show_frame(SubjectsPage))
-        self.start_button.pack(fill='both', pady=2, expand=True)
+        settings = Button(self, bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", font=("Verdana", 35), command=lambda: controller.show_frame(SettingsPage))
+        settings.pack(side="bottom", fill="both", ipady=30, pady=10)
 
-        self.settings_button = Button(self, bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
-                                      activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
-                                      disabledforeground=num_bg, command=lambda: controller.show_frame(SettingsPage),
-                                      highlightbackground=num_bg)
-        self.settings_button.pack(fill='both', side='bottom', expand=True)
+        tasks = Button(self, bd=0, font=("Verdana", 35), bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f")
+        tasks.pack(side="bottom", fill="x", ipady=20)
 
-        def font_resize_mainpage(_):
-            pass
+        game = Button(self, bd=0, font=("Verdana", 35), bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f")
+        game.pack(side="bottom", fill="x", ipady=20, pady=10)
 
-        self.bind("<Configure>", font_resize_mainpage)
+        self.title = title
+        self.settings = settings
+        self.tasks = tasks
+        self.game = game
 
-        self.set_lang_mainpage()
+        self.set_lang()
 
-    def set_lang_mainpage(self):
+    def set_lang(self):
         if current_language == "eng":
-            self.text_label.config(text='Math problem\ngenerator')
-            self.start_button.config(text="Begin")
-            self.settings_button.config(text="Settings")
-        elif current_language == 'rus':
-            self.text_label.config(text='Генератор задач по\nматематике')
-            self.start_button.config(text="Начать")
-            self.settings_button.config(text="Настройки")
+            self.title.config(text="Math problem\ngenerator")
+            self.settings.config(text="Settings")
+            self.tasks.config(text="Print tasks")
+            self.game.config(text="Play the game")
+        elif current_language == "rus":
+            self.title.config(text="Генератор задач\nпо математике")
+            self.settings.config(text="Настройки")
+            self.tasks.config(text="Печатать задачи")
+            self.game.config(text="Играть в игру")
+
 
 class SubjectsPage(Frame):
 
