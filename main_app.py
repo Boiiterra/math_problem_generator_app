@@ -137,14 +137,8 @@ class MainAppBody(Tk):  # Main application with page logic
         # Setting max and min sizes for the app
         self.minsize(width=800, height=600)
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight())
-
-        # creating window:
-        if current_language == "unknown" or lng_state == "ask" or system() == "Linux":
-            middle_x = int((self.winfo_screenwidth() - 800) / 2)
-            middle_y = int((self.winfo_screenheight() - 600) / 2)
-            self.geometry(f"{800}x{600}+{middle_x}+{middle_y}")  # Middle pos on the screen
-        else:
-            self.geometry(f"{int(_width)}x{int(_height)}+{int(x_pos) - 8}+{(int(y_pos))-31}")  # (- 8) and (- 31) is important
+        self.geometry(f"{_width}x{_height}+{int((self.winfo_screenwidth() - _width) / 2)}+{int((self.winfo_screenheight() - _height) / 2)}")  # Middle pos on the screen
+        self.resizable(0, 0)
 
         # Rewriting default delete method in order to save window parameters
         if system() == "Windows":
