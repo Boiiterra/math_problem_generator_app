@@ -292,10 +292,10 @@ class MainPage(Frame):
         settings = Button(self, bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", font=("Verdana", 35), command=lambda: controller.show_frame(SettingsPage))
         settings.pack(side="bottom", fill="both", ipady=30, pady=10)
 
-        tasks = Button(self, bd=0, font=("Verdana", 35), bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f")
+        tasks = Button(self, bd=0, font=("Verdana", 35), bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(TaskCreationPage))
         tasks.pack(side="bottom", fill="x", ipady=20)
 
-        game = Button(self, bd=0, font=("Verdana", 35), bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f")
+        game = Button(self, bd=0, font=("Verdana", 35), bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(SubjectsPage))
         game.pack(side="bottom", fill="x", ipady=20, pady=10)
 
         self.title = title
