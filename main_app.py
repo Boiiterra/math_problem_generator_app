@@ -65,8 +65,8 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
         parser.set('parameters', 'x', _x_)
         parser.set('parameters', 'y', _y_)
     else:
-        parser.set('parameters', 'height', _height)
-        parser.set('parameters', 'width', _width)
+        parser.set('parameters', 'height', HEIGHT)
+        parser.set('parameters', 'width', WIDTH)
         parser.set('parameters', 'x', x_pos)
         parser.set('parameters', 'y', y_pos)
     parser.set('parameters', 'zoomed', _state)
@@ -134,7 +134,7 @@ class MainAppBody(Tk):  # Main application with page logic
             self.iconbitmap("images//main_icon.ico")
         except TclError:
             print("Unable to find icon file")
-        self.geometry(f"{_width}x{_height}+{int((self.winfo_screenwidth() - _width) / 2)}+{int((self.winfo_screenheight() - _height) / 2)}")  # Middle pos on the screen
+        self.geometry(f"{WIDTH}x{HEIGHT}+{int((self.winfo_screenwidth() - WIDTH) / 2)}+{int((self.winfo_screenheight() - HEIGHT) / 2)}")  # Middle pos on the screen
         self.resizable(0, 0)
 
         # Rewriting default delete method in order to save window parameters
