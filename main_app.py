@@ -16,9 +16,9 @@ parser.read("data.txt")
 # Parameters:
 x_pos = parser.get('parameters', 'x')
 y_pos = parser.get('parameters', 'y')
-_width = parser.get('parameters', 'width')
+WIDTH = 950
 _state = parser.get('parameters', 'zoomed')
-_height = parser.get('parameters', 'height')
+HEIGHT = 650
 # Language
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
