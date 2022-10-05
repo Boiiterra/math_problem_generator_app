@@ -24,6 +24,14 @@ lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
 # Colors and theme
 
+M_FONT = ("Verdana", 35) # Menu font
+
+# fg = "#3f3f3f" # Foreground active
+# bg = "#cfcfcf" # Background color 
+# bg1 = "#bababa" # Background color 1
+# bg2 = "#c5c5c5" # Background color 2
+
+
 bg = "#bababa"
 fg = "#000000"
 active_fg = "#000000"
@@ -154,7 +162,7 @@ class MainAppBody(Tk):  # Main application with page logic
 
         frame_collection = (FLaunchPage, GeometryPage, MainPage, SettingsPage, AreasPage, PerimetersPage, SquaresAPage, 
                             RectanglesAPage, SquaresPPage, RectanglesPPage, SubjectsPage, AlgebraPage, SqEquationPage,
-                            TaskCreationPage, ShowTaskPage)
+                            TaskCreationPage, ShowTaskPage, GameOptPage)
 
         for frame in frame_collection:
             current_frame = frame(container, self)
@@ -276,6 +284,7 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         self.controller.get_page(AlgebraPage).set_lang_algebrapage()
         self.controller.get_page(AreasPage).set_lang_squarespage()
         self.controller.get_page(TaskCreationPage).set_lang()
+        self.controller.get_page(GameOptPage).set_lang()
         self.controller.get_page(MainPage).set_lang()
 
         if _from is None:  # We don't need to go to main page after switching language in settings
@@ -290,13 +299,13 @@ class MainPage(Frame):
         title = Label(self, font=("Verdana", 45))
         title.pack(fill="both", expand=True)
 
-        settings = Button(self, bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", font=("Verdana", 35), command=lambda: controller.show_frame(SettingsPage))
+        settings = Button(self, bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", font=M_FONT, command=lambda: controller.show_frame(SettingsPage))
         settings.pack(side="bottom", fill="both", ipady=30, pady=10)
 
-        tasks = Button(self, bd=0, font=("Verdana", 35), bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(TaskCreationPage))
+        tasks = Button(self, bd=0, font=M_FONT, bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(TaskCreationPage))
         tasks.pack(side="bottom", fill="x", ipady=20)
 
-        game = Button(self, bd=0, font=("Verdana", 35), bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(SubjectsPage))
+        game = Button(self, bd=0, font=M_FONT, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: controller.show_frame(GameOptPage))
         game.pack(side="bottom", fill="x", ipady=20, pady=10)
 
         self.title = title
@@ -317,6 +326,85 @@ class MainPage(Frame):
             self.settings.config(text="Настройки")
             self.tasks.config(text="Печатать задачи")
             self.game.config(text="Играть в игру")
+
+
+class GameOptPage(Frame): # Game Options Page
+
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.controller = controller
+
+        def other_page(code):
+
+            match code:
+                case 0:
+                    page = SubjectsPage
+                case 1:
+                    page = TaskCreationPage#ShowTaskPage
+                case 2:
+                    page = MainPage
+
+            self.set_lang() # To reset info text
+            controller.show_frame(page)
+
+        def show_description(which:int, btn: Button):
+            match current_language, which:
+                case "eng", 0:
+                    description = "Gives you list of all available\ntasks to choose from."
+                case "rus", 0:
+                    description = "Предоставляет вам список\nвсех возможных задач\nдля выбора одной."
+                case "eng", 1:
+                    description = "Allows you to get previously\ngenerated task or\ngenerate random one."
+                case "rus", 1:
+                    description = "Позволяет получить задачу\nпо её номеру, или создать\nодну совершенно случайную."
+                case "eng", 2:
+                    description = "Allows you to go back\nto previous page"
+                case "rus", 2:
+                    description = "Позволяет вернуться\nна предыдущую страницу"
+            info.config(text="\"{}\"\n{}".format(btn['text'].replace('\n', ' '), description))
+
+        container = Frame(self)
+        container.pack(fill="both", expand=True, pady=(20, 20))
+
+        options = Frame(container)
+        options.pack(side="left", padx=(35, 0))
+
+        tasks_list = Button(options, bd=0, font=("Times New Roman", 25), bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: other_page(0))
+        tasks_list.pack(fill="both", expand=True, pady=(0, 5))
+        tasks_list.bind("<Enter>", lambda _: show_description(0, tasks_list))
+
+        show_task = Button(options, bd=0, font=("Times New Roman", 25), bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: other_page(1))
+        show_task.pack(fill="both", expand=True, pady=10)
+        show_task.bind("<Enter>", lambda _: show_description(1, show_task))
+
+        back_btn = Button(options, font=("Times New Roman", 25, "bold"), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: other_page(2))
+        back_btn.pack(fill="both", expand=True, pady=(15, 0))
+        back_btn.bind("<Enter>", lambda _: show_description(2, back_btn))
+
+        info_c = Frame(container) # Info Container
+        info_c.pack(side="right", padx=(0, 90))
+
+        info = Label(info_c, font=("Times New Roman", 25))
+        info.pack()
+
+        self.back_btn = back_btn
+        self.tasks_list = tasks_list
+        self.show_task = show_task
+        self.info = info
+
+        self.set_lang()
+
+    def set_lang(self):
+        if current_language == "eng":
+            self.back_btn.config(text="Back")
+            self.tasks_list.config(text="List of all tasks")
+            self.show_task.config(text="Show task by number")
+            self.info.config(text="Hover over options on the left\nto see their description here.")
+        elif current_language == "rus":
+            self.back_btn.config(text="Назад")
+            self.tasks_list.config(text="Список всех задач")
+            self.show_task.config(text="Получить задачу\nпо номеру")
+            self.info.config(text="Наведите курсор на один\nиз вариантов слева\nчтобы увидеть описание.")
 
 
 class SubjectsPage(Frame):
