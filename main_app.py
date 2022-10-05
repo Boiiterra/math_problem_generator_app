@@ -373,7 +373,7 @@ class SubjectsPage(Frame):
 
         elif current_language == "rus":
             self.back_btn.config(text='Назад')
-            self.subjects_info.config(text="Вибери предмет:")
+            self.subjects_info.config(text="Выбери предмет:")
             self.algebra.config(text="Алгебра")
             self.geometry.config(text="Геометрия")
 
