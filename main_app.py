@@ -1621,6 +1621,8 @@ class TaskCreationPage(Frame):
 
         self.back = back
 
+        self.set_lang()
+
     def set_lang(self):
         if current_language == "rus":
             self.back.config(text="В разработке")
