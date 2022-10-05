@@ -275,6 +275,7 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         self.controller.get_page(SubjectsPage).set_lang_subjectspage()
         self.controller.get_page(AlgebraPage).set_lang_algebrapage()
         self.controller.get_page(AreasPage).set_lang_squarespage()
+        self.controller.get_page(TaskCreationPage).set_lang()
         self.controller.get_page(MainPage).set_lang()
 
         if _from is None:  # We don't need to go to main page after switching language in settings
@@ -1615,8 +1616,16 @@ class TaskCreationPage(Frame):
         Frame.__init__(self, parent)
         self.controller = controller
 
-        back = Button(self, font=("Verdana", 35), text="Under\nmaintenance", command=lambda: controller.show_frame(MainPage))
+        back = Button(self, font=("Verdana", 35), command=lambda: controller.show_frame(MainPage))
         back.pack(fill="both", expand=True)
+
+        self.back = back
+
+    def set_lang(self):
+        if current_language == "rus":
+            self.back.config(text="В разработке")
+        if current_language == "eng":
+            self.back.config(text="Under maintenance")
 
 
 class ShowTaskOptions(Toplevel):
