@@ -1787,11 +1787,5 @@ class SettingsPage(Frame):
             self.english_lang_btn.config(state='normal', cursor="hand2")
 
 
-class ExtraSettings(Toplevel):
-    
-    def __init__(self, parent):
-        Toplevel.__init__(self, parent, bg=bg)
-
-
 if __name__ == "__main__":
     MainAppBody().mainloop()  # Launch application
