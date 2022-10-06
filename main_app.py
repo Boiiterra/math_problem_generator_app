@@ -413,7 +413,7 @@ class SubjectsPage(Frame):
         Frame.__init__(self, parent, bg=bg)
         self.controller = controller
 
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(MainPage), bd=0,
+        self.back_btn = Button(self, font=("Arial", 35), command=lambda: controller.show_frame(GameOptPage), bd=0,
                                bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
                                highlightbackground=num_bg)
         self.back_btn.pack(side='bottom', fill='x', ipady=5)
