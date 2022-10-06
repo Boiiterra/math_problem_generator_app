@@ -12,7 +12,7 @@
 
 ___
 
-<p align="center"><a href="https://terraboii.github.io/math_problem_generator_app/ru/" title="Сайт проекта">Ссылка на сайт проекта</a></p>
+<p align="center"><a href="https://terraboii.github.io/mpga_wp/ru/" title="Сайт проекта">Ссылка на сайт проекта</a></p>
 
 ___
 

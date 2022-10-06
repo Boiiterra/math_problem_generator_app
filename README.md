@@ -17,7 +17,7 @@ ___
 
 ___
 
-<p align="center"><a href="https://terraboii.github.io/math_problem_generator_app", title="Projects's website">Link to project's website</a></p>
+<p align="center"><a href="https://terraboii.github.io/mpga_wp", title="Projects's website">Link to project's website</a></p>
 
 ___
 
