@@ -170,7 +170,6 @@ class MainAppBody(Tk):  # Main application with page logic
         self.destroy()
 
     def ch_page(self, new:Frame, prev:Frame=None):
-        print(new, prev)
         if prev is not None:
             prev.pack_forget()
         new(self).pack(fill="both", expand=True)
