@@ -154,11 +154,11 @@ class MainAppBody(Tk):  # Main application with page logic
         if _state == 'yes':
             self.state('zoomed')
 
-        # if lng_state == "ask" or current_language == "unknown":
-        #     self.page = FLaunchPage(self)
-        #     self.ch_page(self.page)
-        # elif lng_state == "keep":
-            # self.ch_page(MainPage)
+        if lng_state == "ask" or current_language == "unknown":
+            self.ch_page(FLaunchPage)
+        elif lng_state == "keep":
+            self.ch_page(MainPage)
+
 
     def delete_window(self):  # saves parameters and then deletes window
         if self.wm_state() == "zoomed" and lng_state != "ask" and current_language != "unknown":
@@ -169,17 +169,125 @@ class MainAppBody(Tk):  # Main application with page logic
                                    str(self.winfo_rootx()), str(self.winfo_rooty()), '0')
         self.destroy()
 
-    # def ch_page(self, new:Frame, prev:Frame=None):
-    #     print(new, prev)
-    #     if prev is not None:
-    #         prev.pack_forget()
-    #     if (not "flaunchpage" in str(new).lower()) and (not "mainpage" in str(new).lower()):
-    #         new(self).pack(fill="both", expand=True)
-    #     elif "flaunchpage" in str(new).lower():
-    #         self.page.pack(fill="both", expand=True)
+    def ch_page(self, new:Frame, prev:Frame=None):
+        print(new, prev)
+        if prev is not None:
+            prev.pack_forget()
+        new(self).pack(fill="both", expand=True)
 
-    # def get_page(self, page_class):
-    #     return self.frames[page_class]
+
+class FLaunchPage(Frame):  # This page launches when you need to choose language
+
+    def __init__(self, parent):
+        Frame.__init__(self, parent, bg="black")
+
+        question = Label(self, text="\nChoose language:", bg="black", fg="#00ff00", font=("Arial", 40))
+        question.pack(side="top")
+
+        bottom_ = Label(self, bg="black", text="Note: you can always change\nlanguage in settings menu", font=("Arial", 30), fg="#008000")
+        bottom_.pack(side="bottom")
+
+        lang_btn_container = Label(self, bg="black", justify="center")
+        lang_btn_container.pack(expand=True)
+
+        lang_btn_container.rowconfigure(0, weight=1)
+        lang_btn_container.rowconfigure(1, weight=1)
+        lang_btn_container.columnconfigure(0, weight=1)
+
+        self.russian = Button(lang_btn_container, text="Русский", bg="black", fg="#00ff00",
+                         activeforeground="#008000", font=("Arial", 30), bd=0, highlightbackground="black")
+        self.russian.grid(row=0, column=0, sticky="nsew")
+
+        self.english = Button(lang_btn_container, text="English", bg="black", fg="#00ff00",
+                         activeforeground="#008000", font=("Arial", 30), bd=0, highlightbackground="black")
+        self.english.grid(row=1, column=0, sticky="nsew")
+
+        def entered(btn, lang: str):
+            btn.config(bg="#008000", activebackground="#00ff00")
+            _question_text = _hint_text = ''
+            if lang == "eng":
+                _question_text = "\nChoose language:"
+                _hint_text = "You can always change\nlanguage in settings menu"
+            elif lang == "rus":
+                _question_text = "\nВыберите язык:"
+                _hint_text = "Язык всегда можно\nизменить в настройках"
+            question.config(text=_question_text)
+            bottom_.config(text=_hint_text)
+
+        def left(btn):
+            btn.config(bg="black")
+
+        def new_lang(lang):
+            change_language(lang)
+            parent.ch_page(MainPage, self)
+
+        self.english.bind("<Leave>", lambda _: left(btn=self.english))
+        self.russian.bind("<Button-1>", lambda _: new_lang(lang="rus"))
+        self.russian.bind("<Enter>", lambda _: entered(btn=self.russian, lang='rus'))
+        self.english.bind("<Enter>", lambda _: entered(btn=self.english, lang='eng'))
+        self.english.bind("<Button-1>", lambda _: new_lang(lang="eng"))
+        self.russian.bind("<Leave>", lambda _: left(btn=self.russian))
+
+        def font_resize_for_flaunchpage(width):
+            if width.height <= 620:
+                bottom_.config(font=("Arial", 30))
+                question.config(font=('Arial', 40))
+                self.russian.config(font=('Arial', 30))
+                self.english.config(font=('Arial', 30))
+            elif 620 < width.height <= 700:
+                self.english.config(font=('Arial', 35))
+                self.russian.config(font=('Arial', 35))
+                question.config(font=('Arial', 45))
+                bottom_.config(font=("Arial", 35))
+            elif 700 < width.height <= 800:
+                bottom_.config(font=("Arial", 40))
+                question.config(font=('Arial', 50))
+                self.russian.config(font=('Arial', 40))
+                self.english.config(font=('Arial', 40))
+            elif width.height > 800:
+                self.english.config(font=('Arial', 45))
+                self.russian.config(font=('Arial', 45))
+                question.config(font=('Arial', 55))
+                bottom_.config(font=("Arial", 45))
+
+        self.bind("<Configure>", font_resize_for_flaunchpage)
+
+
+class MainPage(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+        self.parent = parent
+
+        title = Label(self, font=("Verdana", 45))
+        title.pack(fill="both", expand=True)
+
+        settings = Button(self, bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", font=M_FONT)#, command=lambda: parent.ch_page(SettingsPage, MainPage))
+        settings.pack(side="bottom", fill="both", ipady=30, pady=10)
+
+        tasks = Button(self, bd=0, font=M_FONT, bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f")#, command=lambda: parent.ch_page(TaskCreationPage, MainPage))
+        tasks.pack(side="bottom", fill="x", ipady=20)
+
+        game = Button(self, bd=0, font=M_FONT, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f")#, command=lambda: parent.ch_page(GameOptPage, MainPage))
+        game.pack(side="bottom", fill="x", ipady=20, pady=10)
+
+        self.title = title
+        self.settings = settings
+        self.tasks = tasks
+        self.game = game
+
+        self.set_lang()
+
+    def set_lang(self):
+        if current_language == "eng":
+            self.title.config(text="Math problem generator")
+            self.settings.config(text="Settings")
+            self.tasks.config(text="Print tasks")
+            self.game.config(text="Play the game")
+        elif current_language == "rus":
+            self.title.config(text="Генератор задач\nпо математике")
+            self.settings.config(text="Настройки")
+            self.tasks.config(text="Печатать задачи")
+            self.game.config(text="Играть в игру")
 
 
 if __name__ == "__main__":
