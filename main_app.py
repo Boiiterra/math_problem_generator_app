@@ -179,6 +179,7 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
 
     def __init__(self, parent):
         Frame.__init__(self, parent, bg="black")
+        self.parent = parent
 
         question = Label(self, text="\nChoose language:", bg="black", fg="#00ff00", font=("Arial", 40))
         question.pack(side="top")
@@ -216,15 +217,11 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         def left(btn):
             btn.config(bg="black")
 
-        def new_lang(lang):
-            change_language(lang)
-            parent.ch_page(MainPage, self)
-
         self.english.bind("<Leave>", lambda _: left(btn=self.english))
-        self.russian.bind("<Button-1>", lambda _: new_lang(lang="rus"))
+        self.russian.bind("<Button-1>", lambda _: self.new_lang(lang="rus"))
         self.russian.bind("<Enter>", lambda _: entered(btn=self.russian, lang='rus'))
         self.english.bind("<Enter>", lambda _: entered(btn=self.english, lang='eng'))
-        self.english.bind("<Button-1>", lambda _: new_lang(lang="eng"))
+        self.english.bind("<Button-1>", lambda _: self.new_lang(lang="eng"))
         self.russian.bind("<Leave>", lambda _: left(btn=self.russian))
 
         def font_resize_for_flaunchpage(width):
@@ -250,6 +247,11 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
                 bottom_.config(font=("Arial", 45))
 
         self.bind("<Configure>", font_resize_for_flaunchpage)
+
+    def new_lang(self, lang, this_page=False):
+        change_language(lang)
+        if this_page:
+            self.parent.ch_page(MainPage, self)
 
 
 class MainPage(Frame):
@@ -1826,15 +1828,16 @@ class SettingsPage(Frame):
                                   highlightbackground=num_bg, height=3)
         self.home_button.pack(fill='x', side='bottom')
 
-        self.set_lang_settingspage()
+        self.set_lang()
 
 
     def language_changer(self, _lang_: str):
-        """Changes language from setting page and fixes its font"""
-        _page = self.parent.get_page(FLaunchPage)  # Getting access to FLaunchPage in oreder to use new_lang method
-        _page.new_lang('', lang=_lang_, _from='')
+        """Changes language from setting page"""
+        FLaunchPage.new_lang(None, _lang_)
+        self.set_lang()
 
-    def set_lang_settingspage(self):
+
+    def set_lang(self):
         if current_language == "eng":
             self.russian_lang_btn.config(state='normal', cursor="hand2")
             self.english_lang_btn.config(state='disabled', cursor="")
