@@ -39,6 +39,7 @@ SSH:
 ```sh
 git clone git@github.com:TerraBoii/math_problem_generator_app.git
 cd math_problem_generator_app
+pip install -r requirements.txt
 python main_app.py
 ```
 
@@ -47,6 +48,7 @@ HTTPS
 ```sh
 git clone https://github.com/TerraBoii/math_problem_generator_app.git
 cd math_problem_generator_app
+pip install -r requirements.txt
 python main_app.py
 ```
 
