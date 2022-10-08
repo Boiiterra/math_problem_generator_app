@@ -218,10 +218,10 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
             btn.config(bg="black")
 
         self.english.bind("<Leave>", lambda _: left(btn=self.english))
-        self.russian.bind("<Button-1>", lambda _: self.new_lang(lang="rus"))
+        self.russian.bind("<Button-1>", lambda _: self.new_lang("rus", True))
         self.russian.bind("<Enter>", lambda _: entered(btn=self.russian, lang='rus'))
         self.english.bind("<Enter>", lambda _: entered(btn=self.english, lang='eng'))
-        self.english.bind("<Button-1>", lambda _: self.new_lang(lang="eng"))
+        self.english.bind("<Button-1>", lambda _: self.new_lang("eng", True))
         self.russian.bind("<Leave>", lambda _: left(btn=self.russian))
 
         def font_resize_for_flaunchpage(width):
