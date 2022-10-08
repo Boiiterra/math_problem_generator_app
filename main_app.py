@@ -1774,80 +1774,96 @@ class ShowTaskPage(Frame):
 
 
 class SettingsPage(Frame):
-
     def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
+        Frame.__init__(self, parent)
+
         def call_link(_):
             open_new_tab("https://github.com/TerraBoii")
 
         def enter(_):
-            self.created_by.config(font=("Tahoma", 15, "underline"))
+            created_by.config(font=("Tahoma", 15, "underline"))
 
         def leave(_):
-            self.created_by.config(font=("Tahoma", 15))
+            created_by.config(font=("Tahoma", 15))
 
-        self.created_by= Label(self, bg=bg, fg="#213c91", text="Created by: TerraBoii", 
-                               font=("Tahoma", 15), cursor='hand2')
-        self.created_by.pack(side='top')
-        self.created_by.bind("<Enter>", enter)
-        self.created_by.bind("<Leave>", leave)
-        self.created_by.bind("<Button-1>", call_link)
+        created_by = Label(self, fg="#213c91", text="Created by: TerraBoii", font=("Tahoma", 15), cursor='hand2')
+        created_by.pack(side="top")
+        created_by.bind("<Enter>", enter)
+        created_by.bind("<Leave>", leave)
+        created_by.bind("<Button-1>", call_link)
 
-        # Separator or placeholder
-        self.place_h0 = Label(self, bg=bg, font=('Arial', 25))
-        self.place_h0.pack()
+        _return = Button(self, font=("Times New Roman", 25), command=lambda: parent.ch_page(MainPage, self),
+                      bd=0, activeforeground="#3f3f3f", bg="#bababa", activebackground="#cfcfcf")
+        _return.pack(side='bottom', pady=(0, 45), ipadx=45)
 
-        self.language_changers_container = Label(self, bg=bg)
-        self.language_changers_container.pack(anchor='n')
+        def show_opts(_for):
+            match _for:
+                case 0:
+                    container.pack(pady=(80, 15))
+                    l_cont.pack_forget()
+                case 1:
+                    container.pack_forget()
+                    l_cont.pack(pady=(80, 15))
+                case 2:
+                    ...
 
-        self.language_changers_container.rowconfigure(0, weight=1)
-        self.language_changers_container.columnconfigure(0, weight=1)
-        self.language_changers_container.columnconfigure(1, weight=1)
-        self.language_changers_container.columnconfigure(2, weight=1)
+        def change_lang(lang):
+            FLaunchPage.new_lang(None, lang)
+            english.config(state=states[current_language=="eng"])
+            russian.config(state=states[current_language=="rus"])
+            self.set_lang()
 
-        self.language_info = Button(self.language_changers_container, bg=bg, disabledforeground=fg,
-                                    font=("Arial", 35), state='disabled', bd=0, highlightbackground=bg)
-        self.language_info.grid(row=0, column=0, sticky="nsew")
+        container = Frame(self)
+        container.pack(pady=(80, 15))
 
-        self.english_lang_btn = Button(self.language_changers_container, text="English", bg=num_bg, fg=num_fg,
-                                       font=("Arial", 35), disabledforeground=num_bg, highlightbackground=num_bg,
-                                       activeforeground=num_active_fg, activebackground=num_bg, bd=0,
-                                       command=lambda: self.language_changer(_lang_="eng"))
-        self.english_lang_btn.grid(row=0, column=1)
+        lang_o = Button(container, font=("Times New Roman", 25), command=lambda: show_opts(1),
+                      bd=0, activeforeground="#3f3f3f", bg="#bababa", activebackground="#cfcfcf")
+        lang_o.grid(row=0, column=0, sticky="nsew", pady=(0, 5), ipadx=65)
 
-        self.russian_lang_btn = Button(self.language_changers_container, text="Русский", bg=bg, fg=fg,
-                                       font=("Arial", 35), disabledforeground=bg, highlightbackground=bg,
-                                       activeforeground=active_fg, activebackground=bg, bd=0,
-                                       command=lambda: self.language_changer(_lang_="rus"))
-        self.russian_lang_btn.grid(row=0, column=2)
+        theme_o = Button(container, font=("Times New Roman", 25), command=lambda: show_opts(2), state="disabled",
+                       bd=0, activeforeground="#3f3f3f", bg="#c5c5c5", activebackground="#cfcfcf")
+        theme_o.grid(row=1, column=0, sticky="nsew", pady=(0, 5))
 
-        self.home_button = Button(self, text="Home", bg=num_bg, fg=home_btn_fg, font=("Arial", 45),
-                                  activeforeground=home_btn_active_fg, activebackground=num_bg, bd=0,
-                                  disabledforeground=num_bg, command=lambda: parent.ch_page(MainPage, self),
-                                  highlightbackground=num_bg, height=3)
-        self.home_button.pack(fill='x', side='bottom')
+        l_cont = Frame(self)
+
+        l_title = Label(l_cont, font=("Times New Roman", 25), text="Change language to")
+        l_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+
+        states = ("normal", "disabled")
+
+        english = Button(l_cont, font=("Times New Roman", 25), command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"],
+                         bd=0, activeforeground="#3f3f3f", bg="#c5c5c5", activebackground="#cfcfcf")
+        english.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
+
+        russian = Button(l_cont, font=("Times New Roman", 25), command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"],
+                         bd=0, activeforeground="#3f3f3f", bg="#bababa", activebackground="#cfcfcf")
+        russian.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
+
+        back = Button(l_cont, font=("Times New Roman", 25), command=lambda: show_opts(0), text="Back",
+                      bd=0, activeforeground="#3f3f3f", bg="#c5c5c5", activebackground="#cfcfcf")
+        back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
+
+        self._return = _return
+        self.lang_o = lang_o
+        self.theme_o = theme_o
+        self.l_title = l_title
+        self.back = back
 
         self.set_lang()
-
-
-    def language_changer(self, _lang_: str):
-        """Changes language from setting page"""
-        FLaunchPage.new_lang(None, _lang_)
-        self.set_lang()
-
 
     def set_lang(self):
         if current_language == "eng":
-            self.russian_lang_btn.config(state='normal', cursor="hand2")
-            self.english_lang_btn.config(state='disabled', cursor="")
-            self.language_info.config(text='Language:')
-            self.home_button.config(text='Home')
-        elif current_language == 'rus':
-            self.home_button.config(text='Назад')
-            self.language_info.config(text='Язык:')
-            self.russian_lang_btn.config(state='disabled', cursor="")
-            self.english_lang_btn.config(state='normal', cursor="hand2")
+            self._return.config(text="Go to the main page")
+            self.lang_o.config(text="Change language")
+            self.theme_o.config(text="Change theme")
+            self.l_title.config(text="Change language to")
+            self.back.config(text="Back")
+        elif current_language == "rus":
+            self._return.config(text="На главную страницу")
+            self.lang_o.config(text="Изменить язык")
+            self.theme_o.config(text="Изменить тему")
+            self.l_title.config(text="Изменить язык на")
+            self.back.config(text="Назад")
 
 
 if __name__ == "__main__":
