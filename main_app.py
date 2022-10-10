@@ -135,9 +135,6 @@ def CreateToolTip(widget, text):
 
 class MainAppBody(Tk):  # Main application with page logic
 
-    # TODO: Redesign MainAppBody -> pages are separated, not contact together
-    # ! (pressing tab ignores page sequence) 
-
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.title(f"Math problem generator - {__version__}")
