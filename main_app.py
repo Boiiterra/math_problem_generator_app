@@ -133,7 +133,7 @@ def CreateToolTip(widget, text):
     widget.bind('<Leave>', leave)
 
 
-class MainAppBody(Tk):  # Main application with page logic
+class App(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -371,7 +371,7 @@ class TasksPage(Frame):
     def __init__(self, parent):
         super().__init__(self, parent)
 
-        back = Button(self, font=("Times New Roman", 25, "bold"), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: MainAppBody.ch_page(MainPage, self))
+        back = Button(self, font=("Times New Roman", 25, "bold"), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(MainPage, self))
 
 
 class SubjectsPage(Frame):
@@ -1871,4 +1871,4 @@ class SettingsPage(Frame):
 
 
 if __name__ == "__main__":
-    MainAppBody().mainloop()  # Launch application
+    App().mainloop()  # Launch application
