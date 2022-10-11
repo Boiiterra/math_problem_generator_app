@@ -298,7 +298,7 @@ class GameOptPage(Frame): # Game Options Page
 
             match code:
                 case 0:
-                    page = SubjectsPage
+                    page = TasksPage
                 case 1:
                     page = TaskCreationPage#ShowTaskPage
                 case 2:
@@ -369,9 +369,40 @@ class GameOptPage(Frame): # Game Options Page
 
 class TasksPage(Frame):
     def __init__(self, parent):
-        super().__init__(self, parent)
+        Frame.__init__(self, parent)
 
-        back = Button(self, font=("Times New Roman", 25, "bold"), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(MainPage, self))
+        top = Frame(self)
+        top.pack(pady=10, padx=(65, 65), fill="x")
+
+        back = Button(top, font=("Times New Roman", 25), bd=0, bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(GameOptPage, self))
+        back.pack(side="left")
+
+        _filter = Button(top, font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f")
+        _filter.pack(side="right")
+
+        options = [QEquationPage, SquaresAPage, SquaresPPage, RectanglesAPage, RectanglesPPage]
+
+        menu = Frame(self)
+        menu.pack(pady=(10, 0))
+
+        one = Button(menu, text="Quadratic equation", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(QEquationPage, self))
+        one.grid(row=0, column=0, padx=(0, 10))
+
+        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(SquaresAPage, self))
+        two.grid(row=0, column=2, padx=(10, 0))
+
+        self.back = back
+        self._filter = _filter
+
+        self.set_lang()
+
+    def set_lang(self):
+        if current_language == "eng":
+            self.back.config(text="Back")
+            self._filter.config(text="Filter")
+        elif current_language == "rus":
+            self.back.config(text='Назад')
+            self._filter.config(text="Фильтр")
 
 
 class SubjectsPage(Frame):
