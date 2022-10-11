@@ -460,7 +460,7 @@ class AlgebraPage(Frame):
 
         self.square_equation = Button(self.algebra_container, bd=0, font=('Arial', 25),
                                      bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: parent.ch_page(SqEquationPage, self), highlightbackground=num_bg)
+                                     command=lambda: parent.ch_page(QEquationPage, self), highlightbackground=num_bg)
         self.square_equation.grid(row=0, column=0, sticky='nsew')
         
         self.figure_perimeters = Button(self.algebra_container, text='Figure square', bd=0, state='disabled',
@@ -481,7 +481,7 @@ class AlgebraPage(Frame):
         if current_language == "eng":
             self.back_btn.config(text="Back")
             self.algebra_info.config(text='Choose topic:')
-            self.square_equation.config(text='Square\nequations')
+            self.square_equation.config(text='Quadratic\nequations')
 
         elif current_language == "rus":
             self.back_btn.config(text="Назад")
@@ -489,7 +489,7 @@ class AlgebraPage(Frame):
             self.square_equation.config(text='Квадратные\nуравнения')
 
 
-class SqEquationPage(Frame):
+class QEquationPage(Frame):
 
     def __init__(self, parent):
         Frame.__init__(self, parent, bg=bg)
