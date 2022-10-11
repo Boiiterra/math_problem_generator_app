@@ -367,6 +367,13 @@ class GameOptPage(Frame): # Game Options Page
             self.info.config(text="Наведите курсор на один\nиз вариантов слева\nчтобы увидеть описание.")
 
 
+class TasksPage(Frame):
+    def __init__(self, parent):
+        super().__init__(self, parent)
+
+        back = Button(self, font=("Times New Roman", 25, "bold"), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: MainAppBody.ch_page(MainPage, self))
+
+
 class SubjectsPage(Frame):
 
     def __init__(self, parent):
