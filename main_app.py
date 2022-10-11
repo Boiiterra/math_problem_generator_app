@@ -82,6 +82,36 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
         parser.write(configfile)
 
 
+class ShowExercise(Frame): # Template 
+    def __init__(self, parent: Frame, exercise: float):
+        Frame.__init__(self, parent)
+
+        label = Label(self, font=('Arial', 27), text="Exercise:")
+        label.pack(side="left", padx=2, pady=5)
+
+        e_text = Text(self, font=('Arial', 27), borderwidth=0, height=1, state="disabled")
+        e_text.pack(fill="x", pady=8, side='right')
+        e_text.bind("<Button-1>", lambda _: copy(exercise))
+
+        self.label = label
+        self.e_text = e_text
+
+        self.change(exercise)
+        self.set_lang()
+
+    def change(self, _to):
+        self.e_text.config(state="normal")
+        self.e_text.delete("0.0", "end")
+        self.e_text.insert("end", _to)
+        self.e_text.config(state="disabled")
+
+    def set_lang(self):
+        if current_language == "eng":
+            self.label.config(text="Exercise:")
+        elif current_language == "rus":
+            self.label.config(text="Номер:")
+
+
 class ToolTip(object):
 
     def __init__(self, widget):
@@ -388,7 +418,7 @@ class TasksPage(Frame):
         one = Button(menu, text="Quadratic equation", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(QEquationPage, self))
         one.grid(row=0, column=0, padx=(0, 10))
 
-        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(SquaresAPage, self))
+        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(TaskPage, self))
         two.grid(row=0, column=2, padx=(10, 0))
 
         self.back = back
@@ -403,6 +433,55 @@ class TasksPage(Frame):
         elif current_language == "rus":
             self.back.config(text='Назад')
             self._filter.config(text="Фильтр")
+
+
+class TaskPage(Frame): # Template?
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+
+        top = ShowExercise(self, 1)
+        top.pack(fill="x", pady=8)
+
+        text_label = Label(self, font=('Arial', 20), anchor='center')
+        text_label.pack(pady=4, expand=True)
+
+        btn_container = Label(self)
+        btn_container.pack(side="bottom", fill="x")
+
+        container = Label(self, anchor='w')
+        container.pack(pady=6, side='bottom')
+
+        def confirm():
+            print("Confirmed")
+
+        def return_back():
+            print("Returned back")
+
+        def click():
+            print("Clicked")
+
+        def new_task():
+            print("Generated")
+
+        answer_txt = Button(container, state="disabled", bd=0, font=("Arial", 32))
+        answer_txt.grid(row=0, column=0)
+
+        answer_field = Entry(container, font=("Arial", 32), width=6)#, validatecommand=is_valid, validate="key")
+        answer_field.grid(row=0, column=1)
+
+        confirm_btn = Button(container, font=('Arial', 32), command=confirm, bd=0, state="disabled")
+        confirm_btn.grid(row=0, column=2)
+
+        answer_field.bind('<Button-1>', click)
+        container.pack_forget()
+
+        back_btn = Button(btn_container, font=("Arial", 35), command=return_back, bd=0,
+                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
+                               highlightbackground=num_bg)
+        back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
+
+        next_btn = Button(btn_container, font=("Arial", 35), bd=0, command=new_task,)
+        next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
 
 
 class SubjectsPage(Frame):
