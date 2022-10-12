@@ -506,7 +506,7 @@ class TasksPage(Frame):
         one = Button(menu, text="Quadratic equation", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(QEquationPage, self))
         one.grid(row=0, column=0, padx=(0, 10))
 
-        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(TaskPage, self))
+        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(SquaresAPage, self))
         two.grid(row=0, column=2, padx=(10, 0))
 
         self.back = back
