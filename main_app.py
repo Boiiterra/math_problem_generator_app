@@ -540,121 +540,6 @@ class TaskPage(Frame):
         ...
 
 
-class SubjectsPage(Frame):
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
-
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: parent.ch_page(GameOptPage, self), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
-
-        self.subjects_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.subjects_info.pack()
-
-        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
-        self.placeholder.pack(side='bottom')
-
-        self.subjects_container = Label(self, bg=bg)
-        self.subjects_container.pack(side="left", expand=True, fill="both", padx=2)
-
-        self.subjects_container.rowconfigure(0, weight=1)
-        self.subjects_container.rowconfigure(1, weight=1)
-        self.subjects_container.columnconfigure(0, weight=1)
-        self.subjects_container.columnconfigure(1, weight=1)
-
-        self.algebra = Button(self.subjects_container, bd=0, font=('Arial', 25),
-                              bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg,
-                              command=lambda: parent.ch_page(AlgebraPage, self), highlightbackground=bg)
-        self.algebra.grid(row=0, column=0, sticky='nsew')
-        
-        self.geometry = Button(self.subjects_container, bd=0, font=('Arial', 25),
-                               bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                               command=lambda: parent.ch_page(GeometryPage, self), highlightbackground=num_bg)
-        self.geometry.grid(row=0, column=1, sticky='nsew')
-        
-        self.custom = Button(self.subjects_container, text='Figure perimeter', bd=0, state='disabled',
-                             disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.custom.grid(row=1, column=0, sticky='nsew')
-        
-        self.number = Button(self.subjects_container, text='Figure square', bd=0, state='disabled',
-                             disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.number.grid(row=1, column=1, sticky='nsew')
-
-        self.set_lang_subjectspage()
-
-    def set_lang_subjectspage(self):
-        if current_language == "eng":
-            self.back_btn.config(text='Back')
-            self.subjects_info.config(text="Choose subject:")
-            self.algebra.config(text="Algebra")
-            self.geometry.config(text="Geometry")
-
-        elif current_language == "rus":
-            self.back_btn.config(text='Назад')
-            self.subjects_info.config(text="Выбери предмет:")
-            self.algebra.config(text="Алгебра")
-            self.geometry.config(text="Геометрия")
-
-
-class AlgebraPage(Frame):
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent 
-
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: parent.ch_page(SubjectsPage, self), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
-
-        self.algebra_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.algebra_info.pack()
-
-        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
-        self.placeholder.pack(side='bottom')
-
-        self.algebra_container = Label(self, bg=bg)
-        self.algebra_container.pack(side="left", expand=True, fill="both", padx=2)
-
-        self.algebra_container.rowconfigure(0, weight=1)
-        self.algebra_container.rowconfigure(1, weight=1)
-        self.algebra_container.columnconfigure(0, weight=1)
-        self.algebra_container.columnconfigure(1, weight=1)
-
-        self.square_equation = Button(self.algebra_container, bd=0, font=('Arial', 25),
-                                     bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: parent.ch_page(QEquationPage, self), highlightbackground=num_bg)
-        self.square_equation.grid(row=0, column=0, sticky='nsew')
-        
-        self.figure_perimeters = Button(self.algebra_container, text='Figure square', bd=0, state='disabled',
-                                        disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeters.grid(row=0, column=1, sticky='nsew')
-        
-        self.figure_perimeter = Button(self.algebra_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
-        
-        self.figure_square = Button(self.algebra_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_square.grid(row=1, column=1, sticky='nsew')
-
-        self.set_lang_algebrapage()
-
-    def set_lang_algebrapage(self):
-        if current_language == "eng":
-            self.back_btn.config(text="Back")
-            self.algebra_info.config(text='Choose topic:')
-            self.square_equation.config(text='Quadratic\nequations')
-
-        elif current_language == "rus":
-            self.back_btn.config(text="Назад")
-            self.algebra_info.config(text='Выбери тему:')
-            self.square_equation.config(text='Квадратные\nуравнения')
-
-
 class QEquationPage(Frame):
 
     def __init__(self, parent):
@@ -844,7 +729,7 @@ class QEquationPage(Frame):
         self.container.pack(pady=6, side='bottom')
         if self.start == 0:
             self.container.pack_forget()
-        self.parent.ch_page(AlgebraPage, self)
+        self.parent.ch_page(TasksPage, self)
 
     def validate(self, action, index, value):
         """Enter only integer values"""
@@ -891,122 +776,6 @@ class QEquationPage(Frame):
             self.back_btn.config(text='Назад')
         self.exercise.config(state='disabled')
 
-
-class GeometryPage(Frame):
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
-
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: parent.ch_page(SubjectsPage, self), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
-
-        self.geometry_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.geometry_info.pack()
-
-        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
-        self.placeholder.pack(side='bottom')
-
-        self.geometry_container = Label(self, bg=bg)
-        self.geometry_container.pack(side="left", expand=True, fill="both", padx=2)
-
-        self.geometry_container.rowconfigure(0, weight=1)
-        self.geometry_container.rowconfigure(1, weight=1)
-        self.geometry_container.columnconfigure(0, weight=1)
-        self.geometry_container.columnconfigure(1, weight=1)
-
-        self.figure_squares = Button(self.geometry_container, bd=0, font=('Arial', 25),
-                                     bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                     command=lambda: parent.ch_page(AreasPage, self), highlightbackground=num_bg)
-        self.figure_squares.grid(row=0, column=0, sticky='nsew')
-        
-        self.figure_perimeters = Button(self.geometry_container, bd=0, font=('Arial', 25),
-                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: parent.ch_page(PerimetersPage, self), highlightbackground=bg)
-        self.figure_perimeters.grid(row=0, column=1, sticky='nsew')
-        
-        self.figure_perimeter = Button(self.geometry_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
-        
-        self.figure_square = Button(self.geometry_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_square.grid(row=1, column=1, sticky='nsew')
-
-        self.set_lang_geometrypage()
-
-    def set_lang_geometrypage(self):
-        if current_language == "eng":
-            self.back_btn.config(text='Back')
-            self.geometry_info.config(text='Choose topic:')
-            self.figure_squares.config(text='Figure\n squares ')
-            self.figure_perimeters.config(text='Figure\nperimeters')
-
-        elif current_language == 'rus':
-            self.back_btn.config(text='Назад')
-            self.geometry_info.config(text='Выбери тему:')
-            self.figure_squares.config(text='Площади \nфигур')
-            self.figure_perimeters.config(text='Периметр\nфигур')
-
-
-class AreasPage(Frame):
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
-
-        self.back_btn = Button(self, font=("Arial", 35), command=lambda: parent.ch_page(GeometryPage, self), bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.back_btn.pack(side='bottom', fill='x', ipady=5)
-        
-        self.areas_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.areas_info.pack()
-
-        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
-        self.placeholder.pack(side='bottom')
-
-        self.figures_container = Label(self, bg=bg)
-        self.figures_container.pack(side="left", expand=True, fill="both", padx=2)
-
-        self.figures_container.rowconfigure(0, weight=1)
-        self.figures_container.rowconfigure(1, weight=1)
-        self.figures_container.columnconfigure(0, weight=1)
-        self.figures_container.columnconfigure(1, weight=1)
-        
-        self.rectangles_a = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                        bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                        command=lambda: parent.ch_page(RectanglesAPage, self), highlightbackground=bg)
-        self.rectangles_a.grid(row=0, column=0, sticky='nsew')
-
-        self.squares_a = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                command=lambda: parent.ch_page(SquaresAPage, self), highlightbackground=num_bg)
-        self.squares_a.grid(row=0, column=1, sticky='nsew')
-        
-        self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
-        
-        self.figure_square = Button(self.figures_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_square.grid(row=1, column=1, sticky='nsew')
-
-        self.set_lang_squarespage()
-
-    def set_lang_squarespage(self):
-        if current_language == "eng":
-            self.back_btn.config(text='Back')
-            self.squares_a.config(text="Square's\narea")
-            self.areas_info.config(text='Choose the figure:')
-            self.rectangles_a.config(text="Rectangele's\narea")
-        elif current_language == 'rus':
-            self.rectangles_a.config(text='Площадь\nпрямоугольника')
-            self.areas_info.config(text='Выберите фигуру:')
-            self.squares_a.config(text='Площадь\nквадрата')
-            self.back_btn.config(text='Назад')
 
 
 class SquaresAPage(Frame):
@@ -1154,7 +923,7 @@ class SquaresAPage(Frame):
         self.container.pack(pady=6, side='bottom')
         if self.start == 0:
             self.container.pack_forget()
-        self.parent.ch_page(AreasPage, self)
+        self.parent.ch_page(TasksPage, self)
 
     def validate(self, action, index, value):
         """Enter only integer values"""
@@ -1347,7 +1116,7 @@ class RectanglesAPage(Frame):
         self.container.pack(pady=6, side='bottom')
         if self.start == 0:
             self.container.pack_forget()
-        self.parent.ch_page(AreasPage, self)
+        self.parent.ch_page(TasksPage, self)
 
     def validate(self, action, index, value):
         """Enter only integer values"""
@@ -1390,64 +1159,6 @@ class RectanglesAPage(Frame):
             self.answer_txt.config(text='Ответ: ')
             self.back_btn.config(text='Назад')
         self.exercise.config(state='disabled')
-
-
-class PerimetersPage(Frame):
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
-
-        self.return_btn = Button(self, font=("Arial", 35), command=lambda: parent.ch_page(GeometryPage, self), bd=0,
-                                 bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                                 highlightbackground=num_bg)
-        self.return_btn.pack(side='bottom', fill='x', ipady=5)
-        
-        self.perimeters_info = Label(self, font=('Arial', 25), bg=bg, fg=fg)
-        self.perimeters_info.pack()
-
-        self.placeholder = Label(self, font=('Arial', 5), bg=bg)
-        self.placeholder.pack(side='bottom')
-
-        self.figures_container = Label(self, bg=bg)
-        self.figures_container.pack(side="left", expand=True, fill="both", padx=2)
-
-        self.figures_container.rowconfigure(0, weight=1)
-        self.figures_container.rowconfigure(1, weight=1)
-        self.figures_container.columnconfigure(0, weight=1)
-        self.figures_container.columnconfigure(1, weight=1)
-
-        self.squares_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                bg=bg, fg=fg, activebackground=bg, activeforeground=num_active_fg,
-                                command=lambda: parent.ch_page(SquaresPPage, self), highlightbackground=bg)
-        self.squares_p.grid(row=0, column=0, sticky='nsew')
-        
-        self.rectangles_p = Button(self.figures_container, bd=0, font=('Arial', 25),
-                                   bg=num_bg, fg=fg, activebackground=num_bg, activeforeground=num_active_fg,
-                                   command=lambda: parent.ch_page(RectanglesPPage, self), highlightbackground=num_bg)
-        self.rectangles_p.grid(row=0, column=1, sticky='nsew')
-        
-        self.figure_perimeter = Button(self.figures_container, text='Figure perimeter', bd=0, state='disabled',
-                                       disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_perimeter.grid(row=1, column=0, sticky='nsew')
-        
-        self.figure_square = Button(self.figures_container, text='Figure square', bd=0, state='disabled',
-                                    disabledforeground=bg, bg=bg, highlightbackground=bg)
-        self.figure_square.grid(row=1, column=1, sticky='nsew')
-
-        self.set_lang_perimeterspage()
-
-    def set_lang_perimeterspage(self):
-        if current_language == "eng":
-            self.return_btn.config(text='Return')
-            self.squares_p.config(text="Square's\nperimeter")
-            self.perimeters_info.config(text='Choose the figure:')
-            self.rectangles_p.config(text="Rectangele's\nperimeter")
-        elif current_language == 'rus':
-            self.rectangles_p.config(text="Периметр\nпрямоугольника")
-            self.perimeters_info.config(text='Выберите фигуру:')
-            self.squares_p.config(text="Периметр\nквадрата")
-            self.return_btn.config(text='Назад')
 
 
 class SquaresPPage(Frame):
@@ -1596,7 +1307,7 @@ class SquaresPPage(Frame):
         self.container.pack(pady=6, side='bottom')
         if self.start == 0:
             self.container.pack_forget()
-        self.parent.ch_page(PerimetersPage, self)
+        self.parent.ch_page(TasksPage, self)
 
     def validate(self, action, index, value):
         """Enter only integer values"""
@@ -1786,7 +1497,7 @@ class RectanglesPPage(Frame):
         self.container.pack(pady=6, side='bottom')
         if self.start == 0:
             self.container.pack_forget()
-        self.parent.ch_page(PerimetersPage, self)
+        self.parent.ch_page(TasksPage, self)
 
     def validate(self, action, index, value):
         """Enter only integer values"""
