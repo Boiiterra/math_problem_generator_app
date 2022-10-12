@@ -157,14 +157,12 @@ class TaskPageTemplate(Frame):
         self.confirm_btn.config(command=command)
 
     def validator(self, action, index, value):
-        """Enter only integer values"""
-        # Integers does not start from zero and there is input limit
+        """Enter only integer values with length limit"""
         if value != "":
             if (index == "0" and value[0] == "0") or (index == "1" and value[0:2] == "-0"):
                 return False
             if len(value) >= 7:
                 return False
-        
         if index != "0" and value[-1] == "-" and action == "1":
             return False
         # Confirm button status
