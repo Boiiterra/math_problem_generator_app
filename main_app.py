@@ -114,7 +114,7 @@ class TaskPageTemplate(Frame):
         is_valid = (parent.register(self.validator), '%d', '%i', '%P') # '%d' -> action, '%i' -> index, '%P' -> value
 
         answer_field = Entry(container, font=("Arial", 32), width=6, validatecommand=is_valid, validate="key")
-        answer_field.grid(row=0, column=1)
+        answer_field.grid(row=0, column=1, padx=15)
 
         confirm_btn = Button(container, font=('Arial', 32), bd=0, state="disabled")
         confirm_btn.grid(row=0, column=2)
