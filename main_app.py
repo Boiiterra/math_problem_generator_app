@@ -119,7 +119,11 @@ class TaskPageTemplate(Frame):
         confirm_btn = Button(container, font=('Arial', 32), bd=0, state="disabled")
         confirm_btn.grid(row=0, column=2)
 
-        back = Button(btn_container, font=("Arial", 35), bd=0, command=lambda: app.ch_page(TasksPage, parent))
+        def go_back():
+            self.answer_field["state"] = "disabled"
+            app.ch_page(TasksPage, parent)
+
+        back = Button(btn_container, font=("Arial", 35), bd=0, command=go_back)
         back.pack(side="left", ipady=5, fill="x", expand=True, padx=(0, 10))
 
         next = Button(btn_container, font=("Arial", 35), bd=0)
