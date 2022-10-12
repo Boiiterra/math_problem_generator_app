@@ -196,7 +196,7 @@ class App(Tk):  # Main application with page logic
                                    str(self.winfo_rootx()), str(self.winfo_rooty()), '0')
         self.destroy()
 
-    def ch_page(self, new:Frame, prev:Frame=None):
+    def ch_page(self, new: Frame, prev: Frame = None):
         if prev is not None:
             prev.pack_forget()
         new(self).pack(fill="both", expand=True)
