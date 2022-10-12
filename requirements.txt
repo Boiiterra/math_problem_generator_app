@@ -1,5 +1,5 @@
-tk
 pillow
+tkinter
 requests
 pypiwin32
 pyautogui
