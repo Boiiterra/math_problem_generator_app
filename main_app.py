@@ -82,34 +82,116 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
         parser.write(configfile)
 
 
-class ShowExercise(Frame): # Template 
-    def __init__(self, parent: Frame, exercise: float):
+class TaskPageTemplate(Frame):
+    exercise = None
+    allowed = "0123456789-"
+
+    def __init__(self, parent: Frame, app):
         Frame.__init__(self, parent)
 
-        label = Label(self, font=('Arial', 27), text="Exercise:")
-        label.pack(side="left", padx=2, pady=5)
+        top = Frame(self)
+        top.pack(fill="x", pady=8)
 
-        e_text = Text(self, font=('Arial', 27), borderwidth=0, height=1, state="disabled")
+        e_label = Label(top, font=('Arial', 27), text="Exercise:")
+        e_label.pack(side="left", padx=2, pady=5)
+
+        e_text = Text(top, font=('Arial', 27), borderwidth=0, height=1, state="disabled")
         e_text.pack(fill="x", pady=8, side='right')
-        e_text.bind("<Button-1>", lambda _: copy(exercise))
+        e_text.bind("<Button-1>", lambda _: copy(self.exercise))
 
-        self.label = label
+        task = Label(self, font=('Arial', 20), anchor='center')
+        task.pack(pady=4, expand=True)
+
+        btn_container = Label(self)
+        btn_container.pack(fill="x", padx=15, side="bottom")
+
+        container = Label(self, anchor='w')
+        container.pack(pady=(0, 6), side="bottom")
+
+        a_label = Label(container, font=("Arial", 32))
+        a_label.grid(row=0, column=0)
+
+        is_valid = (parent.register(self.validator), '%d', '%i', '%P') # '%d' -> action, '%i' -> index, '%P' -> value
+
+        answer_field = Entry(container, font=("Arial", 32), width=6, validatecommand=is_valid, validate="key")
+        answer_field.grid(row=0, column=1)
+
+        confirm_btn = Button(container, font=('Arial', 32), bd=0, state="disabled")
+        confirm_btn.grid(row=0, column=2)
+
+        back = Button(btn_container, font=("Arial", 35), bd=0, command=lambda: app.ch_page(TasksPage, parent))
+        back.pack(side="left", ipady=5, fill="x", expand=True, padx=(0, 10))
+
+        next = Button(btn_container, font=("Arial", 35), bd=0)
+        next.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
+
+        self.e_label = e_label
         self.e_text = e_text
+        self.task = task
+        self.a_label = a_label
+        self.answer_field = answer_field
+        self.confirm_btn = confirm_btn
+        self.back = back
+        self.next = next
 
-        self.change(exercise)
         self.set_lang()
 
-    def change(self, _to):
+    def set_exercise(self, exercise: float):
+        self.exercise = exercise
         self.e_text.config(state="normal")
         self.e_text.delete("0.0", "end")
-        self.e_text.insert("end", _to)
+        self.e_text.insert("end", exercise)
         self.e_text.config(state="disabled")
+
+    def change_task_text(self, new_text: str):
+        self.task.config(text=new_text)
+
+    def new_task_command(self, command):
+        self.next.config(command=command)
+
+    def confirm_command(self, command):
+        self.confirm_btn.config(command=command)
+
+    def validator(self, action, index, value):
+        """Enter only integer values"""
+        # Integers does not start from zero and there is input limit
+        if value != "":
+            if (index == "0" and value[0] == "0") or (index == "1" and value[0:2] == "-0"):
+                return False
+            if len(value) >= 7:
+                return False
+        
+        if index != "0" and value[-1] == "-" and action == "1":
+            return False
+        # Confirm button status
+        if value == "" and index == "0" and all(symbol in self.allowed for symbol in value):
+            self.confirm_btn.config(state="disabled")
+        elif "0" == index < "6" and all(symbol in self.allowed for symbol in value):
+            self.confirm_btn.config(state="normal")
+        # Entry validation
+        if len(self.answer_field.get()) >= 6 and index != "5" and action == "1":  # Limiting input length
+            return False
+        elif all(symbol in self.allowed for symbol in value):  # Allowed values
+            return True
+        else:
+            return False
+
+    def change_allowed(self, _to: str):
+        self.allowed = _to
 
     def set_lang(self):
         if current_language == "eng":
-            self.label.config(text="Exercise:")
+            self.e_label.config(text="Exercise:")
+            self.a_label.config(text="Answer:")
+            self.back.config(text="Back")
+            self.next.config(text="New task")
+            self.confirm_btn.config(text="Confirm")
         elif current_language == "rus":
-            self.label.config(text="Номер:")
+            self.e_label.config(text="Номер:")
+            self.a_label.config(text="Ответ:")
+            self.back.config(text="Назад")
+            self.next.config(text="Новая задача")
+            self.confirm_btn.config(text="Подтвердить")
 
 
 class ToolTip(object):
@@ -439,49 +521,14 @@ class TaskPage(Frame): # Template?
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        top = ShowExercise(self, 1)
-        top.pack(fill="x", pady=8)
+        page = TaskPageTemplate(self, parent)
+        page.set_exercise(1)
+        page.pack(fill="both", expand=True)
 
-        text_label = Label(self, font=('Arial', 20), anchor='center')
-        text_label.pack(pady=4, expand=True)
+        self.set_lang()
 
-        btn_container = Label(self)
-        btn_container.pack(side="bottom", fill="x")
-
-        container = Label(self, anchor='w')
-        container.pack(pady=6, side='bottom')
-
-        def confirm():
-            print("Confirmed")
-
-        def return_back():
-            print("Returned back")
-
-        def click():
-            print("Clicked")
-
-        def new_task():
-            print("Generated")
-
-        answer_txt = Button(container, state="disabled", bd=0, font=("Arial", 32))
-        answer_txt.grid(row=0, column=0)
-
-        answer_field = Entry(container, font=("Arial", 32), width=6)#, validatecommand=is_valid, validate="key")
-        answer_field.grid(row=0, column=1)
-
-        confirm_btn = Button(container, font=('Arial', 32), command=confirm, bd=0, state="disabled")
-        confirm_btn.grid(row=0, column=2)
-
-        answer_field.bind('<Button-1>', click)
-        container.pack_forget()
-
-        back_btn = Button(btn_container, font=("Arial", 35), command=return_back, bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
-
-        next_btn = Button(btn_container, font=("Arial", 35), bd=0, command=new_task,)
-        next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
+    def set_lang(self):
+        ...
 
 
 class SubjectsPage(Frame):
