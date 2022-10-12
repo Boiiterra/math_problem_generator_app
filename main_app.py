@@ -517,7 +517,7 @@ class TasksPage(Frame):
             self._filter.config(text="Фильтр")
 
 
-class TaskPage(Frame): # Template?
+class TaskPage(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
