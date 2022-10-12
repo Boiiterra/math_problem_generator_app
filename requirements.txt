@@ -1,5 +1,7 @@
+tk
 pillow
-pypiwin32
 requests
+pypiwin32
 pyautogui
 packaging
+pyperclip
