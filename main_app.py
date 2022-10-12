@@ -95,9 +95,13 @@ class TaskPageTemplate(Frame):
         e_label = Label(top, font=('Arial', 27), text="Exercise:")
         e_label.pack(side="left", padx=2, pady=5)
 
-        e_text = Text(top, font=('Arial', 27), borderwidth=0, height=1, state="disabled")
+        def do_copy(_):
+            if self.exercise is not None:
+                copy(self.exercise)
+
+        e_text = Text(top, font=('Arial', 27), borderwidth=0, height=1, state="disabled", cursor="")
         e_text.pack(fill="x", pady=8, side='right')
-        e_text.bind("<Button-1>", lambda _: copy(self.exercise))
+        e_text.bind("<Button-1>", do_copy)
 
         task = Label(self, font=('Arial', 20), anchor='center')
         task.pack(pady=4, expand=True)
