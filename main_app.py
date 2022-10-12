@@ -156,6 +156,9 @@ class TaskPageTemplate(Frame):
     def confirm_command(self, command):
         self.confirm_btn.config(command=command)
 
+    def change_allowed(self, _to: str):
+        self.allowed = _to
+
     def validator(self, action, index, value):
         """Enter only integer values with length limit"""
         if value != "":
@@ -177,9 +180,6 @@ class TaskPageTemplate(Frame):
             return True
         else:
             return False
-
-    def change_allowed(self, _to: str):
-        self.allowed = _to
 
     def set_lang(self):
         if current_language == "eng":
