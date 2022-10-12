@@ -527,6 +527,11 @@ class TaskPage(Frame):
 
         page = TaskPageTemplate(self, parent)
         page.set_exercise(1)
+        page.new_task_command(lambda: print("generated"))
+        page.confirm_command(lambda: print(page.answer_field.get()))
+        page.change_task_text("Hello I am the task")
+        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
+        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
         page.pack(fill="both", expand=True)
 
         self.set_lang()
