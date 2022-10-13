@@ -592,15 +592,13 @@ class QEquationPage(Frame):
 
                 if current_language == "eng":
                     page.change_task_text(self.text_e)
-                    page.confirm_btn.config(text="Confirm")
                 elif current_language == "rus":
                     page.change_task_text(self.text_r)
-                    page.confirm_btn.config(text="Подтвердить")
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Confirm")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Подтвердить")
+
+            if current_language == "eng":
+                page.confirm_btn.config(text="Confirm")
+            elif current_language == "rus":
+                page.confirm_btn.config(text="Подтвердить")
 
         def activate():
             page.next.config(state='normal')
@@ -618,15 +616,15 @@ class QEquationPage(Frame):
             self.after(1000, activate)
             if _input == self.answer:
                 if current_language == "eng":
-                    page.confirm_btn.config(text=" Correct", state="disabled")
+                    page.confirm_btn.config(text="Correct", state="disabled")
                 elif current_language == "rus":
-                    page.confirm_btn.config(text=" Правильно", state="disabled")
+                    page.confirm_btn.config(text="Правильно", state="disabled")
                 self.after(500, new_task)
             else:
                 if current_language == "eng":
-                    page.confirm_btn.config(text=" Wrong", state="disabled")
+                    page.confirm_btn.config(text="Wrong", state="disabled")
                 elif current_language == "rus":
-                    page.confirm_btn.config(text=" Неправильно", state="disabled")
+                    page.confirm_btn.config(text="Неправильно", state="disabled")
                 self.after(500, lambda: new_task(False))
 
         page.new_task_command(new_task)
