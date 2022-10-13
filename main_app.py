@@ -83,8 +83,8 @@ def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
 
 
 class TaskPageTemplate(Frame):
-    exercise = None
     allowed = "0123456789-"
+    exercise = None
 
     def __init__(self, parent: Frame, app):
         Frame.__init__(self, parent)
