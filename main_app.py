@@ -92,7 +92,7 @@ class TaskPageTemplate(Frame):
         top = Frame(self)
         top.pack(fill="x", pady=8)
 
-        e_label = Label(top, font=('Arial', 27), text="Exercise:")
+        e_label = Label(top, font=('Arial', 27))
         e_label.pack(side="left", padx=2, pady=5)
 
         def do_copy(_):
