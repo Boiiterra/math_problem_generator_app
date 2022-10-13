@@ -732,28 +732,21 @@ class TaskPage(Frame):
 
 
 class RectanglesAPage(Frame):
-
     def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
+        Frame.__init__(self, parent)
 
-        # Variables:
-        self.exercise_no = 0
+        page = TaskPageTemplate(self, parent)
+        page.pack(fill="both", expand=True)
+        page.change_allowed("0123456789")
+
+        self.exercise_no = None
         self.param = None
         self.answer = None
         self.text_e = None
         self.text_r = None
-        self.start = 0
 
-        def container_reset():
-            self.container.pack_forget()
-            self.container.pack(pady=6, side='bottom')
-
-        def update_task(full_reset=None):
-            if self.start == 0:
-                container_reset()
-                self.start = 1
-            if full_reset is None:
+        def new_task(full_reset: bool = True):
+            if full_reset:
                 task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
                                         self.winfo_screenwidth(), self.winfo_screenheight())
                 self.answer = task_data[2]
@@ -763,164 +756,45 @@ class RectanglesAPage(Frame):
                               f"\nIts height is {self.param[0]} and width is {self.param[1]}."
                 self.text_r = "Чему равна площадь прямоугольника,\nесли его высота равна " \
                               f"{self.param[0]}, а ширина {self.param[1]}."
-                self.exercise.config(state='normal')
-                self.exercise.delete("0.0", 'end')
+                page.set_exercise(self.exercise_no)
                 if current_language == "eng":
-                    self.text_label.config(text=self.text_e)
-                    self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
-                    self.confirm_btn.config(text=" Confirm", disabledforeground=active_fg)
+                    page.change_task_text(self.text_e)
                 elif current_language == "rus":
-                    self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
-                    self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
-                    self.text_label.config(text=self.text_r)
-                self.exercise.config(state='disabled')
-            else:
-                if current_language == "eng":
-                    self.confirm_btn.config(text=" Confirm", disabledforeground=active_fg)
-                elif current_language == "rus":
-                    self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
+                    page.change_task_text(self.text_r)
 
-        self.update_task = update_task
+            if current_language == "eng":
+                page.confirm_btn.config(text="Confirm")
+            elif current_language == "rus":
+                page.confirm_btn.config(text="Подтвердить")
 
-        def new_task():
-            self.next_btn.config(state='disabled')
-            update_task()
-            self.after(1000, self.next_btn.config(state='normal'))
-
-
-        self.exercise = Text(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, height=1, highlightbackground=bg,
-                             highlightcolor=bg)
-        self.exercise.pack(fill="x", pady=8, side='top')
-        self.exercise.bind("<Button-1>", lambda _: copy(self.exercise_no))
-
-        self.text_label = Label(self, bg=bg, fg=fg, font=('Arial', 20), anchor='center')
-        self.text_label.pack(pady=4, expand=True)
-
-        # Containers:
-        self.btn_container = Label(self, bg=bg)
-        self.btn_container.pack(side="bottom", fill="x")
-
-        self.btn_container.rowconfigure(0, weight=1)
-        self.btn_container.columnconfigure(0, weight=1)
-        self.btn_container.columnconfigure(1, weight=1)
-
-        self.container = Label(self, bg=bg, anchor='w')
-        self.container.pack(pady=6, side='bottom')
-
-        self.container.rowconfigure(0, weight=1)
-        self.container.columnconfigure(0, weight=1)
-        self.container.columnconfigure(1, weight=1)
-        self.container.columnconfigure(2, weight=1)
-
-        self.answer_txt = Button(self.container, bg=bg, disabledforeground=fg, state="disabled", bd=0, font=("Arial", 32),
-                                 highlightbackground=bg)
-        self.answer_txt.grid(row=0, column=0)
-
-        is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
-
-        def click(_):
-            self.answer_field.config(state='normal')
+        def activate():
+            page.next.config(state='normal')
+            page.answer_field.config(state='normal')
 
         def confirm():
-            self.next_btn.config(state='disabled')
-            _input = int(self.answer_field.get())
-            self.answer_field.delete(0, 'end')
-            self.answer_field.config(state='disabled')
-            self.after(1000, self.next_btn.config(state='normal'))
+            page.next.config(state='disabled')
+            _input = int(page.answer_field.get())
+            page.clear()
+            page.answer_field.config(state='disabled')
+            self.after(1000, activate)
             if _input == self.answer:
                 if current_language == "eng":
-                    self.confirm_btn.config(text=" Correct", state="disabled", disabledforeground=active_fg)
+                    page.confirm_btn.config(text="Correct", state="disabled")
                 elif current_language == "rus":
-                    self.confirm_btn.config(text=" Правильно", state="disabled", disabledforeground=active_fg)
-                self.after(500, update_task)
+                    page.confirm_btn.config(text="Правильно", state="disabled")
+                self.after(500, new_task)
             else:
                 if current_language == "eng":
-                    self.confirm_btn.config(text=" Wrong", state="disabled", disabledforeground=active_fg)
+                    page.confirm_btn.config(text="Wrong", state="disabled")
                 elif current_language == "rus":
-                    self.confirm_btn.config(text=" Неправильно", state="disabled", disabledforeground=active_fg)
-                self.after(500, lambda: update_task(False))
-            self.after(505, container_reset)
+                    page.confirm_btn.config(text="Неправильно", state="disabled")
+                self.after(500, lambda: new_task(False))
 
-        self.answer_field = Entry(self.container, font=("Arial", 32), validatecommand=is_valid, validate="key", width=6,
-                                  bg=bg, fg=fg, insertbackground=fg, disabledbackground=bg, disabledforeground=fg, 
-                                  highlightbackground=bg, highlightcolor=bg)
-        self.answer_field.grid(row=0, column=1)
+        page.new_task_command(new_task)
+        page.confirm_command(confirm)
 
-        self.confirm_btn = Button(self.container, font=('Arial', 32), command=confirm, bd=0, disabledforeground=active_fg,
-                                  bg=bg, fg=fg, activebackground=bg, activeforeground=active_fg, state="disabled",
-                                  highlightbackground=bg)
-        self.confirm_btn.grid(row=0, column=2)
-        
-        self.answer_field.bind('<Button-1>', click)
-        self.container.pack_forget()
-
-        self.back_btn = Button(self.btn_container, font=("Arial", 35), command=self.return_back, bd=0,
-                               bg=num_bg, activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg,
-                               highlightbackground=num_bg)
-        self.back_btn.grid(row=0, column=0, ipady=5, sticky="nsew", padx=1)
-
-        self.next_btn = Button(self.btn_container, font=("Arial", 35), bd=0, disabledforeground=active_fg,
-                               bg=bg, activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=new_task,
-                               highlightbackground=bg)
-        self.next_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
-
-        self.set_lang_rectanglesaspage()
-
-    def return_back(self):
-        self.answer_field.config(state='normal', fg=fg)
-        self.answer_field.delete(0, "end")
-        self.answer_field.config(state='disabled')
-        self.container.pack_forget()
-        if current_language == "eng":
-            self.confirm_btn.config(text=" Confirm", disabledforeground=active_fg)
-        elif current_language == "rus": 
-            self.confirm_btn.config(text=" Подтвердить", disabledforeground=active_fg)
-        self.container.pack(pady=6, side='bottom')
-        if self.start == 0:
-            self.container.pack_forget()
-        self.parent.ch_page(TasksPage, self)
-
-    def validate(self, action, index, value):
-        """Enter only integer values"""
-        # Integers does not start from zero and there is input limit
-        if value != "":
-            if index == "0" and value[0] == "0":
-                return False
-            if len(value) >= 7:
-                return False
-        # Confirm button status
-        if value == "" and index == "0" and all(_ in "0123456789" for _ in value):
-            self.confirm_btn.config(state="disabled")
-        elif "0" == index < "6" and all(_ in "0123456789" for _ in value):
-            self.confirm_btn.config(state="normal")
-        # Entry validation
-        if len(self.answer_field.get()) >= 6 and index != "5" and action == "1":  # Limiting input length
-            return False
-        elif all(_ in "0123456789" for _ in value):  # Allowed values
-            return True
-        else:
-            return False
-
-    def set_lang_rectanglesaspage(self):
-        self.exercise.config(state='normal')
-        self.exercise.delete("0.0", 'end')
-        if current_language == "eng":
-            self.back_btn.config(text='Back')
-            self.next_btn.config(text="New task")
-            self.answer_txt.config(text='Answer: ')
-            self.text_label.config(text=self.text_e)
-            self.confirm_btn.config(text=" Confirm")
-            self.exercise.insert("0.0", f"  Exercise: {self.exercise_no}")
-            CreateToolTip(self.exercise, text="Click to copy exercise number")
-        elif current_language == 'rus':
-            CreateToolTip(self.exercise, text="Нажмите, чтобы скопировать номер задачи")
-            self.exercise.insert("0.0", f"  Номер: {self.exercise_no}")
-            self.confirm_btn.config(text=" Подтвердить")
-            self.next_btn.config(text="Новое задание")
-            self.text_label.config(text=self.text_r)
-            self.answer_txt.config(text='Ответ: ')
-            self.back_btn.config(text='Назад')
-        self.exercise.config(state='disabled')
+        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
+        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
 
 
 class SquaresPPage(Frame):
