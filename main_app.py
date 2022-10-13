@@ -133,9 +133,12 @@ class TaskPageTemplate(Frame):
         next = Button(b_cont, font=("Arial", 35), bd=0)
         next.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
 
+        self.top = top
         self.e_label = e_label
         self.e_text = e_text
         self.task = task
+        self.b_cont = b_cont
+        self.cont = cont
         self.a_label = a_label
         self.answer_field = answer_field
         self.confirm_btn = confirm_btn
