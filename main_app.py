@@ -844,7 +844,6 @@ class RectanglesAPage(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent, bg=bg)
         self.parent = parent
-        self.parent = parent
 
         # Variables:
         self.exercise_no = 0
@@ -1036,7 +1035,6 @@ class SquaresPPage(Frame):
 
     def __init__(self, parent):
         Frame.__init__(self, parent, bg=bg)
-        self.parent = parent
         self.parent = parent
 
         # Variables:
