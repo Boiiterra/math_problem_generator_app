@@ -187,6 +187,20 @@ class TaskPageTemplate(Frame):
         else:
             return False
 
+    # def set_theme(self, _bg: str, _fg: str):
+    #     self.config(bg=_bg)
+    #     self.top.config(bg=_bg)
+    #     self.e_label.config(bg=_bg, fg=_fg)
+    #     self.e_text.config()
+    #     self.task.config()
+    #     self.b_cont.config(_bg=_bg)
+    #     self.cont.config(bg=_bg)
+    #     self.a_label.config(bg=_bg, fg=_fg)
+    #     self.confirm_btn.config()
+    #     self.back.config()
+    #     self.next.config()
+    #     self.answer_field.config()
+
     def set_lang(self):
         if current_language == "eng":
             self.e_label.config(text="Exercise:")
