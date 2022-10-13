@@ -45,22 +45,18 @@ home_btn_active_fg = "#5e5e5e"
 def change_language(language: str):  # This function changes language for whole application
     global parser, current_language, lng_state
 
+    parser.read('data.txt')
+    parser.set("language", 'state', 'keep')
+
     if language == "rus":
-        parser.read('data.txt')
-        parser.set("language", 'state', 'keep')
         parser.set('language', "language", 'rus')
-        with open("data.txt", "w") as configfile:
-            parser.write(configfile)
-        lng_state = parser.get('language', 'state')
-        current_language = parser.get('language', 'language')
     elif language == "eng":
-        parser.read('data.txt')
-        parser.set("language", 'state', 'keep')
         parser.set('language', "language", 'eng')
-        with open("data.txt", "w") as configfile:
-            parser.write(configfile)
-        lng_state = parser.get('language', 'state')
-        current_language = parser.get('language', 'language')
+
+    with open("data.txt", "w") as configfile:
+        parser.write(configfile)
+    lng_state = parser.get('language', 'state')
+    current_language = parser.get('language', 'language')
 
 
 def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
