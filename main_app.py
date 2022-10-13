@@ -799,7 +799,7 @@ class RectanglesAPage(Frame):
 
 class SquaresPPage(Frame):
     def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
+        Frame.__init__(self, parent)
 
         page = TaskPageTemplate(self, parent)
         page.pack(fill="both", expand=True)
@@ -863,7 +863,7 @@ class SquaresPPage(Frame):
 
 class RectanglesPPage(Frame):
     def __init__(self, parent):
-        Frame.__init__(self, parent, bg=bg)
+        Frame.__init__(self, parent)
 
         page = TaskPageTemplate(self, parent)
         page.pack(fill="both", expand=True)
