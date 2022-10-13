@@ -109,7 +109,7 @@ class TaskPageTemplate(Frame):
         b_cont = Label(self)
         b_cont.pack(fill="x", padx=15, side="bottom")
 
-        cont = Label(self, anchor='w')
+        cont = Frame(self)
         cont.pack(pady=(0, 6), side="bottom")
 
         a_label = Label(cont, font=("Arial", 32))
