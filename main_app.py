@@ -32,16 +32,6 @@ M_FONT = ("Verdana", 35) # Menu font
 # bg2 = "#c5c5c5" # Background color 2
 
 
-bg = "#bababa"
-fg = "#000000"
-active_fg = "#000000"
-home_btn_fg = "#404040"
-main_btn_bg = "#292929"
-num_bg = "#999999"
-num_fg = "#4d4d4d"
-num_active_fg = "#787878"
-home_btn_active_fg = "#5e5e5e"
-
 def change_language(language: str):  # This function changes language for whole application
     global parser, current_language, lng_state
 
@@ -970,7 +960,7 @@ class ShowTaskPage(Frame):
         def rand_task():
             print("Random task is generated.")
 
-        btn_container = Label(self, bg=bg)
+        btn_container = Label(self)
         btn_container.pack(side="bottom", fill="x")
         self.btn_container = btn_container
 
@@ -981,22 +971,19 @@ class ShowTaskPage(Frame):
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
 
-        exercise = Entry(self, bg=bg, fg=fg, font=('Arial', 27), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
+        exercise = Entry(self, font=('Arial', 27), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
         exercise.pack(fill="x", pady=8, side='top')
         self.exercise = exercise
 
-        return_btn = Button(btn_container, font=("Arial", 35), command=lambda: parent.ch_page(MainPage, self), bd=0, bg=num_bg,
-                            activebackground=num_bg, fg=home_btn_fg, activeforeground=home_btn_active_fg, highlightbackground=num_bg)
+        return_btn = Button(btn_container, font=("Arial", 35), command=lambda: parent.ch_page(MainPage, self), bd=0)
         return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
         self.return_btn = return_btn
 
-        rand_btn = Button(btn_container, font=("Arial", 35), bd=0, highlightbackground=bg, bg=num_bg, fg=num_fg,
-                               activebackground=num_bg, activeforeground=num_active_fg, command=rand_task)
+        rand_btn = Button(btn_container, font=("Arial", 35), bd=0, command=rand_task)
         rand_btn.grid(row=0, column=2, ipady=5, sticky="nsew", padx=1)
         self.rand_btn = rand_btn
 
-        load_btn = Button(btn_container, font=("Arial", 35), bd=0, highlightbackground=bg, bg=bg, state="disabled",
-                               activebackground=bg, fg=num_fg, activeforeground=num_active_fg, command=load_task)
+        load_btn = Button(btn_container, font=("Arial", 35), bd=0, state="disabled", command=load_task)
         load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
         self.load_btn = load_btn
 
