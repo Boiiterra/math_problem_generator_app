@@ -106,31 +106,31 @@ class TaskPageTemplate(Frame):
         task = Label(self, font=('Arial', 20), anchor='center')
         task.pack(pady=4, expand=True)
 
-        btn_container = Label(self)
-        btn_container.pack(fill="x", padx=15, side="bottom")
+        b_cont = Label(self)
+        b_cont.pack(fill="x", padx=15, side="bottom")
 
-        container = Label(self, anchor='w')
-        container.pack(pady=(0, 6), side="bottom")
+        cont = Label(self, anchor='w')
+        cont.pack(pady=(0, 6), side="bottom")
 
-        a_label = Label(container, font=("Arial", 32))
+        a_label = Label(cont, font=("Arial", 32))
         a_label.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validator), '%d', '%i', '%P') # '%d' -> action, '%i' -> index, '%P' -> value
 
-        answer_field = Entry(container, font=("Arial", 32), width=6, validatecommand=is_valid, validate="key")
+        answer_field = Entry(cont, font=("Arial", 32), width=6, validatecommand=is_valid, validate="key")
         answer_field.grid(row=0, column=1, padx=15)
 
-        confirm_btn = Button(container, font=('Arial', 32), bd=0, state="disabled")
+        confirm_btn = Button(cont, font=('Arial', 32), bd=0, state="disabled")
         confirm_btn.grid(row=0, column=2)
 
         def go_back():
             self.answer_field["state"] = "disabled"
             app.ch_page(TasksPage, parent)
 
-        back = Button(btn_container, font=("Arial", 35), bd=0, command=go_back)
+        back = Button(b_cont, font=("Arial", 35), bd=0, command=go_back)
         back.pack(side="left", ipady=5, fill="x", expand=True, padx=(0, 10))
 
-        next = Button(btn_container, font=("Arial", 35), bd=0)
+        next = Button(b_cont, font=("Arial", 35), bd=0)
         next.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
 
         self.e_label = e_label
