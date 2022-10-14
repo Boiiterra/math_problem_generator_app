@@ -504,7 +504,7 @@ class TasksPage(Frame):
         Frame.__init__(self, parent)
 
         top = Frame(self)
-        top.pack(pady=10, padx=(65, 65), fill="x")
+        top.pack(pady=10, padx=65, fill="x")
 
         back = Button(top, font=("Times New Roman", 25), bd=0, bg="#c5c5c5", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
