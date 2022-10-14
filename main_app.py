@@ -206,6 +206,14 @@ class TaskPageTemplate(Frame):
             self.confirm_btn.config(text="Подтвердить")
 
 
+class Option(Button):
+    def __init__(self, parent: Frame, _from: Frame, destination: Frame, number: int, _app):
+        Button.__init__(self, parent, text=destination.task[current_language], font=("Times New Roman", 25), bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
+
+    def grid(self, **kwargs):
+        self.grid_configure(kwargs)
+
+
 class ToolTip(object):
 
     def __init__(self, widget):
@@ -504,16 +512,13 @@ class TasksPage(Frame):
         _filter = Button(top, font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f")
         _filter.pack(side="right")
 
-        options = [QEquationPage, SquaresAPage, SquaresPPage, RectanglesAPage, RectanglesPPage]
+        options = [QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
 
         menu = Frame(self)
-        menu.pack(pady=(10, 0))
+        menu.pack(pady=(20, 0))
 
-        one = Button(menu, text="Quadratic equation", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(QEquationPage, self))
-        one.grid(row=0, column=0, padx=(0, 10))
-
-        two = Button(menu, text="Area of a square", font=("Times New Roman", 25), bd=0, bg="#bababa", activebackground="#cfcfcf", activeforeground="#3f3f3f", command=lambda: parent.ch_page(SquaresAPage, self))
-        two.grid(row=0, column=2, padx=(10, 0))
+        for i in range(len(options)):
+            Option(menu, self, options[i], i, parent).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
 
         self.back = back
         self._filter = _filter
