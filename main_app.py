@@ -535,6 +535,8 @@ class TasksPage(Frame):
 
 
 class QEquationPage(Frame):
+    task = {"eng": "Quadratic equation", "rus": "Квадратное уравнение"}
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
@@ -644,6 +646,8 @@ class QEquationPage(Frame):
 
 
 class SquaresAPage(Frame):
+    task = {"eng": "Square's area", "rus": "Площадь квадрата"}
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
@@ -707,26 +711,9 @@ class SquaresAPage(Frame):
         parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
 
 
-class TaskPage(Frame):
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.set_exercise(1)
-        page.new_task_command(lambda: print("generated"))
-        page.confirm_command(lambda: print(page.answer_field.get()))
-        page.change_task_text("Hello I am the task")
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-        page.pack(fill="both", expand=True)
-
-        self.set_lang()
-
-    def set_lang(self):
-        ...
-
-
 class RectanglesAPage(Frame):
+    task = {"eng": "Rectangle's area", "rus": "Площадь прямоугольника"}
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
@@ -793,6 +780,8 @@ class RectanglesAPage(Frame):
 
 
 class SquaresPPage(Frame):
+    task = {"eng": "Square's perimeter", "rus": "Периметр квадрата"}
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
@@ -857,6 +846,8 @@ class SquaresPPage(Frame):
 
 
 class RectanglesPPage(Frame):
+    task = {"eng": "Rectangle's perimeter", "rus": "Периметр прямоугольника"}
+
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
