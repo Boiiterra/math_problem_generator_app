@@ -582,7 +582,7 @@ class QEquationPage(Frame):
                     extra_text_r = "Найдите наименьший корень уравнения."
                 elif self.task_type == 2:
                     extra_text_e = "Find the biggest equation's root."
-                    extra_text_r = "Найлите наибольший корень уравнения."
+                    extra_text_r = "Найдите наибольший корень уравнения."
                 elif self.task_type == 3:
                     extra_text_e = "Find any equation's root."
                     extra_text_r = "Найдите любой корень уравнения"
