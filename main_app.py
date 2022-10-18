@@ -1,11 +1,12 @@
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
-from modules import perimeter_task, area_task, square_equation
 from pyautogui import position as mouse_pos
 from tkinter.messagebox import showinfo
 from configparser import ConfigParser
 from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
+
+from modules import perimeter_task, area_task, square_equation
 
 __version__ = "0.7"
 author = "TerraBoii"
