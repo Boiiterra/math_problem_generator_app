@@ -9,7 +9,7 @@ class ToolTip:
         self.x = self.y = 0
         self.id = id
 
-    def showtip(self, text):
+    def showtip(self, text: str, f_size: int):
         self.text = text
         if self.tipwindow or not self.text:
             return
@@ -33,11 +33,9 @@ class ToolTip:
             background="#ffffe0",
             relief="solid",
             borderwidth=1,
-            # font=("tahoma", 10, "normal"),
+            font=("tahoma", f_size, "normal"),
         )
         label.pack(ipadx=1)
-
-        self.label = label
 
     def hidetip(self):
         tw = self.tipwindow
@@ -45,12 +43,8 @@ class ToolTip:
         if tw:
             tw.destroy()
 
-    def label_font(self, size: int):
-        self.label.config(font=(("tahoma",size, "normal")))
-
 
 def create_tool_tip(widget, text: str, f_size: int):
     toolTip = ToolTip(widget)
-    toolTip.label_font(f_size)
-    widget.bind("<Enter>", lambda _: toolTip.showtip(text))
+    widget.bind("<Enter>", lambda _: toolTip.showtip(text, f_size))
     widget.bind("<Leave>", lambda _: toolTip.hidetip())
