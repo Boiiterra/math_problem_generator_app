@@ -119,10 +119,10 @@ class TaskPageTemplate(Frame):
             self.answer_field["state"] = "disabled"
             app.ch_page(TasksPage, parent)
 
-        back = Button(b_cont, font=("Arial", 35), bd=0, command=go_back)
+        back = Button(b_cont, font=("Arial", 32), bd=0, command=go_back)
         back.pack(side="left", ipady=5, fill="x", expand=True, padx=(0, 10))
 
-        next = Button(b_cont, font=("Arial", 35), bd=0)
+        next = Button(b_cont, font=("Arial", 32), bd=0)
         next.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
 
         self.top = top
