@@ -26,6 +26,7 @@ current_language = parser.get("language", "language")
 # Colors and theme
 
 M_FONT = ("Verdana", 35) # Menu font
+M_FONT1 = ("Times New Roman", 25) # Menu font 1
 
 fg = "#000000"
 afg = "#3F3F3F" # Active Foreground
@@ -215,7 +216,7 @@ class TaskPageTemplate(Frame):
 
 class Option(Button):
     def __init__(self, parent: Frame, _from: Frame, destination: Frame, number: int, _app):
-        Button.__init__(self, parent, text=destination.task[current_language], font=("Times New Roman", 25), bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
+        Button.__init__(self, parent, text=destination.task[current_language], font=M_FONT1, bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
 
     def grid(self, **kwargs):
         self.grid_configure(kwargs)
@@ -476,11 +477,11 @@ class GameOptPage(Frame): # Game Options Page
         options = Frame(container)
         options.pack(side="left", padx=(35, 0))
 
-        tasks_list = Button(options, bd=0, font=("Times New Roman", 25), command=lambda: other_page(0))
+        tasks_list = Button(options, bd=0, font=M_FONT1, command=lambda: other_page(0))
         tasks_list.pack(fill="both", expand=True, pady=(0, 5))
         tasks_list.bind("<Enter>", lambda _: show_description(0, tasks_list))
 
-        show_task = Button(options, bd=0, font=("Times New Roman", 25), command=lambda: other_page(1))
+        show_task = Button(options, bd=0, font=M_FONT1, command=lambda: other_page(1))
         show_task.pack(fill="both", expand=True, pady=10)
         show_task.bind("<Enter>", lambda _: show_description(1, show_task))
 
@@ -491,7 +492,7 @@ class GameOptPage(Frame): # Game Options Page
         info_c = Frame(container) # Info Container
         info_c.pack(side="right", padx=(0, 90))
 
-        info = Label(info_c, font=("Times New Roman", 25))
+        info = Label(info_c, font=M_FONT1)
         info.pack()
 
         self.container = container
@@ -535,10 +536,10 @@ class TasksPage(Frame):
         top = Frame(self)
         top.pack(pady=10, padx=65, fill="x")
 
-        back = Button(top, font=("Times New Roman", 25), bd=0, command=lambda: parent.ch_page(GameOptPage, self))
+        back = Button(top, font=M_FONT1, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
 
-        _filter = Button(top, font=("Times New Roman", 25), bd=0)
+        _filter = Button(top, font=M_FONT1, bd=0)
         _filter.pack(side="right")
 
         options = [QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
@@ -1080,7 +1081,7 @@ class SettingsPage(Frame):
         created_by.bind("<Leave>", leave)
         created_by.bind("<Button-1>", call_link)
 
-        _return = Button(self, font=("Times New Roman", 25), command=lambda: parent.ch_page(MainPage, self), bd=0)
+        _return = Button(self, font=M_FONT1, command=lambda: parent.ch_page(MainPage, self), bd=0)
         _return.pack(side='bottom', pady=(0, 45), ipadx=45)
 
         def show_opts(_for):
@@ -1103,26 +1104,26 @@ class SettingsPage(Frame):
         container = Frame(self)
         container.pack(pady=(80, 15))
 
-        lang_o = Button(container, font=("Times New Roman", 25), command=lambda: show_opts(1), bd=0)
+        lang_o = Button(container, font=M_FONT1, command=lambda: show_opts(1), bd=0)
         lang_o.grid(row=0, column=0, sticky="nsew", pady=(0, 5), ipadx=65)
 
-        theme_o = Button(container, font=("Times New Roman", 25), command=lambda: show_opts(2), state="disabled", bd=0)
+        theme_o = Button(container, font=M_FONT1, command=lambda: show_opts(2), state="disabled", bd=0)
         theme_o.grid(row=1, column=0, sticky="nsew", pady=(0, 5))
 
         l_cont = Frame(self)
 
-        l_title = Label(l_cont, font=("Times New Roman", 25), text="Change language to")
+        l_title = Label(l_cont, font=M_FONT1, text="Change language to")
         l_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
 
         states = ("normal", "disabled")
 
-        english = Button(l_cont, font=("Times New Roman", 25), command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"], bd=0)
+        english = Button(l_cont, font=M_FONT1, command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"], bd=0)
         english.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
 
-        russian = Button(l_cont, font=("Times New Roman", 25), command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"], bd=0)
+        russian = Button(l_cont, font=M_FONT1, command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"], bd=0)
         russian.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
 
-        back = Button(l_cont, font=("Times New Roman", 25), command=lambda: show_opts(0), text="Back", bd=0)
+        back = Button(l_cont, font=M_FONT1, command=lambda: show_opts(0), text="Back", bd=0)
         back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
 
         self.created_by = created_by
