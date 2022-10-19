@@ -222,57 +222,6 @@ class Option(Button):
         self.grid_configure(kwargs)
 
 
-class ToolTip(object):
-
-    def __init__(self, widget):
-        self.widget = widget
-        self.tipwindow = None
-        self.id = None
-        self.x = self.y = 0
-
-    def showtip(self, text):
-        "Display text in tooltip window"
-        self.text = text
-        if self.tipwindow or not self.text:
-            return
-        mouse_x, mouse_y = mouse_pos()
-        if mouse_x <= 1700 and current_language == "eng":
-            x = mouse_x + 8
-            y = mouse_y + 1
-        elif mouse_x <= 1600 and current_language == "rus":
-            x = mouse_x + 8
-            y = mouse_y + 1
-        elif mouse_x > 1700 and current_language == "eng":
-            x = mouse_x - 200
-            y = mouse_y + 1
-        elif mouse_x > 1600 and current_language == "rus":
-            x = mouse_x - 312
-            y = mouse_y + 1
-        self.tipwindow = tw = Toplevel(self.widget)
-        tw.wm_overrideredirect(1)
-        tw.wm_geometry("+%d+%d" % (x, y))
-        label = Label(tw, text=self.text, justify="left",
-                      background="#ffffe0", relief="solid", borderwidth=1,
-                      font=("tahoma", "10", "normal"))
-        label.pack(ipadx=1)
-
-    def hidetip(self):
-        tw = self.tipwindow
-        self.tipwindow = None
-        if tw:
-            tw.destroy()
-
-
-def CreateToolTip(widget, text):
-    toolTip = ToolTip(widget)
-    def enter(_):
-        toolTip.showtip(text)
-    def leave(_):
-        toolTip.hidetip()
-    widget.bind('<Enter>', enter)
-    widget.bind('<Leave>', leave)
-
-
 class App(Tk):  # Main application with page logic
 
     def __init__(self, *args, **kwargs):
