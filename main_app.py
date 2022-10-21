@@ -10,7 +10,6 @@ from modules import perimeter_task, area_task, square_equation, create_tool_tip
 
 __version__ = "0.7"
 author = "TerraBoii"
-s_width, s_height = 1920, 1080
 
 # File reading section
 parser = ConfigParser()
