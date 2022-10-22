@@ -1122,7 +1122,7 @@ class SettingsPage(Frame):
         self.created_by.config(bg=bg, fg="#213c91")
         self._return.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg)
         self.container.config(bg=bg)
-        self.lang_o.config(fg=fg, activeforeground=b_abg, bg=b_bg, activebackground=b_abg)
+        self.lang_o.config(fg=fg, activeforeground=afg, bg=b_bg, activebackground=b_abg)
         self.theme_o.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
         self.l_cont.config(bg=bg)
         self.l_title.config(bg=bg, fg=fg)
