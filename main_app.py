@@ -69,6 +69,11 @@ def change_language(language: str):  # This function changes language for whole 
     current_language = parser.get('language', 'language')
 
 
+def change_scaling(width: int, height: int):
+    global scaling
+    scaling = scale(width, height, scaling)
+
+
 def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
     # Saves given params to data.txt file
     global parser
@@ -259,6 +264,11 @@ class App(Tk):  # Main application with page logic
             self.ch_page(FLaunchPage)
         elif lng_state == "keep":
             self.ch_page(MainPage)
+
+        def scaling_scale(size): # Yea it is a good name, trust me.
+            change_scaling(self.winfo_width(), self.winfo_height())
+
+        self.bind("<Configure>", scaling_scale)
 
 
     def delete_window(self):  # saves parameters and then deletes window
