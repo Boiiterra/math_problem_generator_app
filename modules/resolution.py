@@ -1,2 +1,3 @@
 def scale(width: int, height: int) -> float:
-    return ((width / 1920) + (height / 1080)) // 2
+    print(((width / 950) + (height / 650)) / 2)
+    return ((width / 950) + (height / 650)) / 2
