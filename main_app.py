@@ -6,7 +6,7 @@ from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
 
-from modules import perimeter_task, area_task, square_equation, create_tool_tip
+from modules import perimeter_task, area_task, square_equation, create_tool_tip, scale
 
 __version__ = "0.7"
 author = "TerraBoii"
