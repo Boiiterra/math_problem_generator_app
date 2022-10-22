@@ -20,6 +20,7 @@ y_pos = parser.get('parameters', 'y')
 WIDTH = 950
 _state = parser.get('parameters', 'zoomed')
 HEIGHT = 650
+scaling = scale(WIDTH, HEIGHT, 1) # Font scaling
 # Language
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
