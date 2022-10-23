@@ -25,22 +25,6 @@ scaling = scale(WIDTH, HEIGHT, 1) # Font scaling
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
 # Colors and theme
-
-T_FONT = ("Verdana", 45) # Title font
-M_FONT = ("Verdana", 35) # Menu font
-M_FONT1 = ("Times New Roman", 25) # Menu font 1
-C_FONT = ("Tahoma", 15) # Creator font
-A20 = ("Arial", 20)
-A27 = ("Arial", 27)
-A30 = ('Arial', 30)
-A32 = ('Arial', 32)
-A35 = ('Arial', 35)
-A40 = ('Arial', 40)
-A45 = ('Arial', 45)
-A50 = ('Arial', 50)
-A55 = ('Arial', 55)
-V35 = ("Verdana", 35)
-
 fg = "#000000"
 afg = "#3F3F3F" # Active Foreground
 dfg = "#696969" # Disabled foreground
@@ -103,18 +87,18 @@ class TaskPageTemplate(Frame):
         top = Frame(self)
         top.pack(fill="x", pady=8)
 
-        e_label = Label(top, font=A27)
+        e_label = Label(top)
         e_label.pack(side="left", padx=2, pady=5)
 
         def do_copy(_):
             if self.exercise is not None:
                 copy(self.exercise)
 
-        e_text = Text(top, font=A27, borderwidth=0, height=1, state="disabled", cursor="", highlightthickness=0)
+        e_text = Text(top, borderwidth=0, height=1, state="disabled", cursor="", highlightthickness=0)
         e_text.pack(fill="x", pady=8, side='right')
         e_text.bind("<Button-1>", do_copy)
 
-        task = Label(self, font=A20, anchor='center')
+        task = Label(self, anchor='center')
         task.pack(pady=4, expand=True)
 
         b_cont = Label(self)
@@ -123,26 +107,36 @@ class TaskPageTemplate(Frame):
         cont = Frame(self)
         cont.pack(pady=(0, 6), side="bottom")
 
-        a_label = Label(cont, font=A32)
+        a_label = Label(cont)
         a_label.grid(row=0, column=0)
 
         is_valid = (parent.register(self.validator), '%d', '%i', '%P') # '%d' -> action, '%i' -> index, '%P' -> value
 
-        answer_field = Entry(cont, font=A32, width=6, border=0, validatecommand=is_valid, validate="key")
+        answer_field = Entry(cont, width=6, border=0, validatecommand=is_valid, validate="key")
         answer_field.grid(row=0, column=1, padx=15)
 
-        confirm_btn = Button(cont, font=A32, bd=0, state="disabled")
+        confirm_btn = Button(cont, bd=0, state="disabled")
         confirm_btn.grid(row=0, column=2)
 
         def go_back():
             self.answer_field["state"] = "disabled"
             app.ch_page(TasksPage, parent)
 
-        back = Button(b_cont, font=A32, bd=0, command=go_back)
+        back = Button(b_cont, bd=0, command=go_back)
         back.pack(side="left", ipady=5, fill="x", expand=True, padx=(0, 10))
 
-        next = Button(b_cont, font=A32, bd=0)
+        next = Button(b_cont, bd=0)
         next.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
+
+        def set_font(_):
+            e_label.config(font=("Arial", int(27 * scaling)))
+            e_text.config(font=("Arial", int(27 * scaling)))
+            task.config(font=("Arial", int(20 * scaling)))
+            answer_field.config(font=('Arial', int(32 * scaling)))
+            a_label.config(font=('Arial', int(32 * scaling)))
+            back.config(font=('Arial', int(32 * scaling)))
+            next.config(font=('Arial', int(32 * scaling)))
+            confirm_btn.config(font=('Arial', int(32 * scaling)))
 
         self.top = top
         self.e_label = e_label
@@ -158,6 +152,8 @@ class TaskPageTemplate(Frame):
 
         self.set_lang()
         self.set_theme()
+
+        self.bind("<Configure>", set_font)
 
     def set_exercise(self, exercise: float):
         self.exercise = exercise
@@ -236,23 +232,25 @@ class TaskPageTemplate(Frame):
 
 class Option(Button):
     def __init__(self, parent: Frame, _from: Frame, destination: Frame, number: int, _app):
-        Button.__init__(self, parent, text=destination.task[current_language], font=M_FONT1, bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
+        Button.__init__(self, parent, text=destination.task[current_language], bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
 
     def grid(self, **kwargs):
         self.grid_configure(kwargs)
 
 
 class App(Tk):  # Main application with page logic
-
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
         self.title(f"Math problem generator - {__version__}")
+
         try:
             self.iconbitmap("images//main_icon.ico")
         except TclError:
             print("Unable to find icon file")
+
         self.geometry(f"{WIDTH}x{HEIGHT}+{int((self.winfo_screenwidth() - WIDTH) / 2)}+{int((self.winfo_screenheight() - HEIGHT) / 2)}")  # Middle pos on the screen
-        self.resizable(0, 0)
+        self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight() - 31)
+        self.minsize(800, 600)
 
         # Rewriting default delete method in order to save window parameters
         if system() == "Windows":
@@ -287,15 +285,14 @@ class App(Tk):  # Main application with page logic
 
 
 class FLaunchPage(Frame):  # This page launches when you need to choose language
-
     def __init__(self, parent):
         Frame.__init__(self, parent, bg="black")
         self.parent = parent
 
-        question = Label(self, text="\nChoose language:", bg="black", fg="#00ff00", font=A40)
+        question = Label(self, text="\nChoose language:", bg="black", fg="#00ff00", font=('Arial', int(40 * scaling)))
         question.pack(side="top")
 
-        bottom_ = Label(self, bg="black", text="Note: you can always change\nlanguage in settings menu", font=A30, fg="#008000")
+        bottom_ = Label(self, bg="black", text="Note: you can always change\nlanguage in settings menu", fg="#008000")
         bottom_.pack(side="bottom")
 
         lang_btn_container = Label(self, bg="black", justify="center")
@@ -306,11 +303,11 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
         lang_btn_container.columnconfigure(0, weight=1)
 
         self.russian = Button(lang_btn_container, text="Русский", bg="black", fg="#00ff00",
-                         activeforeground="#008000", font=A30, bd=0, highlightbackground="black")
+                         activeforeground="#008000", bd=0, highlightbackground="black")
         self.russian.grid(row=0, column=0, sticky="nsew")
 
         self.english = Button(lang_btn_container, text="English", bg="black", fg="#00ff00",
-                         activeforeground="#008000", font=A30, bd=0, highlightbackground="black")
+                         activeforeground="#008000", bd=0, highlightbackground="black")
         self.english.grid(row=1, column=0, sticky="nsew")
 
         def entered(btn, lang: str):
@@ -337,25 +334,25 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
 
         def font_resize_for_flaunchpage(width):
             if width.height <= 620:
-                bottom_.config(font=A30)
-                question.config(font=A40)
-                self.russian.config(font=A30)
-                self.english.config(font=A30)
+                bottom_.config(font=('Arial', 30))
+                question.config(font=('Arial', 40))
+                self.russian.config(font=('Arial', 30))
+                self.english.config(font=('Arial', 30))
             elif 620 < width.height <= 700:
-                self.english.config(font=A35)
-                self.russian.config(font=A35)
-                question.config(font=A45)
-                bottom_.config(font=A35)
+                self.english.config(font=('Arial', 35))
+                self.russian.config(font=('Arial', 35))
+                question.config(font=('Arial', 45))
+                bottom_.config(font=('Arial', 35))
             elif 700 < width.height <= 800:
-                bottom_.config(font=A40)
-                question.config(font=A50)
-                self.russian.config(font=A40)
-                self.english.config(font=A40)
+                bottom_.config(font=('Arial', 40))
+                question.config(font=('Arial', 50))
+                self.russian.config(font=('Arial', 40))
+                self.english.config(font=('Arial', 40))
             elif width.height > 800:
-                self.english.config(font=A45)
-                self.russian.config(font=A45)
-                question.config(font=A55)
-                bottom_.config(font=A45)
+                self.english.config(font=('Arial', 45))
+                self.russian.config(font=('Arial', 45))
+                question.config(font=('Arial', 55))
+                bottom_.config(font=('Arial', 45))
 
         self.bind("<Configure>", font_resize_for_flaunchpage)
 
@@ -370,22 +367,30 @@ class MainPage(Frame):
         Frame.__init__(self, parent)
         self.parent = parent
 
-        title = Label(self, font=T_FONT)
+        title = Label(self)
         title.pack(fill="both", expand=True)
 
-        settings = Button(self, bd=0, font=M_FONT, command=lambda: parent.ch_page(SettingsPage, self))
-        settings.pack(side="bottom", fill="both", ipady=30, pady=10)
+        settings = Button(self, bd=0, command=lambda: parent.ch_page(SettingsPage, self))
+        settings.pack(side="bottom", fill="both", ipady=20, pady=10)
 
-        tasks = Button(self, bd=0, font=M_FONT, command=lambda: parent.ch_page(TaskCreationPage, self))
+        tasks = Button(self, bd=0, command=lambda: parent.ch_page(TaskCreationPage, self))
         tasks.pack(side="bottom", fill="x", ipady=20)
 
-        game = Button(self, bd=0, font=M_FONT, command=lambda: parent.ch_page(GameOptPage, self))
+        game = Button(self, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         game.pack(side="bottom", fill="x", ipady=20, pady=10)
 
         self.title = title
         self.settings = settings
         self.tasks = tasks
         self.game = game
+
+        def font_scaling(_):
+            title.config(font=("Verdana", int(45 * scaling)))
+            settings.config(font=("Verdana", int(35 * scaling)))
+            tasks.config(font=("Verdana", int(35 * scaling)))
+            game.config(font=("Verdana", int(35 * scaling)))
+
+        self.bind("<Configure>", font_scaling)
 
         self.set_lang()
         self.set_theme()
@@ -422,7 +427,7 @@ class GameOptPage(Frame): # Game Options Page
                 case 0:
                     page = TasksPage
                 case 1:
-                    page = TaskCreationPage#ShowTaskPage
+                    page = ShowTaskPage
                 case 2:
                     page = MainPage
 
@@ -451,22 +456,22 @@ class GameOptPage(Frame): # Game Options Page
         options = Frame(container)
         options.pack(side="left", padx=(35, 0))
 
-        tasks_list = Button(options, bd=0, font=M_FONT1, command=lambda: other_page(0))
+        tasks_list = Button(options, bd=0, command=lambda: other_page(0))
         tasks_list.pack(fill="both", expand=True, pady=(0, 5))
         tasks_list.bind("<Enter>", lambda _: show_description(0, tasks_list))
 
-        show_task = Button(options, bd=0, font=M_FONT1, command=lambda: other_page(1))
+        show_task = Button(options, bd=0, command=lambda: other_page(1))
         show_task.pack(fill="both", expand=True, pady=10)
         show_task.bind("<Enter>", lambda _: show_description(1, show_task))
 
-        back_btn = Button(options, font=M_FONT1+("bold",), bd=0, command=lambda: other_page(2))
+        back_btn = Button(options, bd=0, command=lambda: other_page(2))
         back_btn.pack(fill="both", expand=True, pady=(15, 0))
         back_btn.bind("<Enter>", lambda _: show_description(2, back_btn))
 
         info_c = Frame(container) # Info Container
         info_c.pack(side="right", padx=(0, 90))
 
-        info = Label(info_c, font=M_FONT1)
+        info = Label(info_c)
         info.pack()
 
         self.container = container
@@ -476,6 +481,14 @@ class GameOptPage(Frame): # Game Options Page
         self.back_btn = back_btn
         self.info_c = info_c
         self.info = info
+
+        def font_scaling(_):
+            tasks_list.config(font=("Times New Roman", int(25 * scaling)))
+            show_task.config(font=("Times New Roman", int(25 * scaling)))
+            back_btn.config(font=("Times New Roman", int(25 * scaling), "bold"))
+            info.config(font=("Times New Roman", int(25 * scaling)))
+
+        self.bind("<Configure>", font_scaling)
 
         self.set_lang()
         self.set_theme()
@@ -510,10 +523,10 @@ class TasksPage(Frame):
         top = Frame(self)
         top.pack(pady=10, padx=65, fill="x")
 
-        back = Button(top, font=M_FONT1, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
+        back = Button(top, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
 
-        _filter = Button(top, font=M_FONT1, bd=0)
+        _filter = Button(top, bd=0)
         _filter.pack(side="right")
 
         options = [QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
@@ -528,6 +541,14 @@ class TasksPage(Frame):
         self.back = back
         self._filter = _filter
         self.menu = menu
+
+        def font_scaling(_):
+            back.config(font=("Times New Roman", int(25 * scaling)))
+            _filter.config(font=("Times New Roman", int(25 * scaling)))
+            for slave in menu.grid_slaves():
+                slave.config(font=("Times New Roman", int(25 * scaling)))
+
+        self.bind("<Configure>", font_scaling)
 
         self.set_lang()
         self.set_theme()
@@ -933,7 +954,7 @@ class TaskCreationPage(Frame):
         Frame.__init__(self, parent)
         self.parent = parent
 
-        back = Button(self, font=V35, command=lambda: parent.ch_page(MainPage, self))
+        back = Button(self, font=("Verdana", int(35 * scaling)), command=lambda: parent.ch_page(MainPage, self))
         back.pack(fill="both", expand=True)
 
         self.back = back
@@ -981,19 +1002,19 @@ class ShowTaskPage(Frame):
 
         is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
 
-        exercise = Entry(self, font=A27, borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
+        exercise = Entry(self, font=("Arial", int(27 * scaling)), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
         exercise.pack(fill="x", pady=8, side='top')
         self.exercise = exercise
 
-        return_btn = Button(btn_container, font=A32, command=lambda: parent.ch_page(MainPage, self), bd=0)
+        return_btn = Button(btn_container, font=('Arial', int(32 * scaling)), command=lambda: parent.ch_page(MainPage, self), bd=0)
         return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
         self.return_btn = return_btn
 
-        rand_btn = Button(btn_container, font=A32, bd=0, command=rand_task)
+        rand_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, command=rand_task)
         rand_btn.grid(row=0, column=2, ipady=5, sticky="nsew", padx=1)
         self.rand_btn = rand_btn
 
-        load_btn = Button(btn_container, font=A32, bd=0, state="disabled", command=load_task)
+        load_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, state="disabled", command=load_task)
         load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
         self.load_btn = load_btn
 
@@ -1002,12 +1023,12 @@ class ShowTaskPage(Frame):
     def set_lang_showtaskpage(self):
         if current_language == "eng":
             self.return_btn.config(text="Back")
-            self.exercise.insert(0, " Exercise: ")
+            self.exercise.insert(0, "Exercise: ")
             self.load_btn.config(text="Load task")
             self.rand_btn.config(text="Random task")
         elif current_language == "rus":
             self.return_btn.config(text="Назад")
-            self.exercise.insert(0, "    Номер: ")
+            self.exercise.insert(0, "Номер: ")
             self.load_btn.config(text="Загрузить")
             self.rand_btn.config(text="Случайное")
 
@@ -1044,18 +1065,18 @@ class SettingsPage(Frame):
             open_new_tab("https://github.com/TerraBoii")
 
         def enter(_):
-            created_by.config(font=C_FONT+("underline",))
+            created_by.config(font=("Tahoma", int(15 * scaling), "underline",))
 
         def leave(_):
-            created_by.config(font=C_FONT)
+            created_by.config(font=("Tahoma", int(15 * scaling)))
 
-        created_by = Label(self, text="Created by: TerraBoii", font=C_FONT, cursor='hand2')
+        created_by = Label(self, cursor='hand2')
         created_by.pack(side="top")
         created_by.bind("<Enter>", enter)
         created_by.bind("<Leave>", leave)
         created_by.bind("<Button-1>", call_link)
 
-        _return = Button(self, font=M_FONT1, command=lambda: parent.ch_page(MainPage, self), bd=0)
+        _return = Button(self, command=lambda: parent.ch_page(MainPage, self), bd=0)
         _return.pack(side='bottom', pady=(0, 45), ipadx=45)
 
         def show_opts(_for):
@@ -1078,26 +1099,26 @@ class SettingsPage(Frame):
         container = Frame(self)
         container.pack(pady=(80, 15))
 
-        lang_o = Button(container, font=M_FONT1, command=lambda: show_opts(1), bd=0)
+        lang_o = Button(container, command=lambda: show_opts(1), bd=0)
         lang_o.grid(row=0, column=0, sticky="nsew", pady=(0, 5), ipadx=65)
 
-        theme_o = Button(container, font=M_FONT1, command=lambda: show_opts(2), state="disabled", bd=0)
+        theme_o = Button(container, command=lambda: show_opts(2), state="disabled", bd=0)
         theme_o.grid(row=1, column=0, sticky="nsew", pady=(0, 5))
 
         l_cont = Frame(self)
 
-        l_title = Label(l_cont, font=M_FONT1, text="Change language to")
+        l_title = Label(l_cont, text="Change language to")
         l_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
 
         states = ("normal", "disabled")
 
-        english = Button(l_cont, font=M_FONT1, command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"], bd=0)
+        english = Button(l_cont, command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"], bd=0)
         english.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
 
-        russian = Button(l_cont, font=M_FONT1, command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"], bd=0)
+        russian = Button(l_cont, command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"], bd=0)
         russian.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
 
-        back = Button(l_cont, font=M_FONT1, command=lambda: show_opts(0), text="Back", bd=0)
+        back = Button(l_cont, command=lambda: show_opts(0), text="Back", bd=0)
         back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
 
         self.created_by = created_by
@@ -1111,17 +1132,31 @@ class SettingsPage(Frame):
         self.russian = russian
         self.back = back
 
+        def font_scaling(_):
+            created_by.config(font=("Tahoma", int(15 * scaling)))
+            _return.config(font=("Times New Roman", int(25 * scaling)))
+            lang_o.config(font=("Times New Roman", int(25 * scaling)))
+            theme_o.config(font=("Times New Roman", int(25 * scaling)))
+            l_title.config(font=("Times New Roman", int(25 * scaling)))
+            english.config(font=("Times New Roman", int(25 * scaling)))
+            russian.config(font=("Times New Roman", int(25 * scaling)))
+            back.config(font=("Times New Roman", int(25 * scaling)))
+
+        self.bind("<Configure>", font_scaling)
+
         self.set_lang()
         self.set_theme()
 
     def set_lang(self):
         if current_language == "eng":
+            self.created_by.config(text="Created by: TerraBoii")
             self._return.config(text="Go to the main page")
             self.lang_o.config(text="Change language")
             self.theme_o.config(text="Change theme")
             self.l_title.config(text="Change language to")
             self.back.config(text="Back")
         elif current_language == "rus":
+            self.created_by.config(text="Создатель: TerraBoii")
             self._return.config(text="На главную страницу")
             self.lang_o.config(text="Изменить язык")
             self.theme_o.config(text="Изменить тему")
