@@ -6,9 +6,10 @@ if [ -z $1 ]; then
 elif [[ $1 == *"."* ]]; then
     echo "Please do not secify file type or do not use dots"
 else
-    printf "%s" ", $1" >> ./modules/__init__.py
+    ./automation/writter.py $1
     echo "from .$1 import $1" >> ./modules/generators/__init__.py
 
+    # adding generator
     touch ./modules/generators/$1.py
     echo "from random import seed, randint" >> ./modules/generators/$1.py
     echo >> ./modules/generators/$1.py
