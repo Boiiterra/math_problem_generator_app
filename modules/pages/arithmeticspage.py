@@ -14,7 +14,7 @@ class ArithmeticsPage(Frame):
         page.pack(fill="both", expand=True)
 
         self.exercise_no = None
-        self.tesk = None
+        self.task = None
         self.answer = None
         self.text_e = None
         self.text_r = None
