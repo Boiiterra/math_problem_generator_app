@@ -6,7 +6,7 @@ from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
 
-from modules import perimeter_task, area_task, square_equation, create_tool_tip, arithmetics, scale
+from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage
 
 __version__ = "0.7"
 author = "TerraBoii"
@@ -20,7 +20,7 @@ y_pos = parser.get('parameters', 'y')
 WIDTH = 950
 _state = parser.get('parameters', 'zoomed')
 HEIGHT = 650
-scaling = scale(WIDTH, HEIGHT, 1) # Font scaling
+scaling = scale(WIDTH, HEIGHT) # Font scaling
 # Language
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
@@ -230,14 +230,6 @@ class TaskPageTemplate(Frame):
             create_tool_tip(self.e_text, "Нажмите, чтобы скопировать номер задачи.", 10)
 
 
-class Option(Button):
-    def __init__(self, parent: Frame, _from: Frame, destination: Frame, number: int, _app):
-        Button.__init__(self, parent, text=destination.task[current_language], bd=0, fg=fg, bg=(b_bg if number % 2 == 0 else b_bg1), activebackground=b_abg, activeforeground=afg, command=lambda: _app.ch_page(destination, _from))
-
-    def grid(self, **kwargs):
-        self.grid_configure(kwargs)
-
-
 class App(Tk):  # Main application with page logic
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
@@ -281,11 +273,11 @@ class App(Tk):  # Main application with page logic
     def ch_page(self, new: Frame, prev: Frame = None):
         if prev is not None:
             prev.pack_forget()
-        new(self).pack(fill="both", expand=True)
+        new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl).pack(fill="both", expand=True)
 
 
 class FLaunchPage(Frame):  # This page launches when you need to choose language
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent, bg="black")
         self.parent = parent
 
@@ -363,7 +355,7 @@ class FLaunchPage(Frame):  # This page launches when you need to choose language
 
 
 class MainPage(Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
         self.parent = parent
 
@@ -417,7 +409,7 @@ class MainPage(Frame):
 
 class GameOptPage(Frame): # Game Options Page
 
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
         self.parent = parent
 
@@ -517,7 +509,7 @@ class GameOptPage(Frame): # Game Options Page
 
 
 class TasksPage(Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
 
         top = Frame(self)
@@ -529,13 +521,13 @@ class TasksPage(Frame):
         _filter = Button(top, bd=0)
         _filter.pack(side="right")
 
-        options = [ArithmeticsPage, QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
+        options = [ArithmeticsPage, Gauss_Sum, QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
 
         menu = Frame(self)
         menu.pack(pady=(20, 0))
 
         for i in range(len(options)):
-            Option(menu, self, options[i], i, parent).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
+            Option(menu, self, options[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
 
         self.top = top
         self.back = back
@@ -567,456 +559,6 @@ class TasksPage(Frame):
         self.back.config(fg=fg, bg=b_bg1, activebackground=b_abg, activeforeground=afg)
         self._filter.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg)
         self.menu.config(bg=bg)
-
-
-class ArithmeticsPage(Frame):
-    task = {"eng": "Arithmetics", "rus": "Арифметика"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-
-        self.exercise_no = None
-        self.tesk = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = arithmetics(__version__, self.winfo_width(), self.winfo_height(), 
-                                            self.winfo_screenwidth(), self.winfo_screenheight())
-                self.task = task_data[0]
-                self.answer = task_data[1]
-                self.exercise_no = task_data[-1]
-                self.text_e = f"What does this equals to\n(\" * \" means multiplication; \" / \" means division)\n{self.task}"
-                self.text_r = f"Чему равно данное выражение\n(\" * \" - умножение; \" / \" - деление)\n{self.task}"
-
-                page.set_exercise(self.exercise_no)
-
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.next.config(state='normal')
-            page.answer_field.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = 0
-            if page.answer_field.get() != "-":
-                _input = int(page.answer_field.get())
-            else:
-                page.answer_field.insert("end", 1)
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-
-
-class QEquationPage(Frame):
-    task = {"eng": "Quadratic equation", "rus": "Квадратное уравнение"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-
-        self.exercise_no = None
-        self.x1 = None
-        self.x2 = None
-        self.param = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-        self.task_type = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = square_equation(__version__, self.winfo_width(), self.winfo_height(), 
-                                            self.winfo_screenwidth(), self.winfo_screenheight())
-                self.x1 = task_data[0]
-                self.x2 = task_data[1]
-
-                if self.x1 != 0 and self.x2 != 0:
-                    if self.x1 > self.x2:
-                        self.answer = self.x2
-                        self.task_type = 1
-                    elif self.x1 < self.x2:
-                        self.answer = self.x2
-                        self.task_type = 2
-                    else:
-                        self.answer = self.x2
-                        self.task_type = 3
-                elif self.x1 == 0 and self.x2 > self.x1:
-                    self.answer = self.x2
-                    self.task_type = 2
-                elif self.x1 == 0 and self.x2 < self.x1:
-                    self.answer = self.x1
-                    self.task_type = 1
-                elif self.x2 == 0 and self.x1 > self.x2:
-                    self.answer = self.x1
-                    self.task_type = 2
-                elif self.x2 == 0 and self.x1 < self.x2:
-                    self.answer = self.x1
-                    self.task_type = 1
-
-                extra_text_e = ""
-                extra_text_r = ""
-                if self.task_type == 1:
-                    extra_text_e = "Find the smallest equation's root."
-                    extra_text_r = "Найдите наименьший корень уравнения."
-                elif self.task_type == 2:
-                    extra_text_e = "Find the biggest equation's root."
-                    extra_text_r = "Найдите наибольший корень уравнения."
-                elif self.task_type == 3:
-                    extra_text_e = "Find any equation's root."
-                    extra_text_r = "Найдите любой корень уравнения"
-
-                self.exercise_no = task_data[-1]
-                self.param = task_data[-2]
-                self.text_e = f"{self.param}\n" + extra_text_e
-                self.text_r = f"{self.param}\n" + extra_text_r
-
-                page.set_exercise(self.exercise_no)
-
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.next.config(state='normal')
-            page.answer_field.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = 0
-            if page.answer_field.get() != "-":
-                _input = int(page.answer_field.get())
-            else:
-                page.answer_field.insert("end", 1)
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-
-
-class SquaresAPage(Frame):
-    task = {"eng": "Square's area", "rus": "Площадь квадрата"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-        page.change_allowed("0123456789")
-
-        self.exercise_no = None
-        self.param = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = area_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                      self.winfo_screenwidth(), self.winfo_screenheight())
-                self.exercise_no = task_data[-1]
-                self.answer = task_data[1]
-                self.param = task_data[0]
-                self.text_e = f"Your goal is to find square's area.\nIts side is {self.param}."
-                self.text_r = f"Чему равна площадь квадрата,\nесли его сторона равна {self.param}."
-                page.set_exercise(self.exercise_no)
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.next.config(state='normal')
-            page.answer_field.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = int(page.answer_field.get())
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-
-
-class RectanglesAPage(Frame):
-    task = {"eng": "Rectangle's area", "rus": "Площадь прямоугольника"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-        page.change_allowed("0123456789")
-
-        self.exercise_no = None
-        self.param = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = area_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
-                                        self.winfo_screenwidth(), self.winfo_screenheight())
-                self.answer = task_data[2]
-                self.exercise_no = task_data[-1]
-                self.param = (task_data[0], task_data[1])
-                self.text_e = "Your goal is to find rectangle's area." \
-                              f"\nIts height is {self.param[0]} and width is {self.param[1]}."
-                self.text_r = "Чему равна площадь прямоугольника,\nесли его высота равна " \
-                              f"{self.param[0]}, а ширина {self.param[1]}."
-                page.set_exercise(self.exercise_no)
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.next.config(state='normal')
-            page.answer_field.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = int(page.answer_field.get())
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-
-
-class SquaresPPage(Frame):
-    task = {"eng": "Square's perimeter", "rus": "Периметр квадрата"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-        page.change_allowed("0123456789")
-
-        self.exercise_no = None
-        self.param = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = perimeter_task('square', __version__, self.winfo_width(), self.winfo_height(), 
-                                           self.winfo_screenwidth(), self.winfo_screenheight())
-                self.exercise_no = task_data[-1]
-                self.answer = task_data[1]
-                self.param = task_data[0]
-                self.text_e = f"Your goal is to find square's perimeter.\nIts side is {self.param}."
-                self.text_r = f"Чему равен периметр квадрата,\nесли его сторона равна {self.param}."
-                page.set_exercise(self.exercise_no)
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.next.config(state='normal')
-            page.answer_field.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = int(page.answer_field.get())
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-
-
-class RectanglesPPage(Frame):
-    task = {"eng": "Rectangle's perimeter", "rus": "Периметр прямоугольника"}
-
-    def __init__(self, parent):
-        Frame.__init__(self, parent)
-
-        page = TaskPageTemplate(self, parent)
-        page.pack(fill="both", expand=True)
-
-        # Variables:
-        self.exercise_no = None
-        self.param = None
-        self.answer = None
-        self.text_e = None
-        self.text_r = None
-
-        def new_task(full_reset: bool = True):
-            if full_reset:
-                task_data = perimeter_task('rectangle', __version__, self.winfo_width(), self.winfo_height(), 
-                                           self.winfo_screenwidth(), self.winfo_screenheight())
-                self.answer = task_data[2]
-                self.exercise_no = task_data[-1]
-                self.param = (task_data[0], task_data[1])
-                self.text_e = "Your goal is to find rectangle's perimeter." \
-                              f"\nIts height is {self.param[0]} and width is {self.param[1]}."
-                self.text_r = "Чему равен периметр прямоугольника,\nесли его высота равна " \
-                              f"{self.param[0]}, а ширина {self.param[1]}."
-                page.set_exercise(self.exercise_no)
-                if current_language == "eng":
-                    page.change_task_text(self.text_e)
-                elif current_language == "rus":
-                    page.change_task_text(self.text_r)
-
-            if current_language == "eng":
-                page.confirm_btn.config(text="Confirm")
-            elif current_language == "rus":
-                page.confirm_btn.config(text="Подтвердить")
-
-        def activate():
-            page.answer_field.config(state='normal')
-            page.next.config(state='normal')
-
-        def confirm():
-            page.next.config(state='disabled')
-            _input = int(page.answer_field.get())
-            page.clear()
-            page.answer_field.config(state='disabled')
-            self.after(1000, activate)
-            if _input == self.answer:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Correct", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Правильно", state="disabled")
-                self.after(500, new_task)
-            else:
-                if current_language == "eng":
-                    page.confirm_btn.config(text="Wrong", state="disabled")
-                elif current_language == "rus":
-                    page.confirm_btn.config(text="Неправильно", state="disabled")
-                self.after(500, lambda: new_task(False))
-
-        page.new_task_command(new_task)
-        page.confirm_command(confirm)
-
-        parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
-        parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
 
 
 class TaskCreationPage(Frame):
@@ -1052,7 +594,7 @@ class ShowTaskOptions(Toplevel):
 
 class ShowTaskPage(Frame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
         self.parent = parent
 
@@ -1129,7 +671,7 @@ class ShowTaskPage(Frame):
 
 
 class SettingsPage(Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
 
         def call_link(_):
