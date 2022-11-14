@@ -10,4 +10,4 @@ def gauss_sum(app_version: str, app_width: int, app_height: int, screen_width: i
 	while top % 2 != 0:
 		top = randint(10, 10000)
 
-	return sum([el for el in range(1, top+1)]), new_seed
+	return sum([el for el in range(1, top+1)]), top, new_seed
