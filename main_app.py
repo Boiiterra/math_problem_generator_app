@@ -55,7 +55,7 @@ def change_language(language: str):  # This function changes language for whole 
 
 def change_scaling(width: int, height: int):
     global scaling
-    scaling = scale(width, height, scaling)
+    scaling = scale(width, height)
 
 
 def save_window_parameters(_width_, _height_, _x_, _y_, _state_):
