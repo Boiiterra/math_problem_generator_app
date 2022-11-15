@@ -15,6 +15,7 @@ else
     echo >> ./modules/generators/$1.py
     echo "from .c_seed import create_seed" >> ./modules/generators/$1.py
     echo >> ./modules/generators/$1.py
+    echo >> ./modules/generators/$1.py
     echo "def $1(app_version: str, app_width: int, app_height: int, screen_width: int, screen_height: int):" >> ./modules/generators/$1.py
     echo -e "\tnew_seed = create_seed(app_version, app_width, app_height, screen_width, screen_height)" >> ./modules/generators/$1.py
     echo -e "\tseed(new_seed)" >> ./modules/generators/$1.py
