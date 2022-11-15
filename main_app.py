@@ -523,6 +523,8 @@ class TasksPage(Frame):
 
         options = [ArithmeticsPage, Gauss_Sum, Lin_EquationPage, Pythagorean_TheoremPage, QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
 
+        start = 0
+
         menu = Frame(self)
         menu.pack(pady=(20, 0))
 
