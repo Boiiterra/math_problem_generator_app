@@ -5,7 +5,7 @@ from .task_template import TaskPageTemplate
 
 
 class Gauss_Sum(Frame):
-    task = {"eng": "Gauss summation", "rus": "Суммирование Гауса"}
+    task = {"eng": "Gauss summation", "rus": "Суммирование Гаусса"}
 
     def __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
         Frame.__init__(self, parent)
