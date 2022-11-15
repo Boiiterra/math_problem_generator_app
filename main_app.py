@@ -6,7 +6,7 @@ from webbrowser import open_new_tab
 from platform import system
 from pyperclip import copy
 
-from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage
+from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, Pythagorean_TheoremPage
 
 __version__ = "0.7"
 author = "TerraBoii"
@@ -521,7 +521,7 @@ class TasksPage(Frame):
         _filter = Button(top, bd=0)
         _filter.pack(side="right")
 
-        options = [ArithmeticsPage, Gauss_Sum, Lin_EquationPage, QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
+        options = [ArithmeticsPage, Gauss_Sum, Lin_EquationPage, Pythagorean_TheoremPage, QEquationPage, RectanglesAPage, RectanglesPPage, SquaresAPage, SquaresPPage]
 
         menu = Frame(self)
         menu.pack(pady=(20, 0))
