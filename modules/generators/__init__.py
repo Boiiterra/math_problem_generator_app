@@ -5,3 +5,5 @@ from .gauss_sum import gauss_sum
 from .area import area_task
 from .lin_equation import lin_equation
 from .pythagorean_theorem import pythagorean_theorem
+from .sq_root import sq_root
+from .cb_root import cb_root
