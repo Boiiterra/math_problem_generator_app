@@ -140,7 +140,7 @@ class TaskPageTemplate(Frame):
         self.confirm_btn.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg, disabledforeground=dfg)
         self.back.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg)
         self.next.config(fg=fg, bg=b_bg1, activebackground=b_abg, activeforeground=afg, disabledforeground=dfg)
-        self.answer_field.config(fg=fg, highlightbackground=e_hl, bg=e_bg)
+        self.answer_field.config(fg=fg, highlightbackground=e_hl, bg=e_bg, insertbackground=fg, disabledbackground=e_bg)
 
     def set_lang(self, lang):
         if lang == "eng":
