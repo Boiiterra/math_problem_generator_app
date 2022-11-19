@@ -7,6 +7,7 @@ from platform import system
 from pyperclip import copy
 
 from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage
+from modules.pages.task_template import TaskPageTemplate
 
 __version__ = "0.7"
 author = "TerraBoii"
@@ -25,15 +26,17 @@ scaling = scale(WIDTH, HEIGHT) # Font scaling
 lng_state = parser.get("language", 'state')
 current_language = parser.get("language", "language")
 # Colors and theme
-fg = "#000000"
-afg = "#3F3F3F" # Active Foreground
-dfg = "#696969" # Disabled foreground
-bg = "#D9D9D9"
-b_bg = "#BABABA" # Button background 1
-b_bg1 = "#C5C5C5" # Button background 2
-b_abg = "#CFCFCF" # Button active background 
-e_bg = "#EAEAEA" # Entry background
-e_hl = "#000000" # Entry highlight
+current_theme = parser.get("theme", "theme")
+fg = parser.get("theme", "fg")
+afg = parser.get("theme", "afg")
+dfg = parser.get("theme", "dfg")
+bg = parser.get("theme", "bg")
+b_bg = parser.get("theme", "b_bg")
+b_bg1 = parser.get("theme", "b_bg1")
+b_abg = parser.get("theme", "b_abg")
+e_bg = parser.get("theme", "e_bg")
+e_hl = parser.get("theme", "e_hl")
+lfg = parser.get("theme", "lfg")
 
 
 def change_language(language: str):  # This function changes language for whole application
@@ -51,6 +54,53 @@ def change_language(language: str):  # This function changes language for whole 
         parser.write(configfile)
     lng_state = parser.get('language', 'state')
     current_language = parser.get('language', 'language')
+
+
+def change_theme(theme: str):
+    global parser, current_theme,fg, afg, dfg, bg, b_bg, b_bg1, b_abg, e_bg, e_hl, lfg
+
+    parser.read("data.txt")
+
+    match theme:
+        case "light":
+            parser.set('theme', "theme", "light")
+            parser.set("theme", "fg", "#000000")
+            parser.set("theme", "afg", "#3F3F3F")
+            parser.set("theme", "dfg", "#696969")
+            parser.set("theme", "bg", "#D9D9D9")
+            parser.set("theme", "b_bg", "#BABABA")
+            parser.set("theme", "b_bg1", "#C5C5C5")
+            parser.set("theme", "b_abg", "#CFCFCF")
+            parser.set("theme", "e_bg", "#EAEAEA")
+            parser.set("theme", "e_hl", "#000000")
+            parser.set("theme", "lfg", "#213c91")
+        case "dark":
+            parser.set('theme', "theme", "dark")
+            parser.set("theme", "fg", "#969696")
+            parser.set("theme", "afg", "#505050")
+            parser.set("theme", "dfg", "#474747")
+            parser.set("theme", "bg", "#272727")
+            parser.set("theme", "b_bg", "#373737")
+            parser.set("theme", "b_bg1", "#424242")
+            parser.set("theme", "b_abg", "#303030")
+            parser.set("theme", "e_bg", "#151515")
+            parser.set("theme", "e_hl", "#171717")
+            parser.set("theme", "lfg", "#2f5ceb")
+
+    with open("data.txt", "w") as configfile:
+        parser.write(configfile)
+
+    current_theme = parser.get("theme", "theme")
+    fg = parser.get("theme", "fg")
+    afg = parser.get("theme", "afg")
+    dfg = parser.get("theme", "dfg")
+    bg = parser.get("theme", "bg")
+    b_bg = parser.get("theme", "b_bg")
+    b_bg1 = parser.get("theme", "b_bg1")
+    b_abg = parser.get("theme", "b_abg")
+    e_bg = parser.get("theme", "e_bg")
+    e_hl = parser.get("theme", "e_hl")
+    lfg = parser.get("theme", "lfg")
 
 
 def change_scaling(width: int, height: int):
@@ -106,6 +156,7 @@ class App(Tk):  # Main application with page logic
             change_scaling(self.winfo_width(), self.winfo_height())
 
         self.bind("<Configure>", scaling_scale)
+        self.change_bg()
 
 
     def delete_window(self):  # saves parameters and then deletes window
@@ -117,10 +168,14 @@ class App(Tk):  # Main application with page logic
                                    str(self.winfo_rootx()), str(self.winfo_rooty()), '0')
         self.destroy()
 
+
     def ch_page(self, new: Frame, prev: Frame = None):
         if prev is not None:
             prev.pack_forget()
         new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl).pack(fill="both", expand=True)
+
+
+    def change_bg(self): self.config(bg=bg)
 
 
 class FLaunchPage(Frame):  # This page launches when you need to choose language
@@ -249,9 +304,9 @@ class MainPage(Frame):
     def set_theme(self):
         self.config(bg=bg)
         self.title.config(bg=bg, fg=fg)
-        self.settings.config(bg=b_bg, activebackground=b_abg, activeforeground=afg)
-        self.tasks.config(bg=b_bg1, activebackground=b_abg, activeforeground=afg)
-        self.game.config(bg=b_bg, activebackground=b_abg, activeforeground=afg)
+        self.settings.config(bg=b_bg, fg=fg, activebackground=b_abg, activeforeground=afg)
+        self.tasks.config(bg=b_bg1, fg=fg, activebackground=b_abg, activeforeground=afg)
+        self.game.config(bg=b_bg, fg=fg, activebackground=b_abg, activeforeground=afg)
 
 
 class GameOptPage(Frame): # Game Options Page
@@ -412,7 +467,7 @@ class TasksPage(Frame):
 
 class TaskCreationPage(Frame):
 
-    def __init__(self, parent):
+    def __init__(self, parent, *_):
         Frame.__init__(self, parent)
         self.parent = parent
 
@@ -422,6 +477,11 @@ class TaskCreationPage(Frame):
         self.back = back
 
         self.set_lang()
+        self.set_theme()
+
+    def set_theme(self):
+        self.config(bg=bg)
+        self.back.config(bg=b_bg, fg=fg, activebackground=b_abg, activeforeground=afg)
 
     def set_lang(self):
         if current_language == "rus":
@@ -447,52 +507,66 @@ class ShowTaskPage(Frame):
         Frame.__init__(self, parent)
         self.parent = parent
 
+        page = TaskPageTemplate(self, parent, GameOptPage)
+        page.pack(fill="both", expand=True)
+
         def load_task():
             print("Task loaded.")
 
         def rand_task():
             print("Random task is generated.")
 
-        btn_container = Label(self)
-        btn_container.pack(side="bottom", fill="x")
-        self.btn_container = btn_container
+        # btn_container = Label(self)
+        # btn_container.pack(side="bottom", fill="x")
+        # self.btn_container = btn_container
 
-        btn_container.rowconfigure(0, weight=1)
-        btn_container.columnconfigure(0, weight=1)
-        btn_container.columnconfigure(1, weight=1)
-        btn_container.columnconfigure(2, weight=1)
+        # btn_container.rowconfigure(0, weight=1)
+        # btn_container.columnconfigure(0, weight=1)
+        # btn_container.columnconfigure(1, weight=1)
+        # btn_container.columnconfigure(2, weight=1)
 
-        is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
+        # is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
 
-        exercise = Entry(self, font=("Arial", int(27 * scaling)), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
-        exercise.pack(fill="x", pady=8, side='top')
-        self.exercise = exercise
+        # exercise = Entry(self, font=("Arial", int(27 * scaling)), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
+        # exercise.pack(fill="x", pady=8, side='top')
+        # self.exercise = exercise
 
-        return_btn = Button(btn_container, font=('Arial', int(32 * scaling)), command=lambda: parent.ch_page(MainPage, self), bd=0)
-        return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
-        self.return_btn = return_btn
+        # return_btn = Button(btn_container, font=('Arial', int(32 * scaling)), command=lambda: parent.ch_page(MainPage, self), bd=0)
+        # return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
+        # self.return_btn = return_btn
 
-        rand_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, command=rand_task)
-        rand_btn.grid(row=0, column=2, ipady=5, sticky="nsew", padx=1)
+        page.next.pack_forget()
+        page.set_lang(current_language)
+        page.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)
+
+        rand_btn = Button(page.b_cont, font=('Arial', int(32 * scaling)), bd=0, command=rand_task)
+        rand_btn.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
         self.rand_btn = rand_btn
 
-        load_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, state="disabled", command=load_task)
-        load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
-        self.load_btn = load_btn
+        page.next.pack(side="right", ipady=5, fill="x", expand=True, padx=0)
+
+        # load_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, state="disabled", command=load_task)
+        # load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
+        # self.load_btn = load_btn
 
         self.set_lang_showtaskpage()
 
     def set_lang_showtaskpage(self):
         if current_language == "eng":
-            self.return_btn.config(text="Back")
-            self.exercise.insert(0, "Exercise: ")
-            self.load_btn.config(text="Load task")
+            # self.return_btn.config(text="Back")
+            # self.exercise.insert(0, "Exercise: ")
+            # self.load_btn.config(text="Load task")
             self.rand_btn.config(text="Random task")
         elif current_language == "rus":
-            self.return_btn.config(text="Назад")
-            self.exercise.insert(0, "Номер: ")
-            self.load_btn.config(text="Загрузить")
+            # self.return_btn.config(text="Назад")
+            # self.exercise.insert(0, "Номер: ")
+            # self.load_btn.config(text="Загрузить")
             self.rand_btn.config(text="Случайное")
+
+
+    def set_theme(self):
+            self.load_btn.config(bg=bg, fg=fg)
+            self.rand_btn.config(bg=bg, fg=fg)
 
 
     def validate(self, action, index, value):
@@ -517,6 +591,75 @@ class ShowTaskPage(Frame):
             return True
         else:
             return False
+
+
+class LangCont(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+        self.states = ("normal", "disabled")
+
+        self.l_title = Label(self)
+        self.l_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+
+        self.english = Button(self, command=lambda: parent.change_lang("eng"), text="English", state=self.states[current_language=="eng"], bd=0)
+        self.english.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
+
+        self.russian = Button(self, command=lambda: parent.change_lang("rus"), text="Русский", state=self.states[current_language=="rus"], bd=0)
+        self.russian.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
+
+        self.back = Button(self, command=lambda: parent.show_opts(0), text="Back", bd=0)
+        self.back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
+
+    def lang(self):
+        self.english.config(state=self.states[current_language=="eng"])
+        self.russian.config(state=self.states[current_language=="rus"])
+        if current_language == "eng":
+            self.l_title.config(text="Change language to")
+        elif current_language == "rus":
+            self.l_title.config(text="Изменить язык на")
+
+    def theme(self):
+        self.config(bg=bg)
+        self.l_title.config(bg=bg, fg=fg)
+        self.english.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg)
+        self.russian.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg)
+        self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
+
+
+class ThemeCont(Frame):
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+        self.states = ("normal", "disabled")
+
+        self.t_title = Label(self)
+        self.t_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
+
+        self.light = Button(self, command=lambda: parent.change_theme_("light"), state=self.states[current_theme=="light"], bd=0)
+        self.light.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
+
+        self.dark = Button(self, command=lambda: parent.change_theme_("dark"), state=self.states[current_theme=="dark"], bd=0)
+        self.dark.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
+
+        self.back = Button(self, command=lambda: parent.show_opts(0), text="Back", bd=0)
+        self.back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
+
+    def lang(self):
+        if current_language == "eng":
+            self.t_title.config(text="Change theme to")
+            self.light.config(text="Light")
+            self.dark.config(text="Dark")
+        elif current_language == "rus":
+            self.t_title.config(text="Изменить тему на")
+            self.light.config(text="Светлая")
+            self.dark.config(text="Тёмная")
+
+    def theme(self):
+        self.config(bg=bg)
+        self.t_title.config(bg=bg, fg=fg)
+        self.light.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg, state=self.states[current_theme=="light"])
+        self.dark.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg, state=self.states[current_theme=="dark"])
+        self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
+
 
 
 class SettingsPage(Frame):
@@ -546,17 +689,14 @@ class SettingsPage(Frame):
                 case 0:
                     container.pack(pady=(80, 15))
                     l_cont.pack_forget()
+                    t_cont.pack_forget()
                 case 1:
                     container.pack_forget()
                     l_cont.pack(pady=(80, 15))
                 case 2:
-                    ...
-
-        def change_lang(lang):
-            FLaunchPage.new_lang(None, lang)
-            english.config(state=states[current_language=="eng"])
-            russian.config(state=states[current_language=="rus"])
-            self.set_lang()
+                    container.pack_forget()
+                    t_cont.pack(pady=(80, 15))
+        self.show_opts = show_opts
 
         container = Frame(self)
         container.pack(pady=(80, 15))
@@ -564,24 +704,12 @@ class SettingsPage(Frame):
         lang_o = Button(container, command=lambda: show_opts(1), bd=0)
         lang_o.grid(row=0, column=0, sticky="nsew", pady=(0, 5), ipadx=65)
 
-        theme_o = Button(container, command=lambda: show_opts(2), state="disabled", bd=0)
+        theme_o = Button(container, command=lambda: show_opts(2), bd=0)
         theme_o.grid(row=1, column=0, sticky="nsew", pady=(0, 5))
 
-        l_cont = Frame(self)
+        l_cont = LangCont(self)
 
-        l_title = Label(l_cont, text="Change language to")
-        l_title.grid(row=0, column=0, sticky="nsew", pady=(0, 10))
-
-        states = ("normal", "disabled")
-
-        english = Button(l_cont, command=lambda: change_lang("eng"), text="English", state=states[current_language=="eng"], bd=0)
-        english.grid(row=1, column=0, sticky="nsew", pady=(0, 5), ipadx=130)
-
-        russian = Button(l_cont, command=lambda: change_lang("rus"), text="Русский", state=states[current_language=="rus"], bd=0)
-        russian.grid(row=2, column=0, sticky="nsew", pady=(0, 5))
-
-        back = Button(l_cont, command=lambda: show_opts(0), text="Back", bd=0)
-        back.grid(row=3, column=0, sticky="nsew", pady=(10, 0))
+        t_cont = ThemeCont(self)
 
         self.created_by = created_by
         self._return = _return
@@ -589,54 +717,60 @@ class SettingsPage(Frame):
         self.lang_o = lang_o
         self.theme_o = theme_o
         self.l_cont = l_cont
-        self.l_title = l_title
-        self.english = english
-        self.russian = russian
-        self.back = back
+        self.t_cont = t_cont
 
         def font_scaling(_):
             created_by.config(font=("Tahoma", int(15 * scaling)))
             _return.config(font=("Times New Roman", int(25 * scaling)))
             lang_o.config(font=("Times New Roman", int(25 * scaling)))
             theme_o.config(font=("Times New Roman", int(25 * scaling)))
-            l_title.config(font=("Times New Roman", int(25 * scaling)))
-            english.config(font=("Times New Roman", int(25 * scaling)))
-            russian.config(font=("Times New Roman", int(25 * scaling)))
-            back.config(font=("Times New Roman", int(25 * scaling)))
+            self.l_cont.l_title.config(font=("Times New Roman", int(25 * scaling)))
+            self.l_cont.english.config(font=("Times New Roman", int(25 * scaling)))
+            self.l_cont.russian.config(font=("Times New Roman", int(25 * scaling)))
+            self.l_cont.back.config(font=("Times New Roman", int(25 * scaling)))
+            self.t_cont.t_title.config(font=("Times New Roman", int(25 * scaling)))
+            self.t_cont.light.config(font=("Times New Roman", int(25 * scaling)))
+            self.t_cont.dark.config(font=("Times New Roman", int(25 * scaling)))
+            self.t_cont.back.config(font=("Times New Roman", int(25 * scaling)))
 
         self.bind("<Configure>", font_scaling)
 
         self.set_lang()
         self.set_theme()
 
+    def change_theme_(self, _to):
+        change_theme(_to)
+        self.set_theme()
+
+    def change_lang(self, lang):
+        FLaunchPage.new_lang(None, lang)
+        self.l_cont.lang()
+        self.set_lang()
+
     def set_lang(self):
+        self.l_cont.lang()
+        self.t_cont.lang()
         if current_language == "eng":
             self.created_by.config(text="Created by: TerraBoii")
             self._return.config(text="Go to the main page")
             self.lang_o.config(text="Change language")
             self.theme_o.config(text="Change theme")
-            self.l_title.config(text="Change language to")
-            self.back.config(text="Back")
         elif current_language == "rus":
             self.created_by.config(text="Создатель: TerraBoii")
             self._return.config(text="На главную страницу")
             self.lang_o.config(text="Изменить язык")
             self.theme_o.config(text="Изменить тему")
-            self.l_title.config(text="Изменить язык на")
-            self.back.config(text="Назад")
 
     def set_theme(self):
         self.config(bg=bg)
-        self.created_by.config(bg=bg, fg="#213c91")
+        self.created_by.config(bg=bg, fg=lfg)
         self._return.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg)
         self.container.config(bg=bg)
         self.lang_o.config(fg=fg, activeforeground=afg, bg=b_bg, activebackground=b_abg)
         self.theme_o.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
-        self.l_cont.config(bg=bg)
-        self.l_title.config(bg=bg, fg=fg)
-        self.english.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg)
-        self.russian.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg)
-        self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
+        self.master.change_bg()
+        self.l_cont.theme()
+        self.t_cont.theme()
 
 
 if __name__ == "__main__":
