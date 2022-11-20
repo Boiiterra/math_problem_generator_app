@@ -6,7 +6,7 @@ if [ -z $1 ]; then
 elif [[ $1 == *"."* ]]; then
     echo "Please do not secify file type or do not use dots"
 else
-    ./automation/writter.py $1
+    ./automation/writer.py $1
     echo "from .$1 import $1" >> ./modules/generators/__init__.py
 
     # adding generator
