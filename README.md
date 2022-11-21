@@ -95,9 +95,9 @@ pip install -r requirements.txt
   - installer_icon.ico
   - launcher.py
   - main_app.py
-  - main_icon.ico
+  - main_icon.ico |--> used for pyinstaller
   - requirements.txt
-  - update_icon.ico
+  - update_icon.ico |--> used for pyinstaller
   - version.txt
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
