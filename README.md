@@ -6,7 +6,12 @@
   - [Installation](#installation)
     - [Windows](#windows)
     - [Linux](#linux)
-  - [Main issues](#main-issues)
+  - [Structure of the project](#structure-of-the-project)
+    - [About generators](#about-generators)
+    - [About pages](#about-pages)
+    - [New task creation](#new-task-creation)
+      - [Manual](#manual)
+      - [Automatic](#automatic)
 
 </details>
 
@@ -45,7 +50,7 @@ SSH:
 git clone git@github.com:TerraBoii/math_problem_generator_app.git
 cd math_problem_generator_app
 pip install -r requirements.txt
-python main_app.py
+./main_app.py
 ```
 
 HTTPS
@@ -54,14 +59,81 @@ HTTPS
 git clone https://github.com/TerraBoii/math_problem_generator_app.git
 cd math_problem_generator_app
 pip install -r requirements.txt
-python main_app.py
+./main_app.py
 ```
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
 
-## Main issues
+## Structure of the project
 
-- Task's text is small if window is big
-- versions up to 0.6.1 struggle to update (Cannot be fixed)
+- ./
+  - app_installer/
+    - mathproblemgenerator_setup.exe
+  - automation/
+    - artist.py
+    - writer.py
+  - images/
+    - main_icon.ico
+    - uninstaller.ico
+    - update_icon.ico
+    - update_manager.jpg
+  - modules/
+    - [generators/](#about-generators)
+    - [pages/](#about-pages)
+    - \_\_init\_\_.py
+    - option.py
+    - resolution.py
+    - tooltip.py
+  - .gitignore
+  - LICENSE
+  - README.md
+  - README_ru.md
+  - add_task.sh
+  - backup_data.txt
+  - data.txt
+  - defaults.txt
+  - installer_icon.ico
+  - launcher.py
+  - main_app.py
+  - main_icon.ico
+  - requirements.txt
+  - update_icon,ico
+  - version.txt
+
+<p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
+
+### About generators
+
+All generators are stored in `./modules/generators/` directory. I won't list them as they will increase over time. Generators are used in [task pages](#about-pages). In order to create new generator check: [how to create new task](#new-task-creation). \
+! Do not create page without checking [New task creation](#new-task-creation) !
+
+### About pages
+
+All pages are stored in `./modules/pages/` directory. I won't list them as they will increase over time. Pages are used in [main_app.py](main_app.py). In order to create new page check: [how to create new task](#new-task-creation). \
+! Do not create page without checking [New task creation](#new-task-creation) !
+
+<p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
+
+<br>
+
+### New task creation
+
+You can create pages manually or automatically.
+
+#### Manual
+
+Will be added soon.
+
+#### Automatic
+
+Works on Linux (probably on MacOS too): /
+If your current working directory is `.../math_problem_generator_app/` then open terminal and type:
+
+```bash
+./add_task.sh <task_name>
+```
+
+Then you can open `./modules/pages/<Task_Name>Page.py` and `./modules/generators/<task_name>.py` and edit them. \
+**Important note**: Make sure that you added `<Task_Name>Page.py` as import from modules into `main_app.py` + into `TasksPage` tasks list.
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
