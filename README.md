@@ -97,7 +97,7 @@ pip install -r requirements.txt
   - main_app.py
   - main_icon.ico
   - requirements.txt
-  - update_icon,ico
+  - update_icon.ico
   - version.txt
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
