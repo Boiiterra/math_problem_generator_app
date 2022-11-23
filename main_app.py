@@ -676,7 +676,6 @@ class ThemeCont(Frame):
         self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
 
 
-
 class SettingsPage(Frame):
     def __init__(self, parent, *_):
         Frame.__init__(self, parent)
