@@ -6,6 +6,7 @@ from .task_template import TaskPageTemplate
 
 class RectanglesPPage(Frame):
     task = {"eng": "Rectangle's perimeter", "rus": "Периметр прямоугольника"}
+    subject = 1
 
     def __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
         Frame.__init__(self, parent)

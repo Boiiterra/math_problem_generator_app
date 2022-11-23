@@ -6,6 +6,7 @@ from .task_template import TaskPageTemplate
 
 class ArithmeticsPage(Frame):
     task = {"eng": "Arithmetics", "rus": "Арифметика"}
+    subject = 0
 
     def __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
         Frame.__init__(self, parent)

@@ -7,6 +7,7 @@ to_add = argv[1]
 text = f"from tkinter import Frame\n\nfrom ..generators import {to_add}\nfrom .task_template import TaskPageTemplate\n\n\nclass {to_add.title()}Page(Frame):\n"
 
 start = '''\ttask = {"eng": "task_name", "rus": "task_name"}
+\tsubject = None # 0 -> algebra; 1 -> geometry 
 
 \tdef __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
 \t\tFrame.__init__(self, parent)
