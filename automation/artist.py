@@ -72,6 +72,9 @@ end = '''\t\t\t\t\t\t\t\t\t\t\tself.winfo_screenwidth(), self.winfo_screenheight
 \t\t\t\t\tpage.confirm_btn.config(text="Неправильно", state="disabled")
 \t\t\t\tself.after(500, lambda: new_task(False))
 
+\t\tself.confirm = confirm
+\t\tself.new_task = new_task
+
 \t\tpage.new_task_command(new_task)
 \t\tpage.confirm_command(confirm)
 \t\tpage.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)
