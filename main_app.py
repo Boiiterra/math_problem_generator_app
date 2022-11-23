@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
 from pyautogui import position as mouse_pos
 from tkinter.messagebox import showinfo
