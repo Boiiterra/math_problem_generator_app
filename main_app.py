@@ -441,7 +441,7 @@ class TasksPage(Frame):
         back = Button(top, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
 
-        _filter = Button(top, bd=0)
+        _filter = Button(top, bd=0, state="disabled")
         _filter.pack(side="right")
 
         start = 0
