@@ -142,19 +142,21 @@ class TaskPageTemplate(Frame):
         self.next.config(fg=fg, bg=b_bg1, activebackground=b_abg, activeforeground=afg, disabledforeground=dfg)
         self.answer_field.config(fg=fg, highlightbackground=e_hl, bg=e_bg, insertbackground=fg, disabledbackground=e_bg)
 
-    def set_lang(self, lang):
+    def set_lang(self, lang: str, msg: list[str] = None):
+        if msg is None:
+            msg = ["Click to copy exercise number.", "Нажмите, чтобы скопировать номер задачи."]
         if lang == "eng":
             self.e_label.config(text="Exercise:")
             self.a_label.config(text="Answer:")
             self.back.config(text="Back")
             self.next.config(text="New task")
             self.confirm_btn.config(text="Confirm")
-            create_tool_tip(self.e_text, "Click to copy exercise number.", 10)
+            create_tool_tip(self.e_text, msg[0], 10)
         elif lang == "rus":
             self.e_label.config(text="Номер:")
             self.a_label.config(text="Ответ:")
             self.back.config(text="Назад")
             self.next.config(text="Новая задача")
             self.confirm_btn.config(text="Подтвердить")
-            create_tool_tip(self.e_text, "Нажмите, чтобы скопировать номер задачи.", 10)
+            create_tool_tip(self.e_text, msg[1], 10)
 
