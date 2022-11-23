@@ -18,6 +18,7 @@ else:
 
 __version__ = "0.7"
 author = "TerraBoii"
+pages = [ArithmeticsPage, Cb_RootPage, Gauss_Sum, Lin_EquationPage, Pythagorean_TheoremPage, QEquationPage, RectanglesAPage, RectanglesPPage, Sq_RootPage, SquaresAPage, SquaresPPage]
 
 # File reading section
 parser = ConfigParser()
@@ -443,15 +444,13 @@ class TasksPage(Frame):
         _filter = Button(top, bd=0)
         _filter.pack(side="right")
 
-        options = [ArithmeticsPage, Cb_RootPage, Gauss_Sum, Lin_EquationPage, Pythagorean_TheoremPage, QEquationPage, RectanglesAPage, RectanglesPPage, Sq_RootPage, SquaresAPage, SquaresPPage]
-
         start = 0
 
         menu = Frame(self)
         menu.pack(pady=(20, 0))
 
-        for i in range(len(options)):
-            Option(menu, self, options[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
+        for i in range(len(pages)):
+            Option(menu, self, pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
 
         self.top = top
         self.back = back
