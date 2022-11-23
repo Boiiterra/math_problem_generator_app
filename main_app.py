@@ -500,9 +500,9 @@ class TaskCreationPage(Frame):
 
     def set_lang(self):
         if current_language == "rus":
-            self.back.config(text="В разработке")
+            self.back.config(text="В разработке  до 0.9")
         if current_language == "eng":
-            self.back.config(text="Under maintenance")
+            self.back.config(text="Under maintenance untill 0.9")
 
 
 class ShowTaskOptions(Toplevel):
