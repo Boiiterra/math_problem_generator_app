@@ -80,7 +80,6 @@ def light_theme():
     parser.set("theme", "lfg", "#213c91")
 
 
-
 def dark_theme():
     global parser
 
