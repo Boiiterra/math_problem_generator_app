@@ -5,8 +5,8 @@ from pyautogui import position as mouse_pos
 from tkinter.messagebox import showinfo
 from configparser import ConfigParser
 from webbrowser import open_new_tab
+from pyperclip import paste
 from platform import system
-from pyperclip import copy
 
 from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage
 from modules.pages.task_template import TaskPageTemplate
