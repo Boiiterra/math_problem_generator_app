@@ -81,14 +81,14 @@ def dark_theme():
     parser.set('theme', "theme", "dark")
     parser.set("theme", "fg", "#969696")
     parser.set("theme", "afg", "#505050")
-            parser.set("theme", "dfg", "#474747")
-            parser.set("theme", "bg", "#272727")
-            parser.set("theme", "b_bg", "#373737")
-            parser.set("theme", "b_bg1", "#424242")
-            parser.set("theme", "b_abg", "#303030")
-            parser.set("theme", "e_bg", "#151515")
-            parser.set("theme", "e_hl", "#171717")
-            parser.set("theme", "lfg", "#2f5ceb")
+    parser.set("theme", "dfg", "#303030")
+    parser.set("theme", "bg", "#272727")
+    parser.set("theme", "b_bg", "#373737")
+    parser.set("theme", "b_bg1", "#424242")
+    parser.set("theme", "b_abg", "#303030")
+    parser.set("theme", "e_bg", "#151515")
+    parser.set("theme", "e_hl", "#171717")
+    parser.set("theme", "lfg", "#2f5ceb")
 
 
 def change_theme(theme: str):
