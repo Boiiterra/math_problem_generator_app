@@ -58,28 +58,29 @@ def change_language(language: str):  # This function changes language for whole 
     current_language = parser.get('language', 'language')
 
 
-def change_theme(theme: str):
-    global parser, current_theme,fg, afg, dfg, bg, b_bg, b_bg1, b_abg, e_bg, e_hl, lfg
+def light_theme():
+    global parser
 
-    parser.read("data.txt")
+    parser.set('theme', "theme", "light")
+    parser.set("theme", "fg", "#000000")
+    parser.set("theme", "afg", "#3F3F3F")
+    parser.set("theme", "dfg", "#696969")
+    parser.set("theme", "bg", "#D9D9D9")
+    parser.set("theme", "b_bg", "#BABABA")
+    parser.set("theme", "b_bg1", "#C5C5C5")
+    parser.set("theme", "b_abg", "#CFCFCF")
+    parser.set("theme", "e_bg", "#EAEAEA")
+    parser.set("theme", "e_hl", "#000000")
+    parser.set("theme", "lfg", "#213c91")
 
-    match theme:
-        case "light":
-            parser.set('theme', "theme", "light")
-            parser.set("theme", "fg", "#000000")
-            parser.set("theme", "afg", "#3F3F3F")
-            parser.set("theme", "dfg", "#696969")
-            parser.set("theme", "bg", "#D9D9D9")
-            parser.set("theme", "b_bg", "#BABABA")
-            parser.set("theme", "b_bg1", "#C5C5C5")
-            parser.set("theme", "b_abg", "#CFCFCF")
-            parser.set("theme", "e_bg", "#EAEAEA")
-            parser.set("theme", "e_hl", "#000000")
-            parser.set("theme", "lfg", "#213c91")
-        case "dark":
-            parser.set('theme', "theme", "dark")
-            parser.set("theme", "fg", "#969696")
-            parser.set("theme", "afg", "#505050")
+
+
+def dark_theme():
+    global parser
+
+    parser.set('theme', "theme", "dark")
+    parser.set("theme", "fg", "#969696")
+    parser.set("theme", "afg", "#505050")
             parser.set("theme", "dfg", "#474747")
             parser.set("theme", "bg", "#272727")
             parser.set("theme", "b_bg", "#373737")
@@ -88,6 +89,18 @@ def change_theme(theme: str):
             parser.set("theme", "e_bg", "#151515")
             parser.set("theme", "e_hl", "#171717")
             parser.set("theme", "lfg", "#2f5ceb")
+
+
+def change_theme(theme: str):
+    global parser, current_theme,fg, afg, dfg, bg, b_bg, b_bg1, b_abg, e_bg, e_hl, lfg
+
+    parser.read("data.txt")
+
+    match theme:
+        case "light":
+            light_theme()
+        case "dark":
+            dark_theme()
 
     with open("data.txt", "w") as configfile:
         parser.write(configfile)
