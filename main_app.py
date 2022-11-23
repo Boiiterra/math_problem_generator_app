@@ -636,8 +636,8 @@ class LangCont(Frame):
     def theme(self):
         self.config(bg=bg)
         self.l_title.config(bg=bg, fg=fg)
-        self.english.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg)
-        self.russian.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg)
+        self.english.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg, disabledforeground=dfg)
+        self.russian.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg, disabledforeground=dfg)
         self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
 
 
@@ -671,8 +671,8 @@ class ThemeCont(Frame):
     def theme(self):
         self.config(bg=bg)
         self.t_title.config(bg=bg, fg=fg)
-        self.light.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg, state=self.states[current_theme=="light"])
-        self.dark.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg, state=self.states[current_theme=="dark"])
+        self.light.config(fg=fg, bg=b_bg1, activeforeground=afg, activebackground=b_abg, disabledforeground=dfg, state=self.states[current_theme=="light"])
+        self.dark.config(fg=fg, bg=b_bg, activeforeground=afg, activebackground=b_abg, disabledforeground=dfg, state=self.states[current_theme=="dark"])
         self.back.config(fg=fg, activeforeground=afg, bg=b_bg1, activebackground=b_abg)
 
 
