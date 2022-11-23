@@ -68,6 +68,9 @@ class Cb_RootPage(Frame):
 					page.confirm_btn.config(text="Неправильно", state="disabled")
 				self.after(500, lambda: new_task(False))
 
+		self.new_task = new_task
+		self.confirm = confirm
+
 		page.new_task_command(new_task)
 		page.confirm_command(confirm)
 		page.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)

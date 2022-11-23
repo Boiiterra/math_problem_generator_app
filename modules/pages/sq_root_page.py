@@ -68,6 +68,9 @@ class Sq_RootPage(Frame):
 					page.confirm_btn.config(text="Неправильно", state="disabled")
 				self.after(500, lambda: new_task(False))
 
+		self.new_task = new_task
+		self.confirm = confirm
+
 		page.new_task_command(new_task)
 		page.confirm_command(confirm)
 		page.change_allowed("0123456789")
