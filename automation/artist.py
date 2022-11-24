@@ -7,7 +7,8 @@ to_add = argv[1]
 text = f"from tkinter import Frame\n\nfrom ..generators import {to_add}\nfrom .task_template import TaskPageTemplate\n\n\nclass {to_add.title()}Page(Frame):\n"
 
 start = '''\ttask = {"eng": "task_name", "rus": "task_name"}
-\tsubject = None # 0 -> algebra; 1 -> geometry 
+\tttask = {"eng": "Task_text_english {}", "rus": "Task_text_russian {}"}
+\tsubject = None # 0 -> algebra; 1 -> geometry
 
 \tdef __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
 \t\tFrame.__init__(self, parent)
@@ -18,8 +19,6 @@ start = '''\ttask = {"eng": "task_name", "rus": "task_name"}
 \t\tself.exercise_no = None
 \t\tself.task = None
 \t\tself.answer = None
-\t\tself.text_e = None
-\t\tself.text_r = None
 
 \t\tdef new_task(full_reset: bool = True):
 \t\t\tif full_reset:
@@ -31,15 +30,9 @@ end = '''\t\t\t\t\t\t\t\t\t\t\tself.winfo_screenwidth(), self.winfo_screenheight
 \t\t\t\tself.task = task_data[1] # or better use self.param if one integer is passed
 \t\t\t\tself.answer = task_data[0]
 \t\t\t\tself.exercise_no = task_data[-1]
-\t\t\t\tself.text_e = f"Task_text_english "+self.task
-\t\t\t\tself.text_r = f"Task_text_russian "+self.task
 
-\t\t\t\tpage.set_exercise(self.exercise_no)
-
-\t\t\t\tif lang == "eng":
-\t\t\t\t\tpage.change_task_text(self.text_e)
-\t\t\t\telif lang == "rus":
-\t\t\t\t\tpage.change_task_text(self.text_r)
+\t\t\t\tpage.set_exercise(self.exercise_no, code) # replace code with four digit number (go to main_app.py and check pages dictionary)
+\t\t\t\tpage.change_task_text(self.ttask[lang].format(self.task))
 
 \t\t\tif lang == "eng":
 \t\t\t\tpage.confirm_btn.config(text="Confirm")
