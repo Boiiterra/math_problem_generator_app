@@ -81,11 +81,11 @@ class TaskPageTemplate(Frame):
 
         self.bind("<Configure>", set_font)
 
-    def set_exercise(self, exercise: float):
-        self.exercise = exercise
+    def set_exercise(self, exercise: float, code: str):
+        self.exercise = str(exercise) + code
         self.e_text.config(state="normal")
         self.e_text.delete("0.0", "end")
-        self.e_text.insert("end", exercise)
+        self.e_text.insert("end", str(exercise) + code)
         self.e_text.config(state="disabled")
 
     def change_task_text(self, new_text: str):
