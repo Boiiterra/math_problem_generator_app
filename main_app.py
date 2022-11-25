@@ -10,10 +10,6 @@ from platform import system
 
 from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage
 from modules.pages.task_template import TaskPageTemplate
-if system() == "Windows": # launchers are going to be better introduced at 1.0 as main update system
-    from launcher import main as launcher
-else:
-    launcher = True
 
 
 __version__ = "0.7"
@@ -791,5 +787,4 @@ class SettingsPage(Frame):
 
 
 if __name__ == "__main__":
-    if launcher: # Checking for update before app is launched (will be introduced better in version 1.0)
-        App().mainloop()  # Launch application
+    App().mainloop()  # Launch application
