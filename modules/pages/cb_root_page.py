@@ -30,7 +30,7 @@ class Cb_RootPage(Frame):
 				self.text_e = f"Find cube root of {self.task}."
 				self.text_r = f"Найдите кубический корень {self.task}."
 
-				page.set_exercise(self.exercise_no)
+				page.set_exercise(self.exercise_no, "0001")
 
 				if lang == "eng":
 					page.change_task_text(self.text_e)

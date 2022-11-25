@@ -32,7 +32,7 @@ class Pythagorean_TheoremPage(Frame):
 				self.text_e = f"Find hypotenuse of right-angled triangle\nwith sides being equal to {self.a} and {self.b}."
 				self.text_r = f"Чему равна гипотенуза AC прямоугольного\nтреугольника ABC с катетами: AB = {self.a}, BC = {self.b}"
 
-				page.set_exercise(self.exercise_no)
+				page.set_exercise(self.exercise_no, "0004")
 
 				if lang == "eng":
 					page.change_task_text(self.text_e)

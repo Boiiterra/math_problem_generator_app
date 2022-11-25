@@ -6,6 +6,8 @@ from .task_template import TaskPageTemplate
 
 class ArithmeticsPage(Frame):
     task = {"eng": "Arithmetics", "rus": "Арифметика"}
+    ttask = {"eng": "What does this equals to\n(\" * \" means multiplication; \" / \" means division)\n{}", 
+             "rus": "Чему равно данное выражение\n(\" * \" - умножение; \" / \" - деление)\n{}"}
     subject = 0
 
     def __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
@@ -17,25 +19,17 @@ class ArithmeticsPage(Frame):
         self.exercise_no = None
         self.task = None
         self.answer = None
-        self.text_e = None
-        self.text_r = None
 
         def new_task(full_reset: bool = True):
             if full_reset:
-                task_data = arithmetics(version, self.winfo_width(), self.winfo_height(), 
-                                            self.winfo_screenwidth(), self.winfo_screenheight())
+                task_data = arithmetics(version, self.winfo_width(), self.winfo_height(),
+                                        self.winfo_screenwidth(), self.winfo_screenheight())
                 self.task = task_data[0]
                 self.answer = task_data[1]
                 self.exercise_no = task_data[-1]
-                self.text_e = f"What does this equals to\n(\" * \" means multiplication; \" / \" means division)\n{self.task}"
-                self.text_r = f"Чему равно данное выражение\n(\" * \" - умножение; \" / \" - деление)\n{self.task}"
+                page.change_task_text(self.ttask[lang].format(self.task))
 
-                page.set_exercise(self.exercise_no)
-
-                if lang == "eng":
-                    page.change_task_text(self.text_e)
-                elif lang == "rus":
-                    page.change_task_text(self.text_r)
+                page.set_exercise(self.exercise_no, "0000")
 
             if lang == "eng":
                 page.confirm_btn.config(text="Confirm")
@@ -69,9 +63,6 @@ class ArithmeticsPage(Frame):
                     page.confirm_btn.config(text="Неправильно", state="disabled")
                 self.after(500, lambda: new_task(False))
 
-        self.new_task = new_task
-        self.confirm = confirm
-
         page.new_task_command(new_task)
         page.confirm_command(confirm)
         page.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)
@@ -79,4 +70,3 @@ class ArithmeticsPage(Frame):
 
         parent.bind('<Return>', lambda _: page.confirm_btn.invoke())
         parent.bind('<KP_Enter>', lambda _: page.confirm_btn.invoke())
-

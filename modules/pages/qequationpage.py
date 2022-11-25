@@ -70,7 +70,7 @@ class QEquationPage(Frame):
                 self.text_e = f"{self.param}\n" + extra_text_e
                 self.text_r = f"{self.param}\n" + extra_text_r
 
-                page.set_exercise(self.exercise_no)
+                page.set_exercise(self.exercise_no, "0005")
 
                 if lang == "eng":
                     page.change_task_text(self.text_e)

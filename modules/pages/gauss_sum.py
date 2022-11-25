@@ -31,7 +31,7 @@ class Gauss_Sum(Frame):
                 self.param = task_data[1]
                 self.text_e = f"Find sum of all integers\nfrom 1 to {self.param} including."
                 self.text_r = f"Чему равна сумма чисел\nот 1 до {self.param} включительно."
-                page.set_exercise(self.exercise_no)
+                page.set_exercise(self.exercise_no, "0002")
                 if lang == "eng":
                     page.change_task_text(self.text_e)
                 elif lang == "rus":

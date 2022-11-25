@@ -30,7 +30,7 @@ class Lin_EquationPage(Frame):
 				self.text_e = f"Solve the equation:\n"+self.task
 				self.text_r = f"Найдите корень уравнения:\n"+self.task
 
-				page.set_exercise(self.exercise_no)
+				page.set_exercise(self.exercise_no, "0003")
 
 				if lang == "eng":
 					page.change_task_text(self.text_e)

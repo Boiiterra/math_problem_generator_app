@@ -30,7 +30,7 @@ class Sq_RootPage(Frame):
 				self.text_e = f"Find the square root of {self.task}."
 				self.text_r = f"Чему равен квадратный корень {self.task}?"
 
-				page.set_exercise(self.exercise_no)
+				page.set_exercise(self.exercise_no, "0008")
 
 				if lang == "eng":
 					page.change_task_text(self.text_e)

@@ -32,7 +32,7 @@ class RectanglesAPage(Frame):
                               f"\nIts height is {self.param[0]} and width is {self.param[1]}."
                 self.text_r = "Чему равна площадь прямоугольника,\nесли его высота равна " \
                               f"{self.param[0]}, а ширина {self.param[1]}."
-                page.set_exercise(self.exercise_no)
+                page.set_exercise(self.exercise_no, "0006")
                 if lang == "eng":
                     page.change_task_text(self.text_e)
                 elif lang == "rus":
