@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from tkinter import TclError, Tk, Frame, Label, Button, Entry, Text, Toplevel
+from tkinter import TclError, Tk, Frame, Label, Button, Toplevel
 from pyautogui import position as mouse_pos
 from tkinter.messagebox import showinfo
 from configparser import ConfigParser
@@ -8,13 +8,29 @@ from webbrowser import open_new_tab
 from pyperclip import paste
 from platform import system
 
-from modules import create_tool_tip, scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage
+from modules import scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, \
+                    ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, \
+                    Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage, Power_NumberPage
 from modules.pages.task_template import TaskPageTemplate
 
 
 __version__ = "0.7"
 author = "TerraBoii"
-pages = [ArithmeticsPage, Cb_RootPage, Gauss_Sum, Lin_EquationPage, Pythagorean_TheoremPage, QEquationPage, RectanglesAPage, RectanglesPPage, Sq_RootPage, SquaresAPage, SquaresPPage]
+pages = {
+    # code: Page
+    "0000": ArithmeticsPage,
+    "0001": Cb_RootPage,
+    "0002": Gauss_Sum,
+    "0003": Lin_EquationPage,
+    "0004": Pythagorean_TheoremPage,
+    "0005": QEquationPage,
+    "0006": RectanglesAPage,
+    "0007": RectanglesPPage,
+    "0008": Sq_RootPage,
+    "0009": SquaresAPage,
+    "0010": SquaresPPage,
+    "0011": Power_NumberPage,
+}
 
 # File reading section
 parser = ConfigParser()
@@ -370,7 +386,7 @@ class GameOptPage(Frame): # Game Options Page
         tasks_list.pack(fill="both", expand=True, pady=(0, 5))
         tasks_list.bind("<Enter>", lambda _: show_description(0, tasks_list))
 
-        show_task = Button(options, bd=0, command=lambda: other_page(1))
+        show_task = Button(options, bd=0, command=lambda: other_page(1), state="disabled")
         show_task.pack(fill="both", expand=True, pady=10)
         show_task.bind("<Enter>", lambda _: show_description(1, show_task))
 
@@ -430,22 +446,62 @@ class TasksPage(Frame):
     def __init__(self, parent, *_):
         Frame.__init__(self, parent)
 
+        self.fstate = 2
+
+        def options(filter_t:bool=None):
+            if filter_t is None:
+                return list(pages.values())
+            elif filter_t:
+                return list(filter(lambda el: el.subject == 1, list(pages.values())))
+            else:
+                return list(filter(lambda el: el.subject == 0, list(pages.values())))
+
+        def filter_():
+            self.fstate += 1
+            if self.fstate == 3:
+                self.fstate = 0
+
+            match self.fstate, current_language:
+                case 0, "eng":
+                    _filter.config(text="Algebra")
+                case 0, "rus":
+                    _filter.config(text="Алгебра")
+                case 1, "eng":
+                    _filter.config(text="Geometry")
+                case 1, "rus":
+                    _filter.config(text="Геометрия")
+                case 2, "eng":
+                    _filter.config(text="Filter")
+                case 2, "rus":
+                    _filter.config(text="Фильтр")
+            self.task_pages = options(self.fstate if self.fstate != 2 else None)
+            repack()
+
+        def repack():
+            for slave in menu.grid_slaves():
+                slave.grid_forget()
+            for i in range(len(self.task_pages[start:start + 16])):
+                Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
+            font_scaling(None)
+
         top = Frame(self)
         top.pack(pady=10, padx=65, fill="x")
 
         back = Button(top, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
 
-        _filter = Button(top, bd=0, state="disabled")
+        _filter = Button(top, bd=0, command=filter_)
         _filter.pack(side="right")
+
+        self.task_pages = options()
 
         start = 0
 
         menu = Frame(self)
         menu.pack(pady=(20, 0))
 
-        for i in range(len(pages)):
-            Option(menu, self, pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
+        for i in range(len(self.task_pages[start:start + 16])):
+            Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
 
         self.top = top
         self.back = back
@@ -516,95 +572,73 @@ class ShowTaskOptions(Toplevel):
 
 
 class ShowTaskPage(Frame):
-
     def __init__(self, parent, *_):
         Frame.__init__(self, parent)
         self.parent = parent
 
         page = TaskPageTemplate(self, parent, GameOptPage)
         page.pack(fill="both", expand=True)
+        self.page = page
 
         def load_task():
             print("Task loaded.")
+            ex = page.e_text.get("0.0", "end").replace("\n", "")
+            task_seed, task_code = ex[:-4], ex[-4:]
+            print(task_seed, task_code)
+            # page.confirm_command(pages[task_code].confirm_c)
+            # page.new_task_command(pages[task_code].new_task_c)
+            print(pages[task_code].confirm)
+            print("Nothing")
 
         def rand_task():
             print("Random task is generated.")
 
-        # btn_container = Label(self)
-        # btn_container.pack(side="bottom", fill="x")
-        # self.btn_container = btn_container
+        def insert(_):
+            if paste():
+                print(paste())
+                if all(el in page.allowed for el in paste()) and len(paste()) >= 5 and paste()[-4:] in pages.keys():
+                    page.e_text.config(state='normal')
+                    page.e_text.delete('0.0', "end")
+                    page.e_text.insert('0.0', paste())
+                    load_btn.config(state="normal")
+                    page.e_text.config(state='disabled')
 
-        # btn_container.rowconfigure(0, weight=1)
-        # btn_container.columnconfigure(0, weight=1)
-        # btn_container.columnconfigure(1, weight=1)
-        # btn_container.columnconfigure(2, weight=1)
-
-        # is_valid = (parent.register(self.validate), '%d', '%i', '%P') # action, index, value
-
-        # exercise = Entry(self, font=("Arial", int(27 * scaling)), borderwidth=0, highlightthickness=0, validatecommand=is_valid, validate="key")
-        # exercise.pack(fill="x", pady=8, side='top')
-        # self.exercise = exercise
-
-        # return_btn = Button(btn_container, font=('Arial', int(32 * scaling)), command=lambda: parent.ch_page(MainPage, self), bd=0)
-        # return_btn.grid(row=0, column=0, sticky='nsew', ipady=5, padx=1)
-        # self.return_btn = return_btn
-
+        # deconstruct page content in order to add new one 
         page.next.pack_forget()
-        page.set_lang(current_language)
-        page.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)
+        page.e_text.pack_forget()
 
         rand_btn = Button(page.b_cont, font=('Arial', int(32 * scaling)), bd=0, command=rand_task)
         rand_btn.pack(side="right", ipady=5, fill="x", expand=True, padx=(10, 0))
-        self.rand_btn = rand_btn
 
         page.next.pack(side="right", ipady=5, fill="x", expand=True, padx=0)
 
-        # load_btn = Button(btn_container, font=('Arial', int(32 * scaling)), bd=0, state="disabled", command=load_task)
-        # load_btn.grid(row=0, column=1, ipady=5, sticky="nsew", padx=1)
-        # self.load_btn = load_btn
+        load_btn = Button(page.top, font=('Arial', int(32 * scaling)), bd=0, state="disabled", command=load_task)
+        load_btn.pack(pady=8, side='right')
 
-        self.set_lang_showtaskpage()
+        page.e_text.pack(fill="x", pady=8, side='right')
+        page.e_text.bind("<1>", insert)
 
-    def set_lang_showtaskpage(self):
+        self.rand_btn = rand_btn
+        self.load_btn = load_btn
+
+        self.set_lang()
+        self.set_theme()
+
+
+    def set_lang(self):
+        self.page.set_lang(current_language, ["Click to paste exercise number.", "Нажмите, чтобы вставить номер задачи."])
         if current_language == "eng":
-            # self.return_btn.config(text="Back")
-            # self.exercise.insert(0, "Exercise: ")
-            # self.load_btn.config(text="Load task")
+            self.load_btn.config(text="Load")
             self.rand_btn.config(text="Random task")
         elif current_language == "rus":
-            # self.return_btn.config(text="Назад")
-            # self.exercise.insert(0, "Номер: ")
-            # self.load_btn.config(text="Загрузить")
+            self.load_btn.config(text="Загрузить")
             self.rand_btn.config(text="Случайное")
 
 
     def set_theme(self):
-            self.load_btn.config(bg=bg, fg=fg)
-            self.rand_btn.config(bg=bg, fg=fg)
-
-
-    def validate(self, action, index, value):
-        # Insert phrase
-        if index == "0" and (value == " Exercise: " or value == "    Номер: ") and action == "1":
-            return True
-        # Remove ability to edit phrase 
-        if int(index) < 11 and ((value[:11] != " Exercise: " or value[:11] != "    Номер: ") or (value[:10] == "" and index == "0" and action == "0")):
-            return False
-        # Integers does not start from zero
-        if len(value) != 11 and index == "11" and value[11] == "0":
-            return False
-        # Load task button activation
-        if len(value[11:]) >= 5 and all(symbol in "0123456789" for symbol in value[11:]):
-            self.load_btn.config(state="normal")
-        else:
-            self.load_btn.config(state="disabled")
-        # Entry validation
-        if len(value) > 42 and action == "1":  # Limiting input length
-            return False
-        elif all(symbol in "0123456789" for symbol in value[11:]):  # Allowed values
-            return True
-        else:
-            return False
+        self.page.set_theme(bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl)
+        self.load_btn.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg, disabledforeground=dfg)
+        self.rand_btn.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg, disabledforeground=dfg)
 
 
 class LangCont(Frame):
