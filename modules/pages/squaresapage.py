@@ -30,7 +30,7 @@ class SquaresAPage(Frame):
                 self.param = task_data[0]
                 self.text_e = f"Your goal is to find square's area.\nIts side is {self.param}."
                 self.text_r = f"Чему равна площадь квадрата,\nесли его сторона равна {self.param}."
-                page.set_exercise(self.exercise_no)
+                page.set_exercise(self.exercise_no, "0009")
                 if lang == "eng":
                     page.change_task_text(self.text_e)
                 elif lang == "rus":

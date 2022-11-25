@@ -7,3 +7,4 @@ from .lin_equation import lin_equation
 from .pythagorean_theorem import pythagorean_theorem
 from .sq_root import sq_root
 from .cb_root import cb_root
+from .power_number import power_number
