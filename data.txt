@@ -24,3 +24,4 @@ lfg = #213c91
 
 [info]
 auto_update = False
+
