@@ -11,7 +11,7 @@ from threading import Thread
 from requests import get
 from pathlib import Path
 
-__version__ = '0.7'
+__version__ = '0.8'
 __author__ = "TerraBoii"
 # If you want to get less automated version check this project: 
 # https://github.com/vsantiago113/Tkinter-MyTestApp

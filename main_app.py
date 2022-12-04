@@ -14,7 +14,7 @@ from modules import scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, Rectan
 from modules.pages.task_template import TaskPageTemplate
 
 
-__version__ = "0.7"
+__version__ = "0.8"
 author = "TerraBoii"
 pages = {
     # code: Page
@@ -501,7 +501,7 @@ class TasksPage(Frame):
         menu.pack(pady=(20, 0))
 
         for i in range(len(self.task_pages[start:start + 16])):
-            Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 8), column=(i // 8), padx=(0, 10), pady=(0, 15), sticky="snew")
+            Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 6), column=(i // 6), padx=(0, 10), pady=(0, 15), sticky="snew")
 
         self.top = top
         self.back = back
