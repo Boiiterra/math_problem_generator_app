@@ -5,7 +5,7 @@ from .task_template import TaskPageTemplate
 
 
 class Pythagorean_TheoremPage(Frame):
-	task = {"eng": "Pythagorean theorem", "rus": "Теорема пифагора"}
+	task = {"eng": "Pythagorean theorem", "rus": "Теорема Пифагора"}
 	subject = 1
 
 	def __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
