@@ -11,4 +11,10 @@ def lin_equation(top, app_version: str, app_width: int, app_height: int, screen_
 	a = randint(-top, top)
 	if a == 0: a += [-1, 1][randint(0, 1)]
 
-	return x, f"{a}x = {a*x}", new_seed
+	if (randint(0, 1000) >= 500):
+		c = randint(-top, top)
+		task = f"{a}x + {c} = {a * x + c}" if c >= 0 else f"{a}x - {abs(c)} = {a * x + c}"
+	else:
+		task = f"{a}x = {a*x}"
+
+	return x, task, new_seed
