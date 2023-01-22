@@ -7,7 +7,7 @@ to_add = argv[1]
 text = f"from tkinter import Frame\n\nfrom ..generators import {to_add}\nfrom .task_template import TaskPageTemplate\n\n\nclass {to_add.title()}Page(Frame):\n"
 
 start = '''\ttask = {"eng": "task_name", "rus": "task_name"}
-\tttask = {"eng": "Task_text_english {}", "rus": "Task_text_russian {}"}
+\ttask_text = {"eng": "Task_text_english {}", "rus": "Task_text_russian {}"}
 \tsubject = None # 0 -> algebra; 1 -> geometry
 
 \tdef __init__(self, parent, lang, version, prev, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl):
@@ -32,7 +32,7 @@ end = '''\t\t\t\t\t\t\t\t\t\t\tself.winfo_screenwidth(), self.winfo_screenheight
 \t\t\t\tself.exercise_no = task_data[-1]
 
 \t\t\t\tpage.set_exercise(self.exercise_no, code) # replace code with four digit number (go to main_app.py and check pages dictionary)
-\t\t\t\tpage.change_task_text(self.ttask[lang].format(self.task))
+\t\t\t\tpage.change_task_text(self.task_text[lang].format(self.task))
 
 \t\t\tif lang == "eng":
 \t\t\t\tpage.confirm_btn.config(text="Confirm")
