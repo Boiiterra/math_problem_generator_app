@@ -122,7 +122,8 @@ You can create pages manually or automatically.
 
 #### Manual
 
-Will be added soon.
+Use [automatic](#automatic) please. \
+Manual is harder than automatic.
 
 #### Automatic
 
@@ -135,5 +136,7 @@ If your current working directory is `.../math_problem_generator_app/` then open
 
 Then you can open `./modules/pages/<Task_Name>Page.py` and `./modules/generators/<task_name>.py` and edit them. \
 **Important note**: Make sure that you added `<Task_Name>Page.py` as import from modules into `main_app.py` + into `TasksPage` tasks list.
+
+If you use Windows - you probably need to google "how to run shell scripts" or create `.bat` ones and contribute them if you want.
 
 <p align="right">(<a href="#top" title="to the top of the page">back to top</a>)</p>
