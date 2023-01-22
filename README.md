@@ -135,7 +135,7 @@ If your current working directory is `.../math_problem_generator_app/` then open
 ```
 
 Then you can open `./modules/pages/<Task_Name>Page.py` and `./modules/generators/<task_name>.py` and edit them. \
-**Important note**: Make sure that you added `<Task_Name>Page.py` as import from modules into `main_app.py` + into `TasksPage` tasks list.
+**Important note**: Make sure that you added `<Task_Name>Page.py` as import from modules into `main_app.py` + into `pages` dictionary (it is located under `__version__` and `author` variables).
 
 If you use Windows - you probably need to google "how to run shell scripts" or create `.bat` ones and contribute them if you want.
 
