@@ -206,7 +206,8 @@ class App(Tk):  # Main application with page logic
             prev.pack_forget()
         new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl).pack(fill="both", expand=True)
 
-
+        new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl) \
+           .pack(fill="both", expand=True)
     def change_bg(self): self.config(bg=bg)
 
 
