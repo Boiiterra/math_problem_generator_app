@@ -34,7 +34,6 @@ class Heron_FormulaPage(Frame):
 				self.b = task_data[2]
 				self.c = task_data[3]
 				self.answer = task_data[0]
-				print(self.answer)
 				self.exercise_no = task_data[-1]
 
 				page.set_exercise(self.exercise_no, "0012") # replace code with four digit number (go to main_app.py and check pages dictionary)
