@@ -8,3 +8,4 @@ from .pythagorean_theorem import pythagorean_theorem
 from .sq_root import sq_root
 from .cb_root import cb_root
 from .power_number import power_number
+from .heron_formula import heron_formula

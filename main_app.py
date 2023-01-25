@@ -10,7 +10,8 @@ from platform import system
 
 from modules import scale, Option, Gauss_Sum, SquaresAPage, SquaresPPage, RectanglesPPage, \
                     ArithmeticsPage, QEquationPage, RectanglesAPage, Lin_EquationPage, \
-                    Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage, Power_NumberPage
+                    Pythagorean_TheoremPage, Sq_RootPage, Cb_RootPage, Power_NumberPage, \
+                    Heron_FormulaPage
 from modules.pages.task_template import TaskPageTemplate
 
 
@@ -30,6 +31,7 @@ pages = {
     "0009": SquaresAPage,
     "0010": SquaresPPage,
     "0011": Power_NumberPage,
+    "0012": Heron_FormulaPage,
 }
 
 # File reading section
@@ -169,7 +171,9 @@ class App(Tk):  # Main application with page logic
         except TclError:
             print("Unable to find icon file")
 
-        self.geometry(f"{WIDTH}x{HEIGHT}+{int((self.winfo_screenwidth() - WIDTH) / 2)}+{int((self.winfo_screenheight() - HEIGHT) / 2)}")  # Middle pos on the screen
+        self.geometry(f"{WIDTH}x{HEIGHT}" \
+                      f"+{int((self.winfo_screenwidth() - WIDTH) / 2)}+" \
+                      f"{int((self.winfo_screenheight() - HEIGHT) / 2)}")  # Middle pos on the screen
         self.maxsize(self.winfo_screenwidth(), self.winfo_screenheight() - 31)
         self.minsize(800, 600)
 
@@ -204,10 +208,10 @@ class App(Tk):  # Main application with page logic
     def ch_page(self, new: Frame, prev: Frame = None):
         if prev is not None:
             prev.pack_forget()
-        new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl).pack(fill="both", expand=True)
-
         new(self, current_language, __version__, TasksPage, bg, fg, afg, dfg, b_bg, b_bg1, b_abg, e_bg, e_hl) \
            .pack(fill="both", expand=True)
+
+
     def change_bg(self): self.config(bg=bg)
 
 
@@ -448,6 +452,7 @@ class TasksPage(Frame):
         Frame.__init__(self, parent)
 
         self.fstate = 2
+        self.start = 0
 
         def options(filter_t:bool=None):
             if filter_t is None:
@@ -481,8 +486,12 @@ class TasksPage(Frame):
         def repack():
             for slave in menu.grid_slaves():
                 slave.grid_forget()
-            for i in range(len(self.task_pages[start:start + 16])):
-                Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 6), column=(i // 6), padx=(0, 10), pady=(0, 15), sticky="snew")
+            for i in range(self.start, self.start + 12):
+                try:
+                    Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg) \
+                          .grid(row=((i - self.start) % 6), column=((i - self.start) // 6), padx=(0, 10), pady=(0, 15), sticky="snew")
+                except IndexError:
+                    break # No more elements left
             font_scaling(None)
 
         top = Frame(self)
@@ -491,27 +500,53 @@ class TasksPage(Frame):
         back = Button(top, bd=0, command=lambda: parent.ch_page(GameOptPage, self))
         back.pack(side="left")
 
+        placeholder = Label(top, width=6)
+        placeholder.pack(side="left")
+
         _filter = Button(top, bd=0, command=filter_)
         _filter.pack(side="right")
 
         self.task_pages = options()
 
-        start = 0
-
         menu = Frame(self)
         menu.pack(pady=(20, 0))
 
-        for i in range(len(self.task_pages[start:start + 16])):
-            Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg).grid(row=(i % 6), column=(i // 6), padx=(0, 10), pady=(0, 15), sticky="snew")
+        for i in range(self.start, self.start + 12):
+            Option(menu, self, self.task_pages[i], i, parent, current_language, fg, b_bg, b_bg1, b_abg, afg) \
+                  .grid(row=((i - self.start) % 6), column=((i - self.start) // 6), padx=(0, 10), pady=(0, 15), sticky="snew")
+
+        def decrement():
+            if self.start:
+                self.start -= 1
+                self.task_pages = options(self.fstate if self.fstate != 2 else None)
+                repack()
+
+        def increment():
+            print(self.start)
+            if (self.start + 12) < len(self.task_pages):
+                self.start += 1
+                self.task_pages = options(self.fstate if self.fstate != 2 else None)
+                repack()
+
+        prev = Button(top, bd=0, command=decrement)
+        prev.pack(side="left")
+
+        next_ = Button(top, bd=0, command=increment)
+        next_.pack(side="left")
 
         self.top = top
         self.back = back
+        self.placeholder = placeholder
         self._filter = _filter
         self.menu = menu
+        self.prev = prev
+        self.next_ = next_
 
         def font_scaling(_):
             back.config(font=("Times New Roman", int(25 * scaling)))
             _filter.config(font=("Times New Roman", int(25 * scaling)))
+            prev.config(font=("Times New Roman", int(25 * scaling)))
+            next_.config(font=("Times New Roman", int(25 * scaling)))
             for slave in menu.grid_slaves():
                 slave.config(font=("Times New Roman", int(25 * scaling)))
 
@@ -524,16 +559,23 @@ class TasksPage(Frame):
         if current_language == "eng":
             self.back.config(text="Back")
             self._filter.config(text="Filter")
+            self.prev.config(text="Previous")
+            self.next_.config(text="Next")
         elif current_language == "rus":
             self.back.config(text='Назад')
             self._filter.config(text="Фильтр")
+            self.prev.config(text="Previous")
+            self.next_.config(text="Next")
 
     def set_theme(self):
         self.config(bg=bg)
         self.top.config(bg=bg)
         self.back.config(fg=fg, bg=b_bg1, activebackground=b_abg, activeforeground=afg)
+        self.placeholder.config(bg=bg)
         self._filter.config(fg=fg, bg=b_bg, activebackground=b_abg, activeforeground=afg)
         self.menu.config(bg=bg)
+        self.prev.config(fg=fg,bg=b_bg, activebackground=b_abg, activeforeground=afg)
+        self.next_.config(fg=fg,bg=b_bg1, activebackground=b_abg, activeforeground=afg)
 
 
 class TaskCreationPage(Frame):
